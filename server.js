@@ -1,6 +1,7 @@
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 require('dotenv').config();
 const express = require('express');
-const { MongoClient } = require('mongodb');
 
 const app = express();
 const port = 5001;
@@ -16,7 +17,7 @@ const client = new MongoClient(uri);
 app.use(express.json());
 
 // 2. cors: middleware (replace the cors package)
-app.use((req, res, next) =>{
+app.use((req, res, next) => {
     // allow all origins
     res.setHeader('Access-Control-Allow-Origin', '*');
     // allow all methods
@@ -32,7 +33,7 @@ app.use((req, res, next) =>{
 
 // 3. routes
 app.get('/api/cafes', async (req, res) => {
-    try{
+    try {
         await client.connect();
         const database = client.db('cafedog');
         const cafesCollection = database.collection('cafes');
@@ -44,10 +45,33 @@ app.get('/api/cafes', async (req, res) => {
     }
 });
 
+app.get('/api/cafes/:id', async (req, res) => {
+    try {
+        const cafeId = req.params.id;
+
+        await client.connect();
+        const database = client.db('cafedog');
+        const cafesCollection = database.collection('cafes');
+
+        const cafe = await cafesCollection.findOne({ _id: new ObjectId(cafeId) });
+
+        if (!cafe) {
+            return res.status(404).json({ error: "Can't find the cafe!" });
+
+        }
+
+        res.status(200).json(cafe);
+
+    } catch (error) {
+        console.error("Query Failure:", error);
+        res.status(500).json({ error: "Server error or invalid ID format." });
+    }
+});
+
 app.post('/api/cafes', async (req, res) => {
-    try{
+    try {
         const newCafe = req.body;
-        if(!newCafe.name || !newCafe.address){
+        if (!newCafe.name || !newCafe.address) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
