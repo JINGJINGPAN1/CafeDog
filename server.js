@@ -63,8 +63,37 @@ app.get('/api/cafes/:id', async (req, res) => {
         res.status(200).json(cafe);
 
     } catch (error) {
-        console.error("Query Failure:", error);
+        console.error("Error finding cafe:", error);
         res.status(500).json({ error: "Server error or invalid ID format." });
+    }
+});
+
+
+app.delete('/api/cafes/:id', async (req, res) => {
+    try {
+        const cafeId = req.params.id;
+
+        if (!cafeId || !ObjectId.isValid(cafeId)) {
+            return res.status(400).json({ error: "Invalid cafe ID format." });
+        }
+
+        await client.connect();
+        const database = client.db('cafedog');
+        const cafesCollection = database.collection('cafes');
+
+        let result = await cafesCollection.deleteOne({ _id: new ObjectId(cafeId) });
+        if (result.deletedCount === 0) {
+            result = await cafesCollection.deleteOne({ _id: cafeId });
+        }
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: "Cafe not found or already deleted." });
+        }
+
+        res.status(200).json({ message: "Cafe successfully deleted!" });
+
+    } catch (error) {
+        console.error("Error deleting cafe:", error);
+        res.status(500).json({ error: "Server error during deletion." });
     }
 });
 
