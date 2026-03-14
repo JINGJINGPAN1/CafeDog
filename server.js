@@ -99,10 +99,19 @@ app.delete('/api/cafes/:id', async (req, res) => {
 
 app.post('/api/cafes', async (req, res) => {
     try {
-        const newCafe = req.body;
-        if (!newCafe.name || !newCafe.address) {
+        const { name, address, has_good_wifi, is_quiet, rating, cover_image } = req.body;
+        if (!name || !address) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
+
+        const newCafe = {
+            name: String(name),
+            address: String(address),
+            has_good_wifi: Boolean(has_good_wifi),
+            is_quiet: Boolean(is_quiet),
+            rating: rating != null && rating !== '' ? Number(rating) : null,
+            cover_image: cover_image ? String(cover_image) : ''
+        };
 
         await client.connect();
         const database = client.db('cafedog');
@@ -120,6 +129,65 @@ app.post('/api/cafes', async (req, res) => {
     }
 });
 
+
+// ==========================================
+// 🌟 REVIEWS API (One-to-Many Relationship)
+// ==========================================
+// 1. POST: Add a new review/pphoto check-in for a specific cafe
+app.post('/api/reviews', async (req, res) => {
+    try {
+        const { cafeId, author, text, photoUrl, rating } = req.body;
+
+        if (!cafeId || !author || !text) {
+            return res.status(400).json({ error: "Missing required fields: cafeId, author, or text." });
+        }
+        if (!ObjectId.isValid(cafeId)) {
+            return res.status(400).json({ error: "Invalid cafe ID format." });
+        }
+
+        const newReview = {
+            cafeId: new ObjectId(cafeId),
+            author: String(author),
+            text: String(text),
+            photoUrl: photoUrl != null && photoUrl !== '' ? String(photoUrl) : '',
+            rating: rating != null && rating !== '' ? Number(rating) : 5,
+            createAt: new Date()
+        };
+
+        await client.connect();
+        const database = client.db('cafedog');
+        const reviewsCollection = database.collection('reviews');
+        const result = await reviewsCollection.insertOne(newReview);
+
+        res.status(201).json({
+            message: "Review successfully posted.",
+            reviewId: result.insertedId
+        });
+
+    } catch (error) {
+        console.error("Error posting review: ", error);
+        res.status(500).json({ error: "server error while posting the review." })
+    }
+});
+
+//2. Get Reviews
+app.get('/api/cafes/:id/reviews', async (req, res) => {
+    try {
+        const cafeId = req.params.id;
+
+        await client.connect();
+        const database = client.db('cafedog');
+        const reviewsCollection = database.collection('reviews');
+
+        const reviews = await reviewsCollection.find({ cafeId: new ObjectId(cafeId) })
+            .sort({ createAt: -1 })
+            .toArray()
+        res.json(reviews);
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        res.status(500).json({ error: 'Failed to fetch reviews' });
+    }
+});
 
 // 4. start the server
 app.listen(port, () => {
