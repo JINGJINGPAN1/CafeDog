@@ -9,6 +9,9 @@ function Home() {
   const [cafes, setCafes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterWifi, setFilterWifi] = useState(false);
+    const [filterQuiet, setFilterQuiet] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,23 +23,30 @@ function Home() {
   });
 
   useEffect(() => {
-    fetchCafes();
-  }, []);
+    fetchCafes(searchTerm, filterWifi, filterQuiet);
+  }, [searchTerm, filterWifi, filterQuiet]);
 
-  const fetchCafes = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const body = await apiFetch('/api/cafes');
-      setCafes(Array.isArray(body) ? body : []);
-    } catch (err) {
-      console.error(err);
-      setCafes([]);
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchCafes = (search, wifi, quiet) => {
+
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (wifi) params.append('wifi', 'true');
+        if (quiet) params.append('quiet', 'true');
+
+        const url = new URL(`http://localhost:5001/api/cafes?${params.toString()}`);
+
+        fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+                setCafes(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setError(err.message);
+                setLoading(false);
+            });
+    };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -171,12 +181,44 @@ function Home() {
             </label>
           </div>
 
-          <button type="submit" className="primaryButton">
-            🚀 Publish Cafe
-          </button>
-        </form>
-      </div>
-      <hr />
+                    <button type="submit" style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginTop: '10px', fontSize: '16px' }}>
+                        🚀 Publish Cafe
+                    </button>
+                </form>
+            </div>
+            <hr />
+
+            {/* search and filter bar */}
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', margin: '20px 0', flexWrap: 'wrap' }}>
+                <input
+                    type="text"
+                    placeholder="🔍 Search cafés..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc', flex: 1, fontSize: '16px' }}
+                />
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                    <input
+                        type="checkbox"
+                        checked={filterWifi}
+                        onChange={(e) => setFilterWifi(e.target.checked)}
+                    />
+                    📶 WiFi only
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                    <input
+                        type="checkbox"
+                        checked={filterQuiet}
+                        onChange={(e) => setFilterQuiet(e.target.checked)}
+                    />
+                    🤫 Quiet only
+                </label>
+            </div>
+
+            {/* result count hint */}
+            <p style={{ color: '#888', fontSize: '14px', marginBottom: '10px' }}>
+                {cafes.length} café{cafes.length !== 1 ? 's' : ''} found
+            </p>
 
       <div className="grid">
         {cafes.map((cafe) => (
