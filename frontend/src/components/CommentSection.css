@@ -1,0 +1,36 @@
+.commentSection {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  display: grid;
+  gap: 10px;
+}
+
+.commentSectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.commentSectionHeader h4 {
+  margin: 0;
+}
+
+.linkButton {
+  border: none;
+  background: transparent;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+}
+
+.commentStatus {
+  margin: 0;
+  color: #666;
+}
+
+.commentError {
+  margin: 0;
+  color: #b00020;
+}

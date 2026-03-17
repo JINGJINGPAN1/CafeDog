@@ -1,0 +1,10 @@
+.commentList {
+  display: grid;
+  gap: 10px;
+}
+
+.commentEmpty {
+  margin: 0;
+  color: #777;
+  font-style: italic;
+}

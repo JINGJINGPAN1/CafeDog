@@ -1,0 +1,91 @@
+.page {
+  padding: 20px;
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.authLinks {
+  display: flex;
+  gap: 12px;
+}
+
+.authLinks a,
+.authLinks button {
+  font-size: 14px;
+}
+
+.linkButton {
+  border: none;
+  background: transparent;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+}
+
+.card {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 22px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.primaryButton {
+  padding: 10px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.cafeCard {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  background: white;
+}
+
+.cafeCover {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}

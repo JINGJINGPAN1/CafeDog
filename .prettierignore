@@ -1,0 +1,12 @@
+node_modules
+frontend/node_modules
+frontend/dist
+dist
+coverage
+tmp
+temp
+.vscode
+.git
+package-lock.json
+frontend/package-lock.json
+

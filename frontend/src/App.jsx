@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import CafeDetail from './CafeDetail';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -12,6 +14,9 @@ function App() {
 
         {/* When the URL is "/cafe/someID", render the CafeDetail component. ":id" is a dynamic parameter */}
         <Route path="/cafe/:id" element={<CafeDetail />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
