@@ -12,16 +12,39 @@
   }
 ]`
 
-# GET /api/posts?cafe_id=xxx
+# GET /api/cafes/:id/posts
+
+or
+
+# GET /api/posts?cafeId=xxx
 
 `[
   {
     "_id": "71e6fd8bg793hce40b2c976c",
-    "cafe_id": "60d5ec9af682fbd39a1b865b",
-    "author_name": "CoffeeLover99",
-    "content": "cold brew is so nice",
+    "cafeId": "60d5ec9af682fbd39a1b865b",
+    "author": "CoffeeLover99",
+    "text": "cold brew is so nice",
     "rating": 5,
-    "image_url": "https://你的s3地址.com/post1.jpg",
-    "created_at": "2026-03-12T10:00:00Z"
+    "photoUrl": "https://your-image-host.com/post1.jpg",
+    "createdAt": "2026-03-12T10:00:00Z"
   }
 ]`
+
+# POST /api/posts
+
+Request body:
+
+`{
+  "cafeId": "60d5ec9af682fbd39a1b865b",
+  "author": "CoffeeLover99",
+  "text": "cold brew is so nice",
+  "rating": 5,
+  "photoUrl": "https://your-image-host.com/post1.jpg"
+}`
+
+Response body:
+
+`{
+  "message": "Post successfully created.",
+  "postId": "71e6fd8bg793hce40b2c976c"
+}`

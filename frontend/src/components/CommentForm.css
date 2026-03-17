@@ -1,0 +1,32 @@
+.commentForm {
+  display: grid;
+  gap: 8px;
+}
+
+.commentForm textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #d6d6d6;
+  padding: 10px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.commentSubmit {
+  justify-self: start;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: #28a745;
+  color: white;
+  cursor: pointer;
+}
+
+.commentSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.commentFormError {
+  color: #b00020;
+}
