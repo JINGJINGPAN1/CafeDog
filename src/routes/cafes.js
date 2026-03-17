@@ -7,7 +7,19 @@ router.get('/cafes', async (req, res) => {
   try {
     const db = await getDb();
     const cafesCollection = db.collection('cafes');
-    const cafes = await cafesCollection.find({}).toArray();
+
+    const filter = {};
+    if (req.query.search) {
+      filter.name = { $regex: req.query.search, $options: 'i' };
+    }
+    if (req.query.wifi === 'true') {
+      filter.has_good_wifi = true;
+    }
+    if (req.query.quiet === 'true') {
+      filter.is_quiet = true;
+    }
+
+    const cafes = await cafesCollection.find(filter).toArray();
     res.json(cafes);
   } catch (error) {
     console.error('Error fetching cafes:', error);

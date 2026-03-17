@@ -33,9 +33,9 @@ function Home() {
         if (wifi) params.append('wifi', 'true');
         if (quiet) params.append('quiet', 'true');
 
-        const url = new URL(`http://localhost:5001/api/cafes?${params.toString()}`);
+        const url = `/api/cafes?${params.toString()}`;
 
-        fetch(url)
+        fetch(url, { credentials: 'include' })
             .then((res) => res.json())
             .then((data) => {
                 setCafes(data);
