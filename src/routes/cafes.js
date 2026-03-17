@@ -71,6 +71,45 @@ router.delete('/cafes/:id', async (req, res) => {
   }
 });
 
+
+router.put('/cafes/:id', async (req, res) => {
+  try {
+    const cafeId = req.params.id;
+    if (!cafeId || !ObjectId.isValid(String(cafeId))) {
+      return res.status(400).json({ error: 'Invalid cafe ID format.' });
+    }
+
+    const { name, address, has_good_wifi, is_quiet, rating, cover_image } = req.body || {};
+    if (!name || !address) {
+      return res.status(400).json({ error: 'Name and address are required.' });
+    }
+
+    const updates = {
+      name: String(name),
+      address: String(address),
+      has_good_wifi: Boolean(has_good_wifi),
+      is_quiet: Boolean(is_quiet),
+      rating: rating != null && rating !== '' ? Number(rating) : null,
+      cover_image: cover_image ? String(cover_image) : '',
+    };
+
+    const db = await getDb();
+    const result = await db.collection('cafes').updateOne(
+      { _id: new ObjectId(String(cafeId)) },
+      { $set: updates }
+    );
+
+    if (result.matchedCount == 0) {
+      return res.status(404).json({ error: 'Cafe not found.' });
+    }
+
+    res.json({ message: 'Cafe updated successfully.' });
+  } catch (error) {
+    console.error('Error deleting cafe:', error);
+    res.status(500).json({ error: 'Server error during deletion.' });
+  }
+});
+
 router.post('/cafes', async (req, res) => {
   try {
     const { name, address, has_good_wifi, is_quiet, rating, cover_image } = req.body || {};

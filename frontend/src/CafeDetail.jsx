@@ -14,6 +14,9 @@ function CafeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState([])
+
   const [posts, setPosts] = useState([]);
   const [formData, setFormData] = useState({
     author: '',
@@ -105,6 +108,43 @@ function CafeDetail() {
     }
   };
 
+  const startEditing = () => {
+    setEditData({
+      name: cafe.name,
+      address: cafe.address,
+      has_good_wifi: cafe.has_good_wifi,
+      is_quiet: cafe.is_quiet,
+      rating: cafe.rating ?? '',
+      cover_image: cafe.cover_image || '',
+    });
+    setIsEditing(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await apiFetch(`/api/cafes/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editData),
+      });
+      // Update local state so the page reflects changes immediately
+      setCafe((prev) => ({ ...prev, ...editData }));
+      setIsEditing(false);
+    } catch (err) {
+      alert('Error updating cafe: ' + err.message);
+    }
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setEditData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+
   if (loading) return <h2>Loading cafe details... ⏳</h2>;
   if (error) return <h2 style={{ color: 'red' }}>Error: {error}</h2>;
   if (!cafe) return <h2>Cafe not found. 🕵️‍♂️</h2>;
@@ -113,28 +153,63 @@ function CafeDetail() {
     <div className="page">
       {/* Top Navigation & Action Bar */}
       <div className="topBar">
-        <Link to="/" className="backLink">
-          &larr; Back to Home
-        </Link>
-        <button onClick={handleDelete} className="dangerButton">
-          🗑️ Delete Cafe
-        </button>
+        <Link to="/" className="backLink">&larr; Back to Home</Link>
+        <div>
+          <button onClick={startEditing} className="primaryButton">Edit Cafe</button>
+          <button onClick={handleDelete} className="dangerButton">Delete Cafe</button>
+        </div>
       </div>
 
       {/* Cafe Details Card */}
-      <div className="cafeCard">
-        <h1 className="cafeTitle">
-          {cafe.name} {cafe.rating && <span className="cafeRating">(⭐️ {cafe.rating})</span>}
-        </h1>
-        <h3 className="cafeAddress">📍 {cafe.address}</h3>
 
-        <div className="cafeInfo">
-          <p>{cafe.has_good_wifi ? '✅ Fast WiFi Available' : '❌ No WiFi'}</p>
-          <p>{cafe.is_quiet ? '✅ Quiet for studying' : '🗣️ Good for chatting'}</p>
-        </div>
+      {isEditing ? (
+        <form onSubmit={handleEditSubmit} className="cafeCard">
+          <label>Name:
+            <input className="input" name="name" value={editData.name} onChange={handleEditChange} required />
+          </label>
+          <label>Address:
+            <input className="input" name="address" value={editData.address} onChange={handleEditChange} required />
+          </label>
+          <label>
+            <input type="checkbox" name="has_good_wifi" checked={editData.has_good_wifi} onChange={handleEditChange} />
+            Good WiFi
+          </label>
+          <label>
+            <input type="checkbox" name="is_quiet" checked={editData.is_quiet} onChange={handleEditChange} />
+            Quiet for studying
+          </label>
+          <label>Rating:
+            <select className="select" name="rating" value={editData.rating} onChange={handleEditChange}>
+              <option value="">No rating</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+          </label>
+          <label>Cover Image URL:
+            <input className="input" name="cover_image" value={editData.cover_image} onChange={handleEditChange} />
+          </label>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="submit" className="primaryButton">Save</button>
+            <button type="button" onClick={() => setIsEditing(false)} className="dangerButton">Cancel</button>
+          </div>
+        </form>
+      ) :
+        (<div className="cafeCard">
+          <h1 className="cafeTitle">
+            {cafe.name} {cafe.rating && <span className="cafeRating">(⭐️ {cafe.rating})</span>}
+          </h1>
+          <h3 className="cafeAddress">📍 {cafe.address}</h3>
 
-        {cafe.cover_image && <img src={cafe.cover_image} alt={cafe.name} className="cafeCover" />}
-      </div>
+          <div className="cafeInfo">
+            <p>{cafe.has_good_wifi ? '✅ Fast WiFi Available' : '❌ No WiFi'}</p>
+            <p>{cafe.is_quiet ? '✅ Quiet for studying' : '🗣️ Good for chatting'}</p>
+          </div>
+
+          {cafe.cover_image && <img src={cafe.cover_image} alt={cafe.name} className="cafeCover" />}
+        </div>)}
 
       <hr className="sectionDivider" />
 
