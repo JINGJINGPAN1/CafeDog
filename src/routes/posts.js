@@ -62,20 +62,31 @@ async function listPostsByCafe(req, res) {
       return res.status(400).json({ error: 'Invalid cafe ID format.' });
     }
 
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
+    const skip = (page - 1) * limit;
+
     const db = await getDb();
     const postsCollection = db.collection('posts');
+    const cafeOid = new ObjectId(String(cafeId));
 
+    const total = await postsCollection.countDocuments({ cafeId: cafeOid });
     const posts = await postsCollection
-      .find({ cafeId: new ObjectId(String(cafeId)) })
+      .find({ cafeId: cafeOid })
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .toArray();
 
     // Backward compatibility: If posts collection is empty, fall back to legacy "reviews".
-    if (posts.length === 0) {
+    if (posts.length === 0 && page === 1) {
       const reviewsCollection = db.collection('reviews');
+      const legacyTotal = await reviewsCollection.countDocuments({ cafeId: cafeOid });
       const legacyReviews = await reviewsCollection
-        .find({ cafeId: new ObjectId(String(cafeId)) })
+        .find({ cafeId: cafeOid })
         .sort({ createAt: -1 })
+        .skip(skip)
+        .limit(limit)
         .toArray();
 
       const normalized = legacyReviews.map((p) => ({
@@ -84,10 +95,10 @@ async function listPostsByCafe(req, res) {
         authorId: p.authorId || null,
       }));
 
-      return res.json(normalized);
+      return res.json({ posts: normalized, total: legacyTotal, page, limit });
     }
 
-    res.json(posts);
+    res.json({ posts, total, page, limit });
   } catch (error) {
     console.error('Error fetching posts:', error);
     res.status(500).json({ error: 'Failed to fetch posts' });

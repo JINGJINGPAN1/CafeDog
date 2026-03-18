@@ -20,8 +20,18 @@ router.get('/cafes', async (req, res) => {
       filter.is_quiet = true;
     }
 
-    const cafes = await cafesCollection.find(filter).toArray();
-    res.json(cafes);
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 12));
+    const skip = (page - 1) * limit;
+
+    const total = await cafesCollection.countDocuments(filter);
+    const cafes = await cafesCollection
+      .find(filter)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    res.json({ cafes, total, page, limit });
   } catch (error) {
     console.error('Error fetching cafes:', error);
     res.status(500).json({ error: 'Failed to fetch cafes' });

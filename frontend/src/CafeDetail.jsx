@@ -18,6 +18,11 @@ function CafeDetail() {
   const [editData, setEditData] = useState([])
 
   const [posts, setPosts] = useState([]);
+  const [postsPage, setPostsPage] = useState(1);
+  const [postsTotal, setPostsTotal] = useState(0);
+  const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+  const POSTS_PER_PAGE = 10;
+
   const [formData, setFormData] = useState({
     author: '',
     text: '',
@@ -27,12 +32,30 @@ function CafeDetail() {
 
   const reloadPosts = useCallback(async () => {
     try {
-      const data = await apiFetch(`/api/cafes/${id}/posts`);
-      setPosts(Array.isArray(data) ? data : []);
+      const data = await apiFetch(`/api/cafes/${id}/posts?page=1&limit=${POSTS_PER_PAGE}`);
+      setPosts(Array.isArray(data.posts) ? data.posts : []);
+      setPostsTotal(data.total || 0);
+      setPostsPage(1);
     } catch (err) {
       console.error('Error fetching posts:', err);
     }
   }, [id]);
+
+  const loadMorePosts = async () => {
+    const nextPage = postsPage + 1;
+    setLoadingMorePosts(true);
+    try {
+      const data = await apiFetch(`/api/cafes/${id}/posts?page=${nextPage}&limit=${POSTS_PER_PAGE}`);
+      const newPosts = Array.isArray(data.posts) ? data.posts : [];
+      setPosts((prev) => [...prev, ...newPosts]);
+      setPostsTotal(data.total || 0);
+      setPostsPage(nextPage);
+    } catch (err) {
+      console.error('Error loading more posts:', err);
+    } finally {
+      setLoadingMorePosts(false);
+    }
+  };
 
   const handleReviewChange = (e) => {
     const { name, value } = e.target;
@@ -77,8 +100,12 @@ function CafeDetail() {
 
     (async () => {
       try {
-        const data = await apiFetch(`/api/cafes/${id}/posts`);
-        if (!cancelled) setPosts(Array.isArray(data) ? data : []);
+        const data = await apiFetch(`/api/cafes/${id}/posts?page=1&limit=${POSTS_PER_PAGE}`);
+        if (!cancelled) {
+          setPosts(Array.isArray(data.posts) ? data.posts : []);
+          setPostsTotal(data.total || 0);
+          setPostsPage(1);
+        }
       } catch (err) {
         console.error('Error fetching posts:', err);
       }
@@ -293,6 +320,19 @@ function CafeDetail() {
             ))
           )}
         </div>
+        {posts.length < postsTotal ? (
+          <div style={{ textAlign: 'center', margin: '20px 0' }}>
+            <button
+              type="button"
+              className="primaryButton"
+              onClick={loadMorePosts}
+              disabled={loadingMorePosts}
+              style={{ padding: '10px 28px', opacity: loadingMorePosts ? 0.65 : 1 }}
+            >
+              {loadingMorePosts ? 'Loading...' : 'Load More Posts'}
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

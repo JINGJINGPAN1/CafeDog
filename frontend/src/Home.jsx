@@ -8,10 +8,14 @@ function Home() {
   const { me, isLoggedIn, logout } = useAuth();
   const [cafes, setCafes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filterWifi, setFilterWifi] = useState(false);
-    const [filterQuiet, setFilterQuiet] = useState(false);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterWifi, setFilterWifi] = useState(false);
+  const [filterQuiet, setFilterQuiet] = useState(false);
+  const CAFES_PER_PAGE = 12;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -23,30 +27,48 @@ function Home() {
   });
 
   useEffect(() => {
-    fetchCafes(searchTerm, filterWifi, filterQuiet);
+    setPage(1);
+    setCafes([]);
+    fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
   }, [searchTerm, filterWifi, filterQuiet]);
 
-    const fetchCafes = (search, wifi, quiet) => {
+  const fetchCafes = (search, wifi, quiet, pg, reset) => {
+    if (reset) setLoading(true);
+    else setLoadingMore(true);
 
-        const params = new URLSearchParams();
-        if (search) params.append('search', search);
-        if (wifi) params.append('wifi', 'true');
-        if (quiet) params.append('quiet', 'true');
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (wifi) params.append('wifi', 'true');
+    if (quiet) params.append('quiet', 'true');
+    params.append('page', String(pg));
+    params.append('limit', String(CAFES_PER_PAGE));
 
-        const url = `/api/cafes?${params.toString()}`;
+    const url = `/api/cafes?${params.toString()}`;
 
-        fetch(url, { credentials: 'include' })
-            .then((res) => res.json())
-            .then((data) => {
-                setCafes(data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error(err);
-                setError(err.message);
-                setLoading(false);
-            });
-    };
+    fetch(url, { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (reset) {
+          setCafes(data.cafes);
+        } else {
+          setCafes((prev) => [...prev, ...data.cafes]);
+        }
+        setTotal(data.total);
+        setPage(pg);
+        setLoading(false);
+        setLoadingMore(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message);
+        setLoading(false);
+        setLoadingMore(false);
+      });
+  };
+
+  const handleLoadMoreCafes = () => {
+    fetchCafes(searchTerm, filterWifi, filterQuiet, page + 1, false);
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -91,7 +113,7 @@ function Home() {
         rating: '',
         cover_image: '',
       });
-      fetchCafes();
+      fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
     } catch (err) {
       alert('Error submitting: ' + err.message);
     }
@@ -217,7 +239,7 @@ function Home() {
 
             {/* result count hint */}
             <p style={{ color: '#888', fontSize: '14px', marginBottom: '10px' }}>
-                {cafes.length} café{cafes.length !== 1 ? 's' : ''} found
+                Showing {cafes.length} of {total} cafe{total !== 1 ? 's' : ''}
             </p>
 
       <div className="grid">
@@ -244,6 +266,27 @@ function Home() {
           </Link>
         ))}
       </div>
+      {cafes.length < total ? (
+        <div style={{ textAlign: 'center', margin: '24px 0' }}>
+          <button
+            type="button"
+            onClick={handleLoadMoreCafes}
+            disabled={loadingMore}
+            style={{
+              padding: '12px 32px',
+              fontSize: '16px',
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: loadingMore ? 'not-allowed' : 'pointer',
+              opacity: loadingMore ? 0.65 : 1,
+            }}
+          >
+            {loadingMore ? 'Loading...' : 'Load More'}
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }
