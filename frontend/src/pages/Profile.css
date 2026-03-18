@@ -1,211 +1,297 @@
-.profilePage {
-  max-width: 900px;
-  margin: 0 auto;
+.pf-page {
+  min-height: 100vh;
+  background: #f7f5f2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.profileTopBar {
-  margin-bottom: 20px;
+/* ── Navbar ── */
+.pf-nav {
+  background: #fff;
+  border-bottom: 0.5px solid #e5e4e7;
+  padding: 12px 32px;
 }
 
-.backLink {
+.pf-back {
+  font-size: 14px;
+  font-weight: 500;
+  color: #C97B4B;
   text-decoration: none;
-  color: #007bff;
-  font-size: 18px;
 }
 
-.profileHeader {
+.pf-back:hover {
+  text-decoration: underline;
+}
+
+/* ── Profile header card ── */
+.pf-card {
+  margin: 20px 32px;
+  background: #fff;
+  border: 0.5px solid #e5e4e7;
+  border-radius: 16px;
+  padding: 28px 32px;
+}
+
+.pf-header {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 24px;
 }
 
-.profileAvatar {
-  width: 80px;
-  height: 80px;
+.pf-avatar {
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background: #007bff;
-  color: white;
+  background: #F5C4B3;
+  color: #712B13;
+  font-size: 28px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: 700;
   flex-shrink: 0;
 }
 
-.profileMeta {
+.pf-meta {
   flex: 1;
+  min-width: 0;
 }
 
-.profileName {
-  margin: 0 0 4px;
-  font-size: 1.8rem;
+.pf-name-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
-.profileBadge {
-  font-size: 0.75rem;
-  background: #28a745;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-weight: 600;
-}
-
-.profileEmail {
+.pf-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1a1a1a;
   margin: 0;
-  color: #666;
 }
 
-.profileJoined {
+.pf-badge {
+  font-size: 11px;
+  background: #FDF0E8;
+  color: #854F0B;
+  border: 0.5px solid #EF9F27;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.pf-email {
+  font-size: 13px;
+  color: #888;
   margin: 4px 0 0;
-  color: #999;
-  font-size: 0.9rem;
 }
 
-.profileStats {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 24px;
-  padding: 16px;
-  background: #f8f9fa;
-  border-radius: 12px;
+.pf-joined {
+  font-size: 12px;
+  color: #aaa;
+  margin: 2px 0 0;
 }
 
-.profileStat {
+/* ── Divider ── */
+.pf-divider {
+  border: none;
+  border-top: 0.5px solid #e5e4e7;
+  margin: 20px 0 16px;
+}
+
+/* ── Stats row ── */
+.pf-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+}
+
+.pf-stat {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2px;
 }
 
-.profileStat strong {
-  font-size: 1.4rem;
+.pf-stat-n {
+  font-size: 20px;
+  font-weight: 500;
+  color: #C97B4B;
 }
 
-.profileStat span {
-  color: #666;
-  font-size: 0.85rem;
+.pf-stat-l {
+  font-size: 12px;
+  color: #aaa;
 }
 
-.profileTabs {
+/* ── Tab bar ── */
+.pf-tabs {
+  margin: 0 32px;
+  background: #fff;
+  border: 0.5px solid #e5e4e7;
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
-  gap: 4px;
-  border-bottom: 2px solid #e6e6e6;
-  margin-bottom: 20px;
 }
 
-.profileTab {
-  padding: 10px 20px;
+.pf-tab {
+  flex: 1;
+  padding: 12px 0;
   border: none;
-  background: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
   cursor: pointer;
-  font-size: 1rem;
-  color: #666;
   border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
+  font-family: inherit;
+  transition: color 0.15s;
 }
 
-.profileTab.active {
-  color: #007bff;
-  border-bottom-color: #007bff;
-  font-weight: 600;
+.pf-tab:hover {
+  color: #666;
 }
 
-.profileContent {
+.pf-tab--on {
+  color: #C97B4B;
+  border-bottom-color: #C97B4B;
+  background: #fff;
+}
+
+/* ── Content area ── */
+.pf-content {
+  margin: 12px 32px 32px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.emptyMsg {
-  color: #888;
-  font-style: italic;
+.pf-empty {
   text-align: center;
-  padding: 32px 0;
+  color: #bbb;
+  font-size: 13px;
+  padding: 40px 0;
 }
 
-.errorText {
-  color: #b00020;
-}
-
-/* Post cards in profile */
-.profilePost {
+/* ── Post card ── */
+.pf-post {
   display: block;
   text-decoration: none;
   color: inherit;
-  background: white;
-  border: 1px solid #e6e6e6;
-  border-radius: 10px;
+  background: #fff;
+  border: 0.5px solid #e5e4e7;
+  border-radius: 12px;
   padding: 16px;
-  transition: box-shadow 0.15s;
+  transition: border-color 0.15s;
 }
 
-.profilePost:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.pf-post:hover {
+  border-color: #C97B4B;
 }
 
-.profilePostHeader {
+.pf-post-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.profilePostDate {
-  color: #999;
+.pf-post-stars {
+  font-size: 14px;
+  color: #C97B4B;
+  letter-spacing: 1px;
 }
 
-.profilePostText {
-  margin: 0 0 8px;
+.pf-post-date {
+  font-size: 12px;
+  color: #aaa;
 }
 
-.profilePostPhoto {
+.pf-post-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #333;
+  margin: 0 0 6px;
+  white-space: pre-wrap;
+}
+
+.pf-post-photo {
   width: 100%;
   max-height: 240px;
   object-fit: cover;
   border-radius: 8px;
+  margin-top: 8px;
+  display: block;
 }
 
-/* Cafe cards in profile */
-.profileCafe {
+/* ── Cafe card ── */
+.pf-cafe {
   display: flex;
   gap: 14px;
   align-items: center;
   text-decoration: none;
   color: inherit;
-  background: white;
-  border: 1px solid #e6e6e6;
-  border-radius: 10px;
-  padding: 12px;
-  transition: box-shadow 0.15s;
+  background: #fff;
+  border: 0.5px solid #e5e4e7;
+  border-radius: 12px;
+  padding: 14px;
+  transition: border-color 0.15s;
 }
 
-.profileCafe:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.pf-cafe:hover {
+  border-color: #C97B4B;
 }
 
-.profileCafeImg {
-  width: 80px;
-  height: 80px;
+.pf-cafe-img {
+  width: 72px;
+  height: 72px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
-.profileCafeInfo {
+.pf-cafe-ph {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  background: linear-gradient(160deg, #F5C4B3, #FAEEDA, #E1F5EE);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.pf-cafe-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 }
 
-.profileCafeRating {
-  color: #f39c12;
+.pf-cafe-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
-.profileCafeAddress {
-  margin: 4px 0 0;
-  color: #666;
-  font-size: 0.9rem;
+.pf-cafe-rating {
+  font-size: 13px;
+  color: #C97B4B;
+  letter-spacing: 1px;
+}
+
+.pf-cafe-addr {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .pf-nav { padding: 12px 16px; }
+  .pf-card { margin: 12px 16px; padding: 20px 18px; }
+  .pf-tabs { margin: 0 16px; }
+  .pf-content { margin: 12px 16px 24px; }
 }
