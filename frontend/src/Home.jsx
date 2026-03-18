@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './auth/useAuth';
 
@@ -25,13 +25,12 @@ function Home() {
     cover_image: '',
   });
 
-  useEffect(() => {
-    setPage(1);
-    setCafes([]);
-    fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
-  }, [searchTerm, filterWifi, filterQuiet]);
+  const categories = ['discover', 'wifi spots', 'quiet study', 'new places', 'top rated'];
+  const [activeTab, setActiveTab] = useState('discover');
 
-  const fetchCafes = (search, wifi, quiet, pg, reset) => {
+  const debounceRef = useRef(null);
+
+  const fetchCafes = useCallback((search, wifi, quiet, pg, reset) => {
     if (reset) setLoading(true);
     else setLoadingMore(true);
 
@@ -63,7 +62,18 @@ function Home() {
         setLoading(false);
         setLoadingMore(false);
       });
-  };
+  }, [CAFES_PER_PAGE]);
+
+  // Debounce search, instant for filter toggles
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setPage(1);
+      setCafes([]);
+      fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [searchTerm, filterWifi, filterQuiet, fetchCafes]);
 
   const handleLoadMoreCafes = () => {
     fetchCafes(searchTerm, filterWifi, filterQuiet, page + 1, false);
@@ -125,8 +135,44 @@ function Home() {
       ? me.email.slice(0, 2).toUpperCase()
       : 'CD';
 
-  const categories = ['discover', 'wifi spots', 'quiet study', 'new places', 'top rated'];
-  const [activeTab, setActiveTab] = useState('discover');
+  // Split cafes into two columns for balanced layout
+  const leftCol = [];
+  const rightCol = [];
+  cafes.forEach((cafe, i) => {
+    if (i % 2 === 0) leftCol.push(cafe);
+    else rightCol.push(cafe);
+  });
+
+  const renderCard = (cafe) => (
+    <Link to={`/cafe/${cafe._id}`} key={cafe._id} className="h-card-link">
+      <div className="h-card">
+        {cafe.cover_image ? (
+          <img className="h-card-img" src={cafe.cover_image} alt={cafe.name} />
+        ) : (
+          <div className="h-card-placeholder" />
+        )}
+        <div className="h-card-body">
+          <div className="h-card-name">{cafe.name}</div>
+          <div className="h-card-addr">{cafe.address}</div>
+          <div className="h-card-tags">
+            {cafe.has_good_wifi ? <span className="h-tag h-tag--wifi">wifi</span> : null}
+            {cafe.is_quiet ? <span className="h-tag h-tag--quiet">quiet</span> : null}
+          </div>
+          <div className="h-card-footer">
+            <span className="h-card-rating">
+              {cafe.rating ? `★ ${cafe.rating}` : ''}
+            </span>
+            <span className="h-card-likes">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#ccc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              0
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 
   if (loading) {
     return (
@@ -161,14 +207,6 @@ function Home() {
           <Link to="/" className="h-logo">
             cafe&nbsp;<span className="h-logo-accent">dog</span>
           </Link>
-
-          <div className="h-nav-search">
-            <svg className="h-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#999" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <span className="h-nav-search-text">search cafes nearby...</span>
-          </div>
 
           <div className="h-nav-right">
             {isLoggedIn ? (
@@ -241,38 +279,14 @@ function Home() {
           Showing {cafes.length} of {total} cafe{total !== 1 ? 's' : ''}
         </p>
 
-        {/* ── 4. Masonry Card Grid ── */}
-        <div className="h-masonry">
-          {cafes.map((cafe) => (
-            <Link to={`/cafe/${cafe._id}`} key={cafe._id} className="h-card-link">
-              <div className="h-card">
-                {cafe.cover_image ? (
-                  <img className="h-card-img" src={cafe.cover_image} alt={cafe.name} />
-                ) : (
-                  <div className="h-card-placeholder" />
-                )}
-                <div className="h-card-body">
-                  <div className="h-card-name">{cafe.name}</div>
-                  <div className="h-card-addr">{cafe.address}</div>
-                  <div className="h-card-tags">
-                    {cafe.has_good_wifi ? <span className="h-tag h-tag--wifi">wifi</span> : null}
-                    {cafe.is_quiet ? <span className="h-tag h-tag--quiet">quiet</span> : null}
-                  </div>
-                  <div className="h-card-footer">
-                    <span className="h-card-rating">
-                      {cafe.rating ? `★ ${cafe.rating}` : ''}
-                    </span>
-                    <span className="h-card-likes">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#ccc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                      </svg>
-                      0
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
+        {/* ── 4. Two-column Card Grid ── */}
+        <div className="h-grid">
+          <div className="h-col">
+            {leftCol.map(renderCard)}
+          </div>
+          <div className="h-col">
+            {rightCol.map(renderCard)}
+          </div>
         </div>
 
         {/* Load More */}
@@ -380,7 +394,7 @@ function Home() {
 
 /* ── All styles in a single template literal ── */
 const homeStyles = `
-  /* 7. Page background */
+  /* 7. Page background — no white container */
   .h-page {
     min-height: 100vh;
     background: #f7f5f2;
@@ -389,7 +403,7 @@ const homeStyles = `
     padding-bottom: 80px;
   }
 
-  /* 1. Navbar */
+  /* 1. Navbar — transparent, no white box */
   .h-navbar {
     position: sticky;
     top: 0;
@@ -399,7 +413,7 @@ const homeStyles = `
     justify-content: space-between;
     height: 52px;
     padding: 0 16px;
-    background: #fff;
+    background: #f7f5f2;
     border-bottom: 0.5px solid #e5e4e7;
   }
   .h-logo {
@@ -411,22 +425,6 @@ const homeStyles = `
     flex-shrink: 0;
   }
   .h-logo-accent { color: #C97B4B; }
-  .h-nav-search {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #f3f2f0;
-    border-radius: 20px;
-    padding: 7px 16px;
-    max-width: 280px;
-    flex: 1;
-    margin: 0 16px;
-  }
-  .h-nav-search-text {
-    font-size: 13px;
-    color: #999;
-    white-space: nowrap;
-  }
   .h-nav-right {
     display: flex;
     align-items: center;
@@ -474,7 +472,7 @@ const homeStyles = `
     display: flex;
     gap: 0;
     overflow-x: auto;
-    background: #fff;
+    background: #f7f5f2;
     padding: 0 16px;
     border-bottom: 0.5px solid #e5e4e7;
     -ms-overflow-style: none;
@@ -493,6 +491,7 @@ const homeStyles = `
     cursor: pointer;
     text-transform: capitalize;
     white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
   }
   .h-tab--active {
     color: #C97B4B;
@@ -554,18 +553,23 @@ const homeStyles = `
     margin: 0;
   }
 
-  /* 4. Masonry Grid */
-  .h-masonry {
-    columns: 2;
+  /* 4. Two-column Grid */
+  .h-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
     padding: 12px 16px 0;
+    align-items: start;
+  }
+  .h-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
   .h-card-link {
     text-decoration: none;
     color: inherit;
     display: block;
-    break-inside: avoid;
-    margin-bottom: 12px;
   }
   .h-card {
     background: #fff;
@@ -781,10 +785,9 @@ const homeStyles = `
     to { transform: translateY(0); }
   }
 
-  /* Mobile: 1-column masonry */
+  /* Mobile: 1-column */
   @media (max-width: 480px) {
-    .h-masonry { columns: 1; }
-    .h-nav-search { display: none; }
+    .h-grid { grid-template-columns: 1fr; }
   }
 `;
 
