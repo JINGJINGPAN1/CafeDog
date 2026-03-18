@@ -1,5 +1,5 @@
-/* 7. Page background */
-.h-page {
+/* Page */
+.hPage {
   min-height: 100vh;
   background: #f7f5f2;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -7,8 +7,8 @@
   padding-bottom: 80px;
 }
 
-/* 1. Navbar */
-.h-navbar {
+/* Navbar */
+.hNavbar {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -20,7 +20,7 @@
   background: #f7f5f2;
   border-bottom: 0.5px solid #e5e4e7;
 }
-.h-logo {
+.hLogo {
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.5px;
@@ -28,14 +28,14 @@
   text-decoration: none;
   flex-shrink: 0;
 }
-.h-logo-accent { color: #C97B4B; }
-.h-nav-right {
+.hLogoAccent { color: #C97B4B; }
+.hNavRight {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
 }
-.h-avatar {
+.hAvatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -49,7 +49,7 @@
   text-decoration: none;
   letter-spacing: 0.5px;
 }
-.h-logout-btn {
+.hLogoutBtn {
   background: none;
   border: none;
   cursor: pointer;
@@ -57,13 +57,13 @@
   display: flex;
   align-items: center;
 }
-.h-auth-link {
+.hAuthLink {
   font-size: 13px;
   color: #555;
   text-decoration: none;
   font-weight: 500;
 }
-.h-auth-link--register {
+.hAuthLinkRegister {
   background: #C97B4B;
   color: #fff;
   padding: 5px 14px;
@@ -71,8 +71,8 @@
   font-size: 12px;
 }
 
-/* 2. Category Tabs */
-.h-tabs {
+/* Category Tabs */
+.hTabs {
   display: flex;
   gap: 0;
   overflow-x: auto;
@@ -82,8 +82,8 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.h-tabs::-webkit-scrollbar { display: none; }
-.h-tab {
+.hTabs::-webkit-scrollbar { display: none; }
+.hTab {
   flex-shrink: 0;
   padding: 12px 16px;
   font-size: 13px;
@@ -97,20 +97,20 @@
   white-space: nowrap;
   transition: color 0.15s, border-color 0.15s;
 }
-.h-tab--active {
+.hTabActive {
   color: #C97B4B;
   border-bottom-color: #C97B4B;
 }
 
-/* 3. Filter Row */
-.h-filters {
+/* Filter Row */
+.hFilters {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 16px 0;
   flex-wrap: wrap;
 }
-.h-filter-search {
+.hFilterSearch {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -121,7 +121,7 @@
   flex: 1;
   min-width: 140px;
 }
-.h-filter-input {
+.hFilterInput {
   border: none;
   outline: none;
   background: transparent;
@@ -129,9 +129,9 @@
   width: 100%;
   color: #333;
 }
-.h-filter-input::placeholder { color: #bbb; }
-.h-search-icon { flex-shrink: 0; }
-.h-pill {
+.hFilterInput::placeholder { color: #bbb; }
+.hSearchIcon { flex-shrink: 0; }
+.hPill {
   padding: 7px 14px;
   border-radius: 20px;
   border: 1px solid #e5e4e7;
@@ -143,106 +143,108 @@
   font-weight: 500;
   transition: all 0.15s;
 }
-.h-pill--active {
+.hPillActive {
   background: #FDF0E8;
   border-color: #C97B4B;
   color: #C97B4B;
 }
 
-/* 6. Result Count */
-.h-count {
+/* Result Count */
+.hCount {
   padding: 8px 16px 0;
   font-size: 13px;
   color: #aaa;
   margin: 0;
 }
 
-/* 4. Two-column Grid */
-.h-grid {
+/* Two-column Grid */
+.hGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   padding: 12px 16px 0;
   align-items: start;
 }
-.h-col {
+.hCol {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-.h-card-link {
+
+/* Cafe Card */
+.hCardLink {
   text-decoration: none;
   color: inherit;
   display: block;
 }
-.h-card {
+.hCard {
   background: #fff;
   border-radius: 12px;
   border: 0.5px solid #e5e4e7;
   overflow: hidden;
   transition: box-shadow 0.15s;
 }
-.h-card:hover {
+.hCard:hover {
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
-.h-card-img {
+.hCardImg {
   width: 100%;
   height: 160px;
   object-fit: cover;
   display: block;
 }
-.h-card-placeholder {
+.hCardPlaceholder {
   width: 100%;
   height: 120px;
   background: linear-gradient(135deg, #f5ebe0, #eddcd2, #e3d5ca);
 }
-.h-card-body {
+.hCardBody {
   padding: 10px 12px 12px;
 }
-.h-card-name {
+.hCardName {
   font-size: 14px;
   font-weight: 500;
   color: #222;
   margin-bottom: 3px;
   line-height: 1.3;
 }
-.h-card-addr {
+.hCardAddr {
   font-size: 11px;
   color: #aaa;
   margin-bottom: 6px;
 }
-.h-card-tags {
+.hCardTags {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
   margin-bottom: 8px;
 }
-.h-tag {
+.hTag {
   font-size: 10px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 10px;
   letter-spacing: 0.2px;
 }
-.h-tag--wifi {
+.hTagWifi {
   background: #FFF3E0;
   color: #E65100;
 }
-.h-tag--quiet {
+.hTagQuiet {
   background: #E8F5E9;
   color: #2E7D32;
 }
-.h-card-footer {
+.hCardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.h-card-rating {
+.hCardRating {
   font-size: 12px;
   font-weight: 600;
   color: #C97B4B;
 }
-.h-card-likes {
+.hCardLikes {
   display: flex;
   align-items: center;
   gap: 3px;
@@ -251,7 +253,7 @@
 }
 
 /* Load More */
-.h-load-more {
+.hLoadMore {
   padding: 10px 32px;
   font-size: 14px;
   font-weight: 500;
@@ -262,22 +264,21 @@
   cursor: pointer;
   transition: all 0.15s;
 }
-.h-load-more:hover {
+.hLoadMore:hover {
   border-color: #C97B4B;
   color: #C97B4B;
 }
-.h-load-more:disabled {
+.hLoadMore:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
-.h-load-more-wrap {
+.hLoadMoreWrap {
   text-align: center;
   margin: 24px 0 40px;
 }
 
-/* 5. Floating Action Button */
-.h-fab {
+/* Floating Action Button */
+.hFab {
   position: fixed;
   bottom: 24px;
   right: 24px;
@@ -294,13 +295,13 @@
   transition: transform 0.15s, box-shadow 0.15s;
   z-index: 90;
 }
-.h-fab:hover {
+.hFab:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(201,123,75,0.5);
 }
 
 /* Modal */
-.h-modal-backdrop {
+.hModalBackdrop {
   position: fixed;
   inset: 0;
   z-index: 200;
@@ -308,43 +309,43 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  animation: h-fade-in 0.15s;
+  animation: hFadeIn 0.15s;
 }
-.h-modal {
+.hModal {
   background: #fff;
   width: 100%;
   max-width: 480px;
   border-radius: 16px 16px 0 0;
   padding: 20px 20px 32px;
-  animation: h-slide-up 0.25s ease-out;
+  animation: hSlideUp 0.25s ease-out;
   max-height: 85vh;
   overflow-y: auto;
 }
-.h-modal-header {
+.hModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
 }
-.h-modal-title {
+.hModalTitle {
   font-size: 17px;
   font-weight: 600;
   color: #222;
   margin: 0;
 }
-.h-modal-close {
+.hModalClose {
   background: none;
   border: none;
   cursor: pointer;
   padding: 4px;
   display: flex;
 }
-.h-form {
+.hForm {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.h-input {
+.hInput {
   padding: 11px 14px;
   border-radius: 10px;
   border: 1px solid #e5e4e7;
@@ -353,15 +354,15 @@
   transition: border-color 0.15s;
   background: #fafaf9;
 }
-.h-input:focus {
+.hInput:focus {
   border-color: #C97B4B;
   background: #fff;
 }
-.h-form-checks {
+.hFormChecks {
   display: flex;
   gap: 20px;
 }
-.h-check-label {
+.hCheckLabel {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -369,7 +370,7 @@
   color: #555;
   cursor: pointer;
 }
-.h-submit-btn {
+.hSubmitBtn {
   padding: 12px;
   border-radius: 10px;
   border: none;
@@ -381,30 +382,30 @@
   margin-top: 4px;
   transition: background 0.15s;
 }
-.h-submit-btn:hover {
+.hSubmitBtn:hover {
   background: #b56a3d;
 }
 
 /* Loading/Error states */
-.h-status {
+.hStatus {
   text-align: center;
   padding: 60px 0;
   color: #999;
 }
-.h-status--error {
+.hStatusError {
   color: #b00020;
 }
 
-@keyframes h-fade-in {
+@keyframes hFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes h-slide-up {
+@keyframes hSlideUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
 
 /* Mobile: 1-column */
 @media (max-width: 480px) {
-  .h-grid { grid-template-columns: 1fr; }
+  .hGrid { grid-template-columns: 1fr; }
 }

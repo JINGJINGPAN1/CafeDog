@@ -1,12 +1,12 @@
-.pf-page {
+.pfPage {
   min-height: 100vh;
   background: #f7f5f2;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── 1. Navbar ── */
-.pf-nav {
+/* Navbar */
+.pfNav {
   background: #fff;
   border-bottom: 0.5px solid #e5e4e7;
   padding: 14px 32px;
@@ -14,33 +14,29 @@
   align-items: center;
   justify-content: space-between;
 }
-
-.pf-logo { font-size: 18px; font-weight: 500; }
-.pf-logo-cafe { color: #1a1a1a; }
-.pf-logo-dog { color: #C97B4B; }
-
-.pf-back {
+.pfLogo { font-size: 18px; font-weight: 500; }
+.pfLogoCafe { color: #1a1a1a; }
+.pfLogoDog { color: #C97B4B; }
+.pfBack {
   font-size: 13px;
   font-weight: 500;
   color: #C97B4B;
   text-decoration: none;
 }
-.pf-back:hover { text-decoration: underline; }
+.pfBack:hover { text-decoration: underline; }
 
-/* ── 2. Profile header ── */
-.pf-section {
+/* Profile header */
+.pfSection {
   padding: 0 32px 0;
 }
-
-.pf-header {
+.pfHeader {
   display: flex;
   gap: 18px;
   align-items: center;
   padding-top: 28px;
   margin-bottom: 20px;
 }
-
-.pf-avatar {
+.pfAvatar {
   width: 68px;
   height: 68px;
   border-radius: 50%;
@@ -53,26 +49,22 @@
   justify-content: center;
   flex-shrink: 0;
 }
-
-.pf-info {
+.pfInfo {
   flex: 1;
   min-width: 0;
 }
-
-.pf-name-row {
+.pfNameRow {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
-.pf-name {
+.pfName {
   font-size: 18px;
   font-weight: 500;
   color: #1a1a1a;
   margin: 0;
 }
-
-.pf-badge {
+.pfBadge {
   font-size: 11px;
   background: #FDF0E8;
   color: #854F0B;
@@ -82,27 +74,23 @@
   font-weight: 500;
   flex-shrink: 0;
 }
-
-.pf-email {
+.pfEmail {
   font-size: 13px;
   color: #888;
   margin: 2px 0;
 }
-
-.pf-joined {
+.pfJoined {
   font-size: 12px;
   color: #bbb;
   margin: 0 0 6px;
 }
-
-.pf-bio {
+.pfBio {
   font-size: 13px;
   color: #666;
   line-height: 1.5;
   margin: 0;
 }
-
-.pf-edit-btn {
+.pfEditBtn {
   padding: 8px 18px;
   border-radius: 20px;
   border: 0.5px solid #e5e4e7;
@@ -115,13 +103,13 @@
   flex-shrink: 0;
   transition: border-color 0.15s;
 }
-.pf-edit-btn:hover {
+.pfEditBtn:hover {
   border-color: #C97B4B;
   color: #C97B4B;
 }
 
-/* ── 3. Stats row ── */
-.pf-stats {
+/* Stats row */
+.pfStats {
   background: #fff;
   border: 0.5px solid #e5e4e7;
   border-radius: 14px;
@@ -129,8 +117,7 @@
   display: flex;
   overflow: hidden;
 }
-
-.pf-stat {
+.pfStat {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -138,26 +125,23 @@
   padding: 16px 0;
   text-align: center;
 }
-
-.pf-stat--mid {
+.pfStatMid {
   border-left: 0.5px solid #e5e4e7;
   border-right: 0.5px solid #e5e4e7;
 }
-
-.pf-stat-n {
+.pfStatN {
   font-size: 20px;
   font-weight: 500;
   color: #C97B4B;
   margin-bottom: 3px;
 }
-
-.pf-stat-l {
+.pfStatL {
   font-size: 11px;
   color: #888;
 }
 
-/* ── 4. Tab bar ── */
-.pf-tabs {
+/* Tab bar */
+.pfTabs {
   background: #fff;
   border: 0.5px solid #e5e4e7;
   border-radius: 12px;
@@ -165,8 +149,7 @@
   display: flex;
   margin-bottom: 16px;
 }
-
-.pf-tab {
+.pfTab {
   flex: 1;
   padding: 12px 0;
   border: none;
@@ -180,24 +163,23 @@
   text-align: center;
   transition: color 0.15s, background 0.15s;
 }
-.pf-tab:hover { color: #666; }
-
-.pf-tab--on {
+.pfTab:hover { color: #666; }
+.pfTabOn {
   color: #C97B4B;
   border-bottom-color: #C97B4B;
   background: #fffaf6;
 }
 
-/* ── 5. Content grid ── */
-.pf-grid {
+/* Content grid */
+.pfGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   padding-bottom: 32px;
 }
 
-/* Shared card shell */
-.pf-card {
+/* Card shell */
+.pfCard {
   display: flex;
   flex-direction: column;
   text-decoration: none;
@@ -208,24 +190,22 @@
   overflow: hidden;
   transition: border-color 0.15s;
 }
-.pf-card:hover { border-color: #C97B4B; }
+.pfCard:hover { border-color: #C97B4B; }
 
 /* Image area */
-.pf-card-img-wrap {
+.pfCardImgWrap {
   width: 100%;
   height: 140px;
   overflow: hidden;
   flex-shrink: 0;
 }
-
-.pf-card-img {
+.pfCardImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
-
-.pf-card-img-ph {
+.pfCardImgPh {
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #e8d5c4, #c4956a);
@@ -235,28 +215,25 @@
   font-size: 32px;
   opacity: 0.25;
 }
-
-.pf-card-img-ph--alt {
+.pfCardImgPhAlt {
   background: linear-gradient(135deg, #d4e0d4, #7a9b7a);
 }
 
 /* Card body */
-.pf-card-body {
+.pfCardBody {
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 4px;
   flex: 1;
 }
-
-.pf-card-cafe {
+.pfCardCafe {
   font-size: 12px;
   font-weight: 500;
   color: #C97B4B;
   margin-bottom: 4px;
 }
-
-.pf-card-text {
+.pfCardText {
   font-size: 13px;
   line-height: 1.5;
   color: #333;
@@ -267,81 +244,83 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
-.pf-card-foot {
+.pfCardFoot {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
 }
-
-.pf-card-stars {
+.pfCardStars {
   font-size: 12px;
   color: #C97B4B;
   letter-spacing: 1px;
 }
-
-.pf-card-date {
+.pfCardDate {
   font-size: 11px;
   color: #bbb;
 }
 
 /* Cafe card specifics */
-.pf-cafe-name {
+.pfCafeName {
   font-size: 14px;
   font-weight: 500;
   color: #1a1a1a;
   margin-bottom: 2px;
 }
-
-.pf-cafe-addr {
+.pfCafeAddr {
   font-size: 12px;
   color: #aaa;
   margin-bottom: 4px;
 }
-
-.pf-cafe-badges {
+.pfCafeBadges {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
   margin-top: 4px;
 }
-
-.pf-cafe-pill {
+.pfCafePill {
   font-size: 10px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 10px;
   border: 1px solid;
 }
-.pf-cafe-pill--wifi { background: #FDF0E8; color: #854F0B; border-color: #EF9F27; }
-.pf-cafe-pill--quiet { background: #E1F5EE; color: #085041; border-color: #5DCAA5; }
-.pf-cafe-pill--rating { background: #EEEDFE; color: #3C3489; border-color: #7F77DD; letter-spacing: 1px; }
+.pfCafePillWifi { background: #FDF0E8; color: #854F0B; border-color: #EF9F27; }
+.pfCafePillQuiet { background: #E1F5EE; color: #085041; border-color: #5DCAA5; }
+.pfCafePillRating { background: #EEEDFE; color: #3C3489; border-color: #7F77DD; letter-spacing: 1px; }
 
-/* ── Empty state ── */
-.pf-empty {
+/* Empty state */
+.pfEmpty {
   grid-column: 1 / -1;
   text-align: center;
   padding: 48px 0;
 }
-
-.pf-empty-icon {
+.pfEmptyIcon {
   display: block;
   font-size: 32px;
   opacity: 0.3;
   margin-bottom: 8px;
 }
-
-.pf-empty p {
+.pfEmptyText {
   font-size: 14px;
   color: #888;
   margin: 0;
 }
 
-/* ── Responsive ── */
+/* Loading/Error */
+.pfStatus {
+  text-align: center;
+  padding: 120px 0;
+  color: #999;
+}
+.pfStatusError {
+  color: #b00020;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
-  .pf-nav { padding: 14px 16px; }
-  .pf-section { padding: 0 16px; }
-  .pf-header { flex-wrap: wrap; }
-  .pf-grid { grid-template-columns: 1fr; }
+  .pfNav { padding: 14px 16px; }
+  .pfSection { padding: 0 16px; }
+  .pfHeader { flex-wrap: wrap; }
+  .pfGrid { grid-template-columns: 1fr; }
 }
