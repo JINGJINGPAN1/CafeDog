@@ -8,7 +8,7 @@ export default function Register() {
   return (
     <div className={styles.authPage}>
       <div className={styles.authCard}>
-        <div className={styles.authLogo}><span className={styles.authLogoCafe}>cafe</span><span className={styles.authLogoDog}>dog</span></div>
+        <div className={styles.authLogo}>cafedog</div>
         <h1 className={styles.authTitle}>Create account</h1>
         <form className={styles.authForm} onSubmit={onSubmit}>
           <div className={styles.authField}>

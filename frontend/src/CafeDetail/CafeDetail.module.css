@@ -1,7 +1,7 @@
 .cdPage {
   min-height: 100vh;
-  background: #f7f5f2;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #fafafa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   display: flex;
   flex-direction: column;
@@ -11,105 +11,116 @@
 .cdNav {
   position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
-  height: 53px; padding: 0 16px;
-  background: #fff; border-bottom: 0.5px solid #e5e4e7;
+  height: 56px; padding: 0 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   flex-shrink: 0;
 }
 .cdBack {
-  width: 32px; height: 32px; border-radius: 50%; background: #f3f2f0;
+  width: 34px; height: 34px; border-radius: 50%; background: #f5f5f5;
   display: flex; align-items: center; justify-content: center;
   text-decoration: none; flex-shrink: 0;
+  transition: background 0.15s;
 }
+.cdBack:hover { background: #eee; }
 .cdNavTitle {
-  font-size: 15px; font-weight: 500; color: #222;
+  font-size: 15px; font-weight: 600; color: #262626;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   position: absolute; left: 50%; transform: translateX(-50%);
   max-width: 40%;
 }
-.cdNavRight { display: flex; gap: 6px; flex-shrink: 0; }
+.cdNavRight { display: flex; gap: 8px; flex-shrink: 0; }
 .cdNavRightSpacer { width: 60px; }
 .cdBtnEdit {
-  font-size: 12px; padding: 5px 14px; border-radius: 14px;
-  border: 1px solid #C97B4B; background: none; color: #C97B4B;
-  cursor: pointer; font-weight: 500;
+  font-size: 13px; padding: 6px 16px; border-radius: 16px;
+  border: 1.5px solid #e07a5f; background: none; color: #e07a5f;
+  cursor: pointer; font-weight: 600; font-family: inherit;
+  transition: all 0.15s;
 }
+.cdBtnEdit:hover { background: #e07a5f; color: #fff; }
 .cdBtnDel {
-  font-size: 12px; padding: 5px 14px; border-radius: 14px;
-  border: 1px solid #dc3545; background: none; color: #dc3545;
-  cursor: pointer; font-weight: 500;
+  font-size: 13px; padding: 6px 16px; border-radius: 16px;
+  border: 1.5px solid #e74c3c; background: none; color: #e74c3c;
+  cursor: pointer; font-weight: 600; font-family: inherit;
+  transition: all 0.15s;
 }
+.cdBtnDel:hover { background: #e74c3c; color: #fff; }
 
 /* Two-column body */
 .cdBody {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: calc(100vh - 53px);
+  height: calc(100vh - 56px);
 }
 
 /* Left */
 .cdLeft {
-  overflow-y: auto; border-right: 0.5px solid #e5e4e7;
-  background: #f7f5f2;
+  overflow-y: auto; border-right: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fafafa;
 }
-.cdLeftPad { padding: 20px 24px; }
+.cdLeftPad { padding: 24px; }
 
 /* Hero */
 .cdHero { position: relative; width: 100%; }
-.cdHeroImg { width: 100%; height: 280px; object-fit: cover; display: block; }
+.cdHeroImg { width: 100%; height: 300px; object-fit: cover; display: block; }
 .cdHeroPh {
-  width: 100%; height: 280px;
-  background: linear-gradient(160deg, #F5C4B3, #FAEEDA, #E1F5EE);
+  width: 100%; height: 300px;
+  background: linear-gradient(160deg, #f5ebe0 0%, #eddcd2 40%, #e3d5ca 100%);
   display: flex; align-items: center; justify-content: center;
 }
-.cdHeroEmoji { font-size: 72px; opacity: 0.2; }
+.cdHeroEmoji { font-size: 72px; opacity: 0.15; }
 .cdDots {
-  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 5px; align-items: center;
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; align-items: center;
 }
-.cdDot { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.45); }
-.cdDotOn { width: 18px; background: #fff; }
+.cdDot { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.4); }
+.cdDotOn { width: 20px; background: #fff; }
 
 /* Info panel */
-.cdName { font-size: 22px; font-weight: 500; color: #222; margin-bottom: 8px; }
-.cdAddr { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #999; margin-bottom: 12px; }
+.cdName { font-size: 24px; font-weight: 700; color: #262626; margin-bottom: 10px; }
+.cdAddr { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #999; margin-bottom: 14px; }
 .cdPin {
   width: 8px; height: 8px; border-radius: 50%;
-  background: #C97B4B; flex-shrink: 0;
+  background: #e07a5f; flex-shrink: 0;
 }
 
-.cdBadges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.cdBadges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
 .cdBadge {
-  font-size: 11px; font-weight: 600; padding: 3px 10px;
-  border-radius: 12px; border: 1px solid;
+  font-size: 12px; font-weight: 600; padding: 5px 14px;
+  border-radius: 14px; border: none;
 }
-.cdBadgeWifi { background: #FDF0E8; color: #854F0B; border-color: #EF9F27; }
-.cdBadgeQuiet { background: #E1F5EE; color: #085041; border-color: #5DCAA5; }
-.cdBadgeRating { background: #EEEDFE; color: #3C3489; border-color: #7F77DD; }
+.cdBadgeWifi { background: #fff3e0; color: #e65100; }
+.cdBadgeQuiet { background: #e8f5e9; color: #2e7d32; }
+.cdBadgeRating { background: #f3e8ff; color: #7c3aed; }
 
-.cdHr { border: none; border-top: 0.5px solid #eee; margin: 14px 0; height: 0; }
+.cdHr { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; height: 0; }
 
 .cdStats { display: grid; grid-template-columns: 1fr 1fr 1fr; text-align: center; }
-.cdStat { display: flex; flex-direction: column; gap: 2px; }
-.cdStatN { font-size: 16px; font-weight: 600; color: #C97B4B; }
-.cdStatL { font-size: 11px; color: #aaa; }
+.cdStat { display: flex; flex-direction: column; gap: 3px; }
+.cdStatN { font-size: 18px; font-weight: 700; color: #e07a5f; }
+.cdStatL { font-size: 12px; color: #bbb; }
 
 .cdMap {
-  height: 120px; background: #eee; border-radius: 10px;
+  height: 120px; background: #f5f5f5; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: #bbb; margin-top: 4px;
+  font-size: 14px; color: #ccc; margin-top: 4px;
 }
 
 /* Edit form */
-.cdEform { display: flex; flex-direction: column; gap: 10px; }
-.cdEformTitle { font-size: 17px; font-weight: 600; color: #222; margin: 0 0 4px; }
+.cdEform { display: flex; flex-direction: column; gap: 12px; }
+.cdEformTitle { font-size: 18px; font-weight: 700; color: #262626; margin: 0 0 4px; }
 .cdEformRow { display: flex; gap: 16px; }
 .cdEformActions { display: flex; gap: 8px; }
-.cdCk { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #555; cursor: pointer; }
+.cdCk { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #555; cursor: pointer; }
 .cdCancel {
-  padding: 10px 20px; border-radius: 10px; border: 1px solid #ddd;
+  padding: 11px 22px; border-radius: 14px; border: 1.5px solid #efefef;
   background: #fff; color: #666; cursor: pointer; font-size: 14px;
+  font-family: inherit; transition: all 0.15s;
 }
+.cdCancel:hover { border-color: #ddd; }
 
 /* Right column */
 .cdRight {
@@ -118,135 +129,139 @@
 
 .cdRh {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 20px; border-bottom: 0.5px solid #e5e4e7; flex-shrink: 0;
+  padding: 18px 24px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); flex-shrink: 0;
 }
-.cdRhTitle { font-size: 15px; font-weight: 500; color: #222; }
-.cdRhCount { font-size: 12px; color: #aaa; }
+.cdRhTitle { font-size: 16px; font-weight: 600; color: #262626; }
+.cdRhCount { font-size: 13px; color: #bbb; }
 
 .cdReviews {
-  flex: 1; overflow-y: auto; padding: 12px 20px;
-  display: flex; flex-direction: column; gap: 12px;
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+  display: flex; flex-direction: column; gap: 14px;
 }
 
 .cdEmpty {
   text-align: center;
-  color: #bbb;
-  padding: 40px 0;
-  font-size: 13px;
+  color: #ccc;
+  padding: 48px 0;
+  font-size: 14px;
 }
 
 /* Review card */
 .cdRv {
-  border: 0.5px solid #e5e4e7; border-radius: 12px;
-  padding: 14px; background: #fafafa;
+  border-radius: 16px;
+  padding: 16px; background: #fafafa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
-.cdRvHead { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.cdRvHead { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
 .cdRvLeft { display: flex; gap: 10px; align-items: center; }
 .cdAv {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 34px; height: 34px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 700; flex-shrink: 0; letter-spacing: 0.3px;
 }
-.cdRvAuthor { font-size: 13px; font-weight: 500; color: #222; }
-.cdRvAuthorLink { color: #222; text-decoration: none; }
-.cdRvAuthorLink:hover { color: #C97B4B; }
-.cdRvTime { font-size: 11px; color: #bbb; margin-top: 1px; }
-.cdRvStars { font-size: 13px; color: #EF9F27; flex-shrink: 0; letter-spacing: 1px; }
+.cdRvAuthor { font-size: 14px; font-weight: 600; color: #262626; }
+.cdRvAuthorLink { color: #262626; text-decoration: none; }
+.cdRvAuthorLink:hover { color: #e07a5f; }
+.cdRvTime { font-size: 11px; color: #ccc; margin-top: 1px; }
+.cdRvStars { font-size: 14px; color: #f59e0b; flex-shrink: 0; letter-spacing: 1px; }
 
-.cdRvText { font-size: 13px; line-height: 1.6; color: #333; margin: 0 0 6px; white-space: pre-wrap; }
+.cdRvText { font-size: 14px; line-height: 1.65; color: #333; margin: 0 0 8px; white-space: pre-wrap; }
 .cdRvPhoto {
-  width: 100%; height: 160px; object-fit: cover;
-  border-radius: 8px; margin: 8px 0; display: block;
+  width: 100%; height: 180px; object-fit: cover;
+  border-radius: 12px; margin: 10px 0; display: block;
 }
 .cdRvFoot { display: flex; justify-content: flex-end; gap: 14px; align-items: center; }
 .cdRvAct { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #ccc; }
-.cdRvReply { color: #bbb; font-size: 12px; }
+.cdRvReply { color: #ccc; font-size: 12px; }
 
 .cdMore {
-  padding: 7px 24px; font-size: 13px; font-weight: 500;
-  background: #fff; border: 1px solid #e5e4e7; border-radius: 16px;
-  color: #888; cursor: pointer; transition: all 0.15s;
+  padding: 8px 28px; font-size: 14px; font-weight: 600;
+  background: #fff; border: 1.5px solid #efefef; border-radius: 20px;
+  color: #888; cursor: pointer; transition: all 0.2s; font-family: inherit;
 }
-.cdMore:hover { border-color: #C97B4B; color: #C97B4B; }
+.cdMore:hover { border-color: #e07a5f; color: #e07a5f; }
 .cdMore:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .cdMoreWrap {
   text-align: center;
-  padding: 12px 0;
+  padding: 14px 0;
 }
 
 /* Review form */
 .cdFform {
-  border-top: 0.5px solid #eee; padding-top: 16px; margin-top: 8px;
+  border-top: 1px solid #f0f0f0; padding-top: 18px; margin-top: 10px;
 }
-.cdFformTitle { font-size: 14px; font-weight: 500; color: #222; margin: 0 0 10px; }
-.cdFformInner { display: flex; flex-direction: column; gap: 8px; }
-.cdFformPosting { font-size: 13px; color: #888; }
+.cdFformTitle { font-size: 15px; font-weight: 600; color: #262626; margin: 0 0 12px; }
+.cdFformInner { display: flex; flex-direction: column; gap: 10px; }
+.cdFformPosting { font-size: 13px; color: #999; }
 
 /* Shared inputs */
 .cdInp {
-  padding: 10px 14px; border-radius: 10px; border: 1px solid #e5e4e7;
-  font-size: 13px; outline: none; background: #fafaf9; color: #222;
-  transition: border-color 0.15s; font-family: inherit;
+  padding: 12px 16px; border-radius: 14px; border: 1.5px solid #efefef;
+  font-size: 14px; outline: none; background: #fafafa; color: #262626;
+  transition: border-color 0.2s, box-shadow 0.2s; font-family: inherit;
 }
 .cdInp::placeholder { color: #bbb; }
-.cdInp:focus { border-color: #C97B4B; background: #fff; }
-.cdTa { resize: vertical; min-height: 60px; line-height: 1.5; color: #222; }
+.cdInp:focus { border-color: #e07a5f; background: #fff; box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1); }
+.cdTa { resize: vertical; min-height: 70px; line-height: 1.55; color: #262626; }
 
 /* Star picker */
 .cdStarRow { display: flex; align-items: center; gap: 10px; }
-.cdStarLabel { font-size: 13px; color: #888; }
+.cdStarLabel { font-size: 14px; color: #999; }
 .cdStars { display: flex; gap: 4px; }
 .cdStar {
-  font-size: 24px; cursor: pointer; background: none; border: none;
-  padding: 0; line-height: 1; transition: transform 0.1s;
+  font-size: 26px; cursor: pointer; background: none; border: none;
+  padding: 0; line-height: 1; transition: transform 0.15s;
 }
-.cdStar:hover { transform: scale(1.2); }
-.cdStarOn { color: #EF9F27; }
-.cdStarOff { color: #ddd; }
+.cdStar:hover { transform: scale(1.25); }
+.cdStarOn { color: #f59e0b; }
+.cdStarOff { color: #e5e5e5; }
 
 .cdPostBtn {
-  padding: 11px; border-radius: 20px; border: none;
-  background: #C97B4B; color: #fff; font-size: 14px; font-weight: 600;
-  cursor: pointer; width: 100%; transition: background 0.15s;
+  padding: 13px; border-radius: 20px; border: none;
+  background: linear-gradient(135deg, #e07a5f, #c96a4f); color: #fff;
+  font-size: 15px; font-weight: 700;
+  cursor: pointer; width: 100%;
+  transition: transform 0.15s, box-shadow 0.15s; font-family: inherit;
 }
-.cdPostBtn:hover { background: #b56a3d; }
+.cdPostBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35); }
 .cdPostBtnFlex { flex: 1; }
 
 /* Bottom bar */
 .cdBar {
-  flex-shrink: 0; padding: 12px 20px;
-  border-top: 0.5px solid #e5e4e7; background: #fff;
+  flex-shrink: 0; padding: 14px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06); background: #fff;
   position: sticky; bottom: 0;
 }
 .cdBarInputRow {
-  display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
+  display: flex; gap: 10px; align-items: center; margin-bottom: 10px;
 }
 .cdBarPill {
-  flex: 1; padding: 9px 18px; border-radius: 20px;
-  background: #FDF0E8; color: #854F0B;
-  border: 0.5px solid #EF9F27;
-  font-size: 13px; font-family: inherit;
+  flex: 1; padding: 10px 20px; border-radius: 24px;
+  background: #fef7f4; color: #e07a5f;
+  border: 1.5px solid rgba(224, 122, 95, 0.2);
+  font-size: 14px; font-family: inherit; font-weight: 500;
   cursor: pointer; text-align: left;
-  transition: background 0.15s;
+  transition: all 0.15s;
 }
-.cdBarPill:hover { background: #fbe5d3; }
+.cdBarPill:hover { background: #fef0ea; border-color: rgba(224, 122, 95, 0.35); }
 .cdBarActions {
-  display: flex; gap: 18px; align-items: center;
+  display: flex; gap: 20px; align-items: center;
 }
 .cdBarAct {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 12px; color: #aaa;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #bbb;
 }
 
 /* Loading/Error states */
 .cdStatus {
   text-align: center;
   padding: 120px 0;
-  color: #999;
+  color: #bbb;
+  font-size: 15px;
 }
 .cdStatusError {
-  color: #b00020;
+  color: #e74c3c;
 }
 
 /* Responsive: single column on mobile */

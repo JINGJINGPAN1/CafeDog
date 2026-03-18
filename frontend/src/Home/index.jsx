@@ -39,8 +39,9 @@ export default function Home() {
 
   return (
     <div className={styles.hPage}>
+      <HomeNavbar isLoggedIn={isLoggedIn} meId={me?._id} initials={initials} logout={logout} />
+
       <div className={styles.hContainer}>
-        <HomeNavbar isLoggedIn={isLoggedIn} meId={me?._id} initials={initials} logout={logout} />
         <HomeTabs categories={categories} activeTab={activeTab} onTabChange={setActiveTab} />
         <HomeFilters
           searchTerm={searchTerm}

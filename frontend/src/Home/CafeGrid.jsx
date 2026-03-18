@@ -2,26 +2,12 @@ import CafeCard from './CafeCard';
 import styles from './Home.module.css';
 
 export default function CafeGrid({ cafes, total, loadingMore, onLoadMore }) {
-  const leftCol = [];
-  const rightCol = [];
-  cafes.forEach((cafe, i) => {
-    if (i % 2 === 0) leftCol.push(cafe);
-    else rightCol.push(cafe);
-  });
-
   return (
     <>
       <div className={styles.hGrid}>
-        <div className={styles.hCol}>
-          {leftCol.map((cafe) => (
-            <CafeCard key={cafe._id} cafe={cafe} />
-          ))}
-        </div>
-        <div className={styles.hCol}>
-          {rightCol.map((cafe) => (
-            <CafeCard key={cafe._id} cafe={cafe} />
-          ))}
-        </div>
+        {cafes.map((cafe) => (
+          <CafeCard key={cafe._id} cafe={cafe} />
+        ))}
       </div>
 
       {cafes.length < total ? (
