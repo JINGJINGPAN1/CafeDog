@@ -1,5 +1,6 @@
 const express = require('express');
 const { getDb, ObjectId } = require('../db');
+const { requireAuth } = require('../middleware/requireAuth');
 
 const router = express.Router();
 
@@ -49,7 +50,7 @@ router.get('/cafes/:id', async (req, res) => {
   }
 });
 
-router.delete('/cafes/:id', async (req, res) => {
+router.delete('/cafes/:id', requireAuth, async (req, res) => {
   try {
     const cafeId = req.params.id;
     if (!cafeId || !ObjectId.isValid(String(cafeId))) {
@@ -58,12 +59,16 @@ router.delete('/cafes/:id', async (req, res) => {
 
     const db = await getDb();
     const cafesCollection = db.collection('cafes');
+    const cafe = await cafesCollection.findOne({ _id: new ObjectId(String(cafeId)) });
 
-    const result = await cafesCollection.deleteOne({ _id: new ObjectId(String(cafeId)) });
-    if (result.deletedCount === 0) {
+    if (!cafe) {
       return res.status(404).json({ error: 'Cafe not found or already deleted.' });
     }
+    if (String(cafe.createdBy) !== String(req.session.userId)) {
+      return res.status(403).json({ error: 'You can only delete your own cafes.' });
+    }
 
+    await cafesCollection.deleteOne({ _id: new ObjectId(String(cafeId)) });
     res.status(200).json({ message: 'Cafe successfully deleted!' });
   } catch (error) {
     console.error('Error deleting cafe:', error);
@@ -72,11 +77,21 @@ router.delete('/cafes/:id', async (req, res) => {
 });
 
 
-router.put('/cafes/:id', async (req, res) => {
+router.put('/cafes/:id', requireAuth, async (req, res) => {
   try {
     const cafeId = req.params.id;
     if (!cafeId || !ObjectId.isValid(String(cafeId))) {
       return res.status(400).json({ error: 'Invalid cafe ID format.' });
+    }
+
+    const db = await getDb();
+    const cafe = await db.collection('cafes').findOne({ _id: new ObjectId(String(cafeId)) });
+
+    if (!cafe) {
+      return res.status(404).json({ error: 'Cafe not found.' });
+    }
+    if (String(cafe.createdBy) !== String(req.session.userId)) {
+      return res.status(403).json({ error: 'You can only edit your own cafes.' });
     }
 
     const { name, address, has_good_wifi, is_quiet, rating, cover_image } = req.body || {};
@@ -93,20 +108,15 @@ router.put('/cafes/:id', async (req, res) => {
       cover_image: cover_image ? String(cover_image) : '',
     };
 
-    const db = await getDb();
-    const result = await db.collection('cafes').updateOne(
+    await db.collection('cafes').updateOne(
       { _id: new ObjectId(String(cafeId)) },
-      { $set: updates }
+      { $set: updates },
     );
-
-    if (result.matchedCount == 0) {
-      return res.status(404).json({ error: 'Cafe not found.' });
-    }
 
     res.json({ message: 'Cafe updated successfully.' });
   } catch (error) {
-    console.error('Error deleting cafe:', error);
-    res.status(500).json({ error: 'Server error during deletion.' });
+    console.error('Error updating cafe:', error);
+    res.status(500).json({ error: 'Failed to update cafe.' });
   }
 });
 
@@ -117,6 +127,7 @@ router.post('/cafes', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const sessionUserId = req.session && req.session.userId;
     const newCafe = {
       name: String(name),
       address: String(address),
@@ -124,6 +135,9 @@ router.post('/cafes', async (req, res) => {
       is_quiet: Boolean(is_quiet),
       rating: rating != null && rating !== '' ? Number(rating) : null,
       cover_image: cover_image ? String(cover_image) : '',
+      createdBy: sessionUserId && ObjectId.isValid(String(sessionUserId))
+        ? new ObjectId(String(sessionUserId))
+        : null,
     };
 
     const db = await getDb();

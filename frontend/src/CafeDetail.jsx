@@ -154,10 +154,12 @@ function CafeDetail() {
       {/* Top Navigation & Action Bar */}
       <div className="topBar">
         <Link to="/" className="backLink">&larr; Back to Home</Link>
-        <div>
-          <button onClick={startEditing} className="primaryButton">Edit Cafe</button>
-          <button onClick={handleDelete} className="dangerButton">Delete Cafe</button>
-        </div>
+        {me && cafe.createdBy && String(me._id) === String(cafe.createdBy) ? (
+          <div>
+            <button onClick={startEditing} className="primaryButton">Edit Cafe</button>
+            <button onClick={handleDelete} className="dangerButton">Delete Cafe</button>
+          </div>
+        ) : null}
       </div>
 
       {/* Cafe Details Card */}
@@ -281,7 +283,14 @@ function CafeDetail() {
               No posts yet. Be the first to check in!
             </p>
           ) : (
-            posts.map((post) => <PostCard key={post._id} post={post} />)
+            posts.map((post) => (
+              <PostCard
+                key={post._id}
+                post={post}
+                onUpdate={reloadPosts}
+                onDelete={reloadPosts}
+              />
+            ))
           )}
         </div>
       </div>

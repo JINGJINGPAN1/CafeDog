@@ -1,4 +1,5 @@
 const express = require('express');
+const { requireAuth } = require('../middleware/requireAuth');
 const { getDb, ObjectId } = require('../db');
 
 const router = express.Router();
@@ -106,6 +107,74 @@ router.get('/posts', async (req, res) => {
   req.params.id = String(cafeId);
   return listPostsByCafe(req, res);
 });
+
+router.delete('/posts/:postId', requireAuth, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    if (!ObjectId.isValid(String(postId))) {
+      return res.status(400).json({ error: 'Invalid post ID.' });
+    }
+
+    const db = await getDb();
+    const post = await db.collection('posts').findOne({ _id: new ObjectId(String(postId)) });
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found.' });
+    }
+    if (String(post.authorId) !== String(req.session.userId)) {
+      return res.status(403).json({ error: 'You can only delete your own posts.' });
+    }
+
+    await db.collection('posts').deleteOne({ _id: new ObjectId(String(postId)) });
+    res.json({ message: 'Post deleted.' });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ error: 'Failed to delete post.' });
+  }
+});
+
+
+router.put('/posts/:postId', requireAuth, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    if (!ObjectId.isValid(String(postId))) {
+      return res.status(400).json({ error: 'Invalid post ID.' });
+    }
+
+    const db = await getDb();
+    const post = await db.collection('posts').findOne({ _id: new ObjectId(String(postId)) });
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found.' });
+    }
+    if (String(post.authorId) !== String(req.session.userId)) {
+      return res.status(403).json({ error: 'You can only edit your own posts.' });
+    }
+
+    const { text, photoUrl, rating } = req.body || {};
+    if (!text) {
+      return res.status(400).json({ error: 'Text is required.' });
+    }
+
+    const updates = {
+      text: String(text),
+      photoUrl: photoUrl != null && photoUrl !== '' ? String(photoUrl) : '',
+      rating: rating != null && rating !== '' ? Number(rating) : post.rating,
+      updatedAt: new Date(),
+    };
+
+    await db.collection('posts').updateOne(
+      { _id: new ObjectId(String(postId)) },
+      { $set: updates }
+    );
+
+    res.json({ message: 'Post updated.' });
+  } catch (error) {
+    console.error('Error updating post:', error);
+    res.status(500).json({ error: 'Failed to update post.' });
+  }
+});
+
 
 // Deprecated aliases
 router.post('/reviews', createPost);

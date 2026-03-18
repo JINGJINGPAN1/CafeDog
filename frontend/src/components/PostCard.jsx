@@ -3,7 +3,49 @@ import LikeButton from './LikeButton';
 import CommentSection from './CommentSection';
 import './PostCard.css';
 
-export default function PostCard({ post }) {
+import { useState } from 'react';
+import { useAuth } from '../auth/useAuth';
+import { apiFetch } from '../lib/api';
+
+export default function PostCard({ post, onUpdate, onDelete }) {
+
+  const { me } = useAuth();
+  const isOwner = me && post.authorId && String(me._id) === String(post.authorId);
+
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState(post.text);
+  const [editPhotoUrl, setEditPhotoUrl] = useState(post.photoUrl || '');
+  const [editRating, setEditRating] = useState(String(post.rating || 5));
+  const [saving, setSaving] = useState(false);
+
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await apiFetch(`/api/posts/${post._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: editText, photoUrl: editPhotoUrl, rating: editRating }),
+      });
+      if (onUpdate) onUpdate();
+      setEditing(false);
+    } catch (err) {
+      alert('Error updating post: ' + err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this post?')) return;
+    try {
+      await apiFetch(`/api/posts/${post._id}`, { method: 'DELETE' });
+      if (onDelete) onDelete();
+    } catch (err) {
+      alert('Error deleting post: ' + err.message);
+    }
+  };
+
   return (
     <div className="postCard">
       <div className="postHeader">
@@ -11,11 +53,49 @@ export default function PostCard({ post }) {
         <span className="postRating">{'⭐️'.repeat(Number(post.rating) || 0)}</span>
       </div>
 
-      <p className="postText">{post.text}</p>
-
-      {post.photoUrl ? (
-        <img className="postPhoto" src={post.photoUrl} alt="Post attachment" />
-      ) : null}
+      {editing ? (
+        <div className="postEditForm">
+          <textarea
+            className="textarea"
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            rows={3}
+            required
+          />
+          <input
+            className="input"
+            value={editPhotoUrl}
+            onChange={(e) => setEditPhotoUrl(e.target.value)}
+            placeholder="Photo URL (optional)"
+          />
+          <select
+            className="select"
+            value={editRating}
+            onChange={(e) => setEditRating(e.target.value)}
+          >
+            <option value="5">⭐️⭐️⭐️⭐️⭐️ (5)</option>
+            <option value="4">⭐️⭐️⭐️⭐️ (4)</option>
+            <option value="3">⭐️⭐️⭐️ (3)</option>
+            <option value="2">⭐️⭐️ (2)</option>
+            <option value="1">⭐️ (1)</option>
+          </select>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button type="button" className="primaryButton" onClick={handleSave} disabled={saving}>
+              {saving ? 'Saving...' : 'Save'}
+            </button>
+            <button type="button" className="dangerButton" onClick={() => setEditing(false)} disabled={saving}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <p className="postText">{post.text}</p>
+          {post.photoUrl ? (
+            <img className="postPhoto" src={post.photoUrl} alt="Post attachment" />
+          ) : null}
+        </>
+      )}
 
       <small className="postMeta">
         Posted on: {new Date(post.createdAt || post.createAt).toLocaleDateString()}
@@ -23,6 +103,16 @@ export default function PostCard({ post }) {
 
       <div className="postActions">
         <LikeButton postId={post._id} />
+        {isOwner && !editing ? (
+          <>
+            <button type="button" className="linkButton" onClick={() => setEditing(true)}>
+              Edit
+            </button>
+            <button type="button" className="linkButton danger" onClick={handleDelete}>
+              Delete
+            </button>
+          </>
+        ) : null}
       </div>
 
       <CommentSection postId={post._id} />
@@ -34,6 +124,7 @@ PostCard.propTypes = {
   post: PropTypes.shape({
     _id: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
     author: PropTypes.string.isRequired,
+    authorId: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     text: PropTypes.string.isRequired,
     rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     photoUrl: PropTypes.string,
@@ -44,4 +135,6 @@ PostCard.propTypes = {
     ]),
     createAt: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
   }).isRequired,
+  onUpdate: PropTypes.func,
+  onDelete: PropTypes.func,
 };
