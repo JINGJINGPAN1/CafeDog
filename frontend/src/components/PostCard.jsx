@@ -7,10 +7,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { apiFetch } from '../lib/api';
+import { useToast } from '../toast/useToast';
 
 export default function PostCard({ post, onUpdate, onDelete }) {
 
   const { me } = useAuth();
+  const toast = useToast();
   const isOwner = me && post.authorId && String(me._id) === String(post.authorId);
 
   const [editing, setEditing] = useState(false);
@@ -31,19 +33,20 @@ export default function PostCard({ post, onUpdate, onDelete }) {
       if (onUpdate) onUpdate();
       setEditing(false);
     } catch (err) {
-      alert('Error updating post: ' + err.message);
+      toast.error('Error updating post: ' + err.message);
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Delete this post?')) return;
+    const confirmed = await toast.confirm('Delete this post?', 'Delete Post');
+    if (!confirmed) return;
     try {
       await apiFetch(`/api/posts/${post._id}`, { method: 'DELETE' });
       if (onDelete) onDelete();
     } catch (err) {
-      alert('Error deleting post: ' + err.message);
+      toast.error('Error deleting post: ' + err.message);
     }
   };
 

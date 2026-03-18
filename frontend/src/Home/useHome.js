@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../auth/useAuth';
+import { useToast } from '../toast/useToast';
 
 const CAFES_PER_PAGE = 12;
 const CATEGORIES = ['discover', 'wifi spots', 'quiet study', 'new places', 'top rated'];
 
 export default function useHome() {
   const { me, isLoggedIn, logout } = useAuth();
+  const toast = useToast();
 
   const [cafes, setCafes] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -95,7 +97,7 @@ export default function useHome() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.address) {
-      alert('Name and address are required!');
+      toast.error('Name and address are required!');
       return;
     }
     try {
@@ -106,12 +108,12 @@ export default function useHome() {
         body: JSON.stringify({ ...formData, rating: Number(formData.rating) }),
       });
       if (!response.ok) throw new Error('Failed to save, backend returned an error');
-      alert('Cafe successfully published!');
+      toast.success('Cafe successfully published!');
       setFormData({ name: '', address: '', has_good_wifi: false, is_quiet: false, rating: '', cover_image: '' });
       setShowForm(false);
       fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
     } catch (err) {
-      alert('Error submitting: ' + err.message);
+      toast.error('Error submitting: ' + err.message);
     }
   };
 

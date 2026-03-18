@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../lib/api';
 import { useAuth } from '../auth/useAuth';
+import { useToast } from '../toast/useToast';
 
 const POSTS_PER_PAGE = 10;
 
@@ -9,6 +10,7 @@ export default function useCafeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { me, isLoggedIn } = useAuth();
+  const toast = useToast();
   const formRef = useRef(null);
   const reviewTextRef = useRef(null);
 
@@ -116,7 +118,7 @@ export default function useCafeDetail() {
       reloadPosts();
     } catch (err) {
       console.error(err);
-      alert('Error creating post: ' + err.message);
+      toast.error('Error creating post: ' + err.message);
     }
   };
 
@@ -126,17 +128,18 @@ export default function useCafeDetail() {
 
   // --- Delete cafe ---
   const handleDelete = async () => {
-    const isConfirmed = window.confirm(
+    const isConfirmed = await toast.confirm(
       'Are you sure you want to delete this cafe? This action cannot be undone.',
+      'Delete Cafe',
     );
     if (!isConfirmed) return;
 
     try {
       await apiFetch(`/api/cafes/${id}`, { method: 'DELETE' });
-      alert('Cafe deleted successfully!');
+      toast.success('Cafe deleted successfully!');
       navigate('/');
     } catch (err) {
-      alert('Error deleting: ' + err.message);
+      toast.error('Error deleting: ' + err.message);
     }
   };
 
@@ -168,7 +171,7 @@ export default function useCafeDetail() {
       setCafe((prev) => ({ ...prev, ...editData }));
       setIsEditing(false);
     } catch (err) {
-      alert('Error updating cafe: ' + err.message);
+      toast.error('Error updating cafe: ' + err.message);
     }
   };
 
