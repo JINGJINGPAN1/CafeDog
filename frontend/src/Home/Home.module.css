@@ -7,6 +7,13 @@
   padding-bottom: 80px;
 }
 
+/* Global Container */
+.hContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
 /* Navbar */
 .hNavbar {
   position: sticky;
@@ -15,16 +22,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  padding: 0 16px;
+  height: 56px;
   background: #f7f5f2;
   border-bottom: 0.5px solid #e5e4e7;
 }
 .hLogo {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   letter-spacing: -0.5px;
-  color: #222;
+  color: #374151;
   text-decoration: none;
   flex-shrink: 0;
 }
@@ -77,7 +83,6 @@
   gap: 0;
   overflow-x: auto;
   background: #f7f5f2;
-  padding: 0 16px;
   border-bottom: 0.5px solid #e5e4e7;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -85,10 +90,10 @@
 .hTabs::-webkit-scrollbar { display: none; }
 .hTab {
   flex-shrink: 0;
-  padding: 12px 16px;
-  font-size: 13px;
+  padding: 12px 18px;
+  font-size: 16px;
   font-weight: 500;
-  color: #999;
+  color: #4b5563;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
@@ -99,16 +104,19 @@
 }
 .hTabActive {
   color: #C97B4B;
+  font-weight: 700;
   border-bottom-color: #C97B4B;
 }
 
-/* Filter Row */
+/* [2] Whitespace — more breathing room below filters */
 .hFilters {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px 0;
+  padding-top: 16px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
+  max-width: 600px;
 }
 .hFilterSearch {
   display: flex;
@@ -117,9 +125,13 @@
   background: #fff;
   border: 1px solid #e5e4e7;
   border-radius: 20px;
-  padding: 7px 14px;
+  padding: 9px 14px;
   flex: 1;
   min-width: 140px;
+  transition: border-color 0.15s;
+}
+.hFilterSearch:focus-within {
+  border-color: #C97B4B;
 }
 .hFilterInput {
   border: none;
@@ -131,6 +143,8 @@
 }
 .hFilterInput::placeholder { color: #bbb; }
 .hSearchIcon { flex-shrink: 0; }
+
+/* [4] Affordances — inverted active filter pills */
 .hPill {
   padding: 7px 14px;
   border-radius: 20px;
@@ -143,17 +157,21 @@
   font-weight: 500;
   transition: all 0.15s;
 }
-.hPillActive {
-  background: #FDF0E8;
+.hPill:hover {
   border-color: #C97B4B;
   color: #C97B4B;
 }
+.hPillActive {
+  background: #C97B4B;
+  border-color: #C97B4B;
+  color: #fff;
+}
 
-/* Result Count */
+/* [1] Hierarchy — darker result count text */
 .hCount {
-  padding: 8px 16px 0;
+  padding-top: 8px;
   font-size: 13px;
-  color: #aaa;
+  color: #777;
   margin: 0;
 }
 
@@ -174,14 +192,14 @@
 .hGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 12px 16px 0;
+  gap: 14px;
+  padding-top: 14px;
   align-items: start;
 }
 .hCol {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 /* Cafe Card */
@@ -195,42 +213,62 @@
   border-radius: 12px;
   border: 0.5px solid #e5e4e7;
   overflow: hidden;
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.2s, transform 0.2s;
 }
 .hCard:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
 }
+
+/* [3] Consistency — unified image proportions via aspect-ratio */
 .hCardImg {
   width: 100%;
-  height: 160px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
 }
+
+/* [3] Consistency — placeholder with coffee icon instead of blank block */
 .hCardPlaceholder {
   width: 100%;
-  height: 120px;
+  aspect-ratio: 4 / 3;
   background: linear-gradient(135deg, #f5ebe0, #eddcd2, #e3d5ca);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: #c4a882;
+  user-select: none;
 }
+
+/* [2] Whitespace — more internal card padding & spacing */
 .hCardBody {
-  padding: 10px 12px 12px;
+  padding: 14px 14px 16px;
 }
+
+/* [1] Hierarchy — bolder, larger cafe name + [3] consistent casing */
 .hCardName {
-  font-size: 14px;
-  font-weight: 500;
-  color: #222;
-  margin-bottom: 3px;
-  line-height: 1.3;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+  line-height: 1.35;
+  text-transform: capitalize;
 }
+
+/* [1] Hierarchy — darker address for readability */
 .hCardAddr {
-  font-size: 11px;
-  color: #aaa;
-  margin-bottom: 6px;
+  font-size: 11.5px;
+  color: #777;
+  margin-bottom: 10px;
+  line-height: 1.4;
 }
+
 .hCardTags {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 .hTag {
   font-size: 10px;
@@ -247,22 +285,40 @@
   background: #E8F5E9;
   color: #2E7D32;
 }
+
+/* [2] Whitespace — top border separating footer from content */
 .hCardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 10px;
+  border-top: 0.5px solid #f0eeeb;
 }
 .hCardRating {
   font-size: 12px;
   font-weight: 600;
   color: #C97B4B;
 }
+
+/* [4] Affordances — visible heart with hover state */
 .hCardLikes {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   font-size: 11px;
-  color: #ccc;
+  color: #999;
+  transition: color 0.15s;
+}
+.hCardLikes svg {
+  stroke: #999;
+  transition: stroke 0.15s, transform 0.15s;
+}
+.hCard:hover .hCardLikes {
+  color: #C97B4B;
+}
+.hCard:hover .hCardLikes svg {
+  stroke: #C97B4B;
+  transform: scale(1.1);
 }
 
 /* Load More */

@@ -39,24 +39,26 @@ export default function Home() {
 
   return (
     <div className={styles.hPage}>
-      <HomeNavbar isLoggedIn={isLoggedIn} meId={me?._id} initials={initials} logout={logout} />
-      <HomeTabs categories={categories} activeTab={activeTab} onTabChange={setActiveTab} />
-      <HomeFilters
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        filterWifi={filterWifi}
-        onToggleWifi={toggleWifi}
-        filterQuiet={filterQuiet}
-        onToggleQuiet={toggleQuiet}
-      />
+      <div className={styles.hContainer}>
+        <HomeNavbar isLoggedIn={isLoggedIn} meId={me?._id} initials={initials} logout={logout} />
+        <HomeTabs categories={categories} activeTab={activeTab} onTabChange={setActiveTab} />
+        <HomeFilters
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          filterWifi={filterWifi}
+          onToggleWifi={toggleWifi}
+          filterQuiet={filterQuiet}
+          onToggleQuiet={toggleQuiet}
+        />
 
-      <p className={styles.hCount}>
-        Showing {cafes.length} of {total} cafe{total !== 1 ? 's' : ''}
-      </p>
+        <p className={styles.hCount}>
+          Showing {cafes.length} of {total} cafe{total !== 1 ? 's' : ''}
+        </p>
 
-      <div className={styles.hGridWrap}>
-        {searching && <div className={styles.hSearchingOverlay} />}
-        <CafeGrid cafes={cafes} total={total} loadingMore={loadingMore} onLoadMore={handleLoadMore} />
+        <div className={styles.hGridWrap}>
+          {searching && <div className={styles.hSearchingOverlay} />}
+          <CafeGrid cafes={cafes} total={total} loadingMore={loadingMore} onLoadMore={handleLoadMore} />
+        </div>
       </div>
 
       <button type="button" className={styles.hFab} onClick={openForm} aria-label="Add cafe">
