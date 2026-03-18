@@ -8,7 +8,8 @@ export default function useHome() {
   const { me, isLoggedIn, logout } = useAuth();
 
   const [cafes, setCafes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
@@ -29,10 +30,15 @@ export default function useHome() {
 
   const [activeTab, setActiveTab] = useState('discover');
   const debounceRef = useRef(null);
+  const hasLoadedOnce = useRef(false);
 
   const fetchCafes = useCallback((search, wifi, quiet, pg, reset) => {
-    if (reset) setLoading(true);
-    else setLoadingMore(true);
+    if (reset) {
+      if (!hasLoadedOnce.current) setInitialLoading(true);
+      else setSearching(true);
+    } else {
+      setLoadingMore(true);
+    }
 
     const params = new URLSearchParams();
     if (search) params.append('search', search);
@@ -51,13 +57,16 @@ export default function useHome() {
         }
         setTotal(data.total);
         setPage(pg);
-        setLoading(false);
+        hasLoadedOnce.current = true;
+        setInitialLoading(false);
+        setSearching(false);
         setLoadingMore(false);
       })
       .catch((err) => {
         console.error(err);
         setError(err.message);
-        setLoading(false);
+        setInitialLoading(false);
+        setSearching(false);
         setLoadingMore(false);
       });
   }, []);
@@ -66,7 +75,6 @@ export default function useHome() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setPage(1);
-      setCafes([]);
       fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
     }, 300);
     return () => clearTimeout(debounceRef.current);
@@ -119,7 +127,7 @@ export default function useHome() {
       : 'CD';
 
   return {
-    cafes, loading, loadingMore, error, total,
+    cafes, initialLoading, searching, loadingMore, error, total,
     searchTerm, setSearchTerm,
     filterWifi, toggleWifi,
     filterQuiet, toggleQuiet,

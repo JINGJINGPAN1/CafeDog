@@ -157,6 +157,19 @@
   margin: 0;
 }
 
+/* Grid wrapper — stable layout during search */
+.hGridWrap {
+  position: relative;
+  min-height: 50vh;
+}
+.hSearchingOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(247,245,242,0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+
 /* Two-column Grid */
 .hGrid {
   display: grid;

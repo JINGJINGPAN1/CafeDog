@@ -8,7 +8,7 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const {
-    cafes, loading, loadingMore, error, total,
+    cafes, initialLoading, searching, loadingMore, error, total,
     searchTerm, setSearchTerm,
     filterWifi, toggleWifi,
     filterQuiet, toggleQuiet,
@@ -19,7 +19,7 @@ export default function Home() {
     me, isLoggedIn, logout, initials,
   } = useHome();
 
-  if (loading) {
+  if (initialLoading) {
     return (
       <div className={styles.hPage}>
         <p className={styles.hStatus}>Loading cafes...</p>
@@ -54,7 +54,10 @@ export default function Home() {
         Showing {cafes.length} of {total} cafe{total !== 1 ? 's' : ''}
       </p>
 
-      <CafeGrid cafes={cafes} total={total} loadingMore={loadingMore} onLoadMore={handleLoadMore} />
+      <div className={styles.hGridWrap}>
+        {searching && <div className={styles.hSearchingOverlay} />}
+        <CafeGrid cafes={cafes} total={total} loadingMore={loadingMore} onLoadMore={handleLoadMore} />
+      </div>
 
       <button type="button" className={styles.hFab} onClick={openForm} aria-label="Add cafe">
         <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
