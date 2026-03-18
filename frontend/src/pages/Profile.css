@@ -5,46 +5,48 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Navbar ── */
+/* ── 1. Navbar ── */
 .pf-nav {
   background: #fff;
   border-bottom: 0.5px solid #e5e4e7;
-  padding: 12px 32px;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
+.pf-logo { font-size: 18px; font-weight: 500; }
+.pf-logo-cafe { color: #1a1a1a; }
+.pf-logo-dog { color: #C97B4B; }
+
 .pf-back {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #C97B4B;
   text-decoration: none;
 }
+.pf-back:hover { text-decoration: underline; }
 
-.pf-back:hover {
-  text-decoration: underline;
-}
-
-/* ── Profile header card ── */
-.pf-card {
-  margin: 20px 32px;
-  background: #fff;
-  border: 0.5px solid #e5e4e7;
-  border-radius: 16px;
-  padding: 28px 32px;
+/* ── 2. Profile header ── */
+.pf-section {
+  padding: 0 32px 0;
 }
 
 .pf-header {
   display: flex;
+  gap: 18px;
   align-items: center;
-  gap: 20px;
+  padding-top: 28px;
+  margin-bottom: 20px;
 }
 
 .pf-avatar {
-  width: 72px;
-  height: 72px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   background: #F5C4B3;
   color: #712B13;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -52,7 +54,7 @@
   flex-shrink: 0;
 }
 
-.pf-meta {
+.pf-info {
   flex: 1;
   min-width: 0;
 }
@@ -64,7 +66,7 @@
 }
 
 .pf-name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   color: #1a1a1a;
   margin: 0;
@@ -84,54 +86,84 @@
 .pf-email {
   font-size: 13px;
   color: #888;
-  margin: 4px 0 0;
+  margin: 2px 0;
 }
 
 .pf-joined {
   font-size: 12px;
-  color: #aaa;
-  margin: 2px 0 0;
+  color: #bbb;
+  margin: 0 0 6px;
 }
 
-/* ── Divider ── */
-.pf-divider {
-  border: none;
-  border-top: 0.5px solid #e5e4e7;
-  margin: 20px 0 16px;
+.pf-bio {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
 }
 
-/* ── Stats row ── */
+.pf-edit-btn {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 0.5px solid #e5e4e7;
+  background: #fff;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  font-family: inherit;
+  align-self: flex-start;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+.pf-edit-btn:hover {
+  border-color: #C97B4B;
+  color: #C97B4B;
+}
+
+/* ── 3. Stats row ── */
 .pf-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  text-align: center;
+  background: #fff;
+  border: 0.5px solid #e5e4e7;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  display: flex;
+  overflow: hidden;
 }
 
 .pf-stat {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  padding: 16px 0;
+  text-align: center;
+}
+
+.pf-stat--mid {
+  border-left: 0.5px solid #e5e4e7;
+  border-right: 0.5px solid #e5e4e7;
 }
 
 .pf-stat-n {
   font-size: 20px;
   font-weight: 500;
   color: #C97B4B;
+  margin-bottom: 3px;
 }
 
 .pf-stat-l {
-  font-size: 12px;
-  color: #aaa;
+  font-size: 11px;
+  color: #888;
 }
 
-/* ── Tab bar ── */
+/* ── 4. Tab bar ── */
 .pf-tabs {
-  margin: 0 32px;
   background: #fff;
   border: 0.5px solid #e5e4e7;
   border-radius: 12px;
   overflow: hidden;
   display: flex;
+  margin-bottom: 16px;
 }
 
 .pf-tab {
@@ -139,159 +171,177 @@
   padding: 12px 0;
   border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #888;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   font-family: inherit;
-  transition: color 0.15s;
+  text-align: center;
+  transition: color 0.15s, background 0.15s;
 }
-
-.pf-tab:hover {
-  color: #666;
-}
+.pf-tab:hover { color: #666; }
 
 .pf-tab--on {
   color: #C97B4B;
   border-bottom-color: #C97B4B;
-  background: #fff;
+  background: #fffaf6;
 }
 
-/* ── Content area ── */
-.pf-content {
-  margin: 12px 32px 32px;
+/* ── 5. Content grid ── */
+.pf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-bottom: 32px;
+}
+
+/* Shared card shell */
+.pf-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.pf-empty {
-  text-align: center;
-  color: #bbb;
-  font-size: 13px;
-  padding: 40px 0;
-}
-
-/* ── Post card ── */
-.pf-post {
-  display: block;
   text-decoration: none;
   color: inherit;
   background: #fff;
   border: 0.5px solid #e5e4e7;
   border-radius: 12px;
-  padding: 16px;
+  overflow: hidden;
   transition: border-color 0.15s;
 }
+.pf-card:hover { border-color: #C97B4B; }
 
-.pf-post:hover {
-  border-color: #C97B4B;
+/* Image area */
+.pf-card-img-wrap {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.pf-post-head {
+.pf-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pf-card-img-ph {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e8d5c4, #c4956a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  opacity: 0.25;
+}
+
+.pf-card-img-ph--alt {
+  background: linear-gradient(135deg, #d4e0d4, #7a9b7a);
+}
+
+/* Card body */
+.pf-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.pf-card-cafe {
+  font-size: 12px;
+  font-weight: 500;
+  color: #C97B4B;
+  margin-bottom: 4px;
+}
+
+.pf-card-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #333;
+  margin: 0 0 8px;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pf-card-foot {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-top: auto;
 }
 
-.pf-post-stars {
-  font-size: 14px;
+.pf-card-stars {
+  font-size: 12px;
   color: #C97B4B;
   letter-spacing: 1px;
 }
 
-.pf-post-date {
-  font-size: 12px;
-  color: #aaa;
+.pf-card-date {
+  font-size: 11px;
+  color: #bbb;
 }
 
-.pf-post-text {
-  font-size: 13px;
-  line-height: 1.6;
-  color: #333;
-  margin: 0 0 6px;
-  white-space: pre-wrap;
-}
-
-.pf-post-photo {
-  width: 100%;
-  max-height: 240px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-top: 8px;
-  display: block;
-}
-
-/* ── Cafe card ── */
-.pf-cafe {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  background: #fff;
-  border: 0.5px solid #e5e4e7;
-  border-radius: 12px;
-  padding: 14px;
-  transition: border-color 0.15s;
-}
-
-.pf-cafe:hover {
-  border-color: #C97B4B;
-}
-
-.pf-cafe-img {
-  width: 72px;
-  height: 72px;
-  object-fit: cover;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
-
-.pf-cafe-ph {
-  width: 72px;
-  height: 72px;
-  border-radius: 10px;
-  background: linear-gradient(160deg, #F5C4B3, #FAEEDA, #E1F5EE);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  opacity: 0.4;
-  flex-shrink: 0;
-}
-
-.pf-cafe-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
-
+/* Cafe card specifics */
 .pf-cafe-name {
   font-size: 14px;
   font-weight: 500;
   color: #1a1a1a;
-}
-
-.pf-cafe-rating {
-  font-size: 13px;
-  color: #C97B4B;
-  letter-spacing: 1px;
+  margin-bottom: 2px;
 }
 
 .pf-cafe-addr {
   font-size: 12px;
   color: #aaa;
+  margin-bottom: 4px;
+}
+
+.pf-cafe-badges {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.pf-cafe-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid;
+}
+.pf-cafe-pill--wifi { background: #FDF0E8; color: #854F0B; border-color: #EF9F27; }
+.pf-cafe-pill--quiet { background: #E1F5EE; color: #085041; border-color: #5DCAA5; }
+.pf-cafe-pill--rating { background: #EEEDFE; color: #3C3489; border-color: #7F77DD; letter-spacing: 1px; }
+
+/* ── Empty state ── */
+.pf-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 0;
+}
+
+.pf-empty-icon {
+  display: block;
+  font-size: 32px;
+  opacity: 0.3;
+  margin-bottom: 8px;
+}
+
+.pf-empty p {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
 }
 
 /* ── Responsive ── */
 @media (max-width: 600px) {
-  .pf-nav { padding: 12px 16px; }
-  .pf-card { margin: 12px 16px; padding: 20px 18px; }
-  .pf-tabs { margin: 0 16px; }
-  .pf-content { margin: 12px 16px 24px; }
+  .pf-nav { padding: 14px 16px; }
+  .pf-section { padding: 0 16px; }
+  .pf-header { flex-wrap: wrap; }
+  .pf-grid { grid-template-columns: 1fr; }
 }
