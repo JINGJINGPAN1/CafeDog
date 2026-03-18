@@ -1,54 +1,122 @@
 .authPage {
+  min-height: 100vh;
+  background: #f7f5f2;
   display: flex;
+  align-items: center;
   justify-content: center;
   padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .authCard {
-  width: min(520px, 100%);
-  background: white;
-  border: 1px solid #e6e6e6;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: left;
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 0.5px solid #e5e4e7;
+  border-radius: 16px;
+  padding: 40px 36px;
+  text-align: center;
+}
+
+.authLogo {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.authLogoCafe {
+  color: #1a1a1a;
+}
+
+.authLogoDog {
+  color: #C97B4B;
+}
+
+.authTitle {
+  font-size: 26px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin: 0 0 28px;
 }
 
 .authForm {
-  display: grid;
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
 }
 
-.field {
-  display: grid;
+.authField {
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 }
 
-.field input {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d6d6d6;
+.authLabel {
+  font-size: 13px;
+  color: #6b6375;
 }
 
-.primaryButton {
-  padding: 10px 12px;
+.authInput {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e4e7;
+  background: #fff;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.authInput:focus {
+  border-color: #C97B4B;
+}
+
+.authError {
+  color: #b00020;
+  font-size: 13px;
+  margin: 0;
+}
+
+.authSubmit {
+  width: 100%;
+  padding: 12px;
   border-radius: 10px;
   border: none;
-  background: #007bff;
-  color: white;
+  background: #C97B4B;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
+  margin-top: 24px;
+  transition: background 0.15s;
+  font-family: inherit;
 }
 
-.primaryButton:disabled {
+.authSubmit:hover {
+  background: #b56a3a;
+}
+
+.authSubmit:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
 
-.error {
-  color: #b00020;
-  margin: 0;
+.authBottom {
+  font-size: 13px;
+  color: #6b6375;
+  margin-top: 20px;
 }
 
-.muted {
-  color: #666;
-  margin-top: 12px;
+.authLink {
+  color: #C97B4B;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.authLink:hover {
+  text-decoration: underline;
 }

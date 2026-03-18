@@ -27,30 +27,26 @@ export default function Login() {
   };
 
   return (
-    <div className="page authPage">
+    <div className="authPage">
       <div className="authCard">
-        <h1>Log in</h1>
+        <div className="authLogo"><span className="authLogoCafe">cafe</span><span className="authLogoDog">dog</span></div>
+        <h1 className="authTitle">Log in</h1>
         <form className="authForm" onSubmit={onSubmit}>
-          <label className="field">
-            <span>Email</span>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
-          </label>
-          <label className="field">
-            <span>Password</span>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              required
-            />
-          </label>
-          {error ? <p className="error">{error}</p> : null}
-          <button className="primaryButton" type="submit" disabled={submitting}>
+          <div className="authField">
+            <label className="authLabel">Email</label>
+            <input className="authInput" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+          </div>
+          <div className="authField">
+            <label className="authLabel">Password</label>
+            <input className="authInput" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+          </div>
+          {error ? <p className="authError">{error}</p> : null}
+          <button className="authSubmit" type="submit" disabled={submitting}>
             {submitting ? 'Logging in...' : 'Log in'}
           </button>
         </form>
-        <p className="muted">
-          New here? <Link to="/register">Create an account</Link>
+        <p className="authBottom">
+          New here? <Link to="/register" className="authLink">Create an account</Link>
         </p>
       </div>
     </div>

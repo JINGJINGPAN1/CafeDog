@@ -28,34 +28,30 @@ export default function Register() {
   };
 
   return (
-    <div className="page authPage">
+    <div className="authPage">
       <div className="authCard">
-        <h1>Create account</h1>
+        <div className="authLogo"><span className="authLogoCafe">cafe</span><span className="authLogoDog">dog</span></div>
+        <h1 className="authTitle">Create account</h1>
         <form className="authForm" onSubmit={onSubmit}>
-          <label className="field">
-            <span>Username</span>
-            <input value={username} onChange={(e) => setUsername(e.target.value)} required />
-          </label>
-          <label className="field">
-            <span>Email</span>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
-          </label>
-          <label className="field">
-            <span>Password (min 8 chars)</span>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              required
-            />
-          </label>
-          {error ? <p className="error">{error}</p> : null}
-          <button className="primaryButton" type="submit" disabled={submitting}>
+          <div className="authField">
+            <label className="authLabel">Username</label>
+            <input className="authInput" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          </div>
+          <div className="authField">
+            <label className="authLabel">Email</label>
+            <input className="authInput" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+          </div>
+          <div className="authField">
+            <label className="authLabel">Password (min 8 chars)</label>
+            <input className="authInput" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+          </div>
+          {error ? <p className="authError">{error}</p> : null}
+          <button className="authSubmit" type="submit" disabled={submitting}>
             {submitting ? 'Creating...' : 'Create account'}
           </button>
         </form>
-        <p className="muted">
-          Already have an account? <Link to="/login">Log in</Link>
+        <p className="authBottom">
+          Already have an account? <Link to="/login" className="authLink">Log in</Link>
         </p>
       </div>
     </div>
