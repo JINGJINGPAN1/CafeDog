@@ -107,7 +107,7 @@ function Home() {
         <div className="authLinks">
           {isLoggedIn ? (
             <>
-              <span>Hi, {me?.username || me?.email}</span>
+              <Link to={`/profile/${me?._id}`}>Hi, {me?.username || me?.email}</Link>
               <button type="button" className="linkButton" onClick={logout}>
                 Logout
               </button>

@@ -113,6 +113,57 @@ router.get('/me', async (req, res) => {
   }
 });
 
+router.get('/users/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    if (!ObjectId.isValid(String(userId))) {
+      return res.status(400).json({ error: 'Invalid user ID.' });
+    }
+
+    const db = await getDb();
+    const oid = new ObjectId(String(userId));
+
+    const user = await db.collection('users').findOne(
+      { _id: oid },
+      { projection: { passwordHash: 0 } },
+    );
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    const posts = await db.collection('posts')
+      .find({ authorId: oid })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    const cafes = await db.collection('cafes')
+      .find({ createdBy: oid })
+      .sort({ _id: -1 })
+      .toArray();
+
+    const likesDocs = await db.collection('likes')
+      .find({ userId: oid })
+      .toArray();
+    const likedPostIds = likesDocs.map((l) => l.postId);
+    const likedPosts = likedPostIds.length > 0
+      ? await db.collection('posts')
+          .find({ _id: { $in: likedPostIds } })
+          .sort({ createdAt: -1 })
+          .toArray()
+      : [];
+
+    res.json({
+      user: sanitizeUser(user),
+      posts,
+      cafes,
+      likedPosts,
+    });
+  } catch (err) {
+    console.error('Profile error:', err);
+    res.status(500).json({ error: 'Failed to fetch profile.' });
+  }
+});
+
 function normalizedPasswordTooShort(password) {
   return String(password).length < 8;
 }

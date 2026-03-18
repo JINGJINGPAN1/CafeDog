@@ -4,6 +4,7 @@ import CommentSection from './CommentSection';
 import './PostCard.css';
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { apiFetch } from '../lib/api';
 
@@ -49,7 +50,11 @@ export default function PostCard({ post, onUpdate, onDelete }) {
   return (
     <div className="postCard">
       <div className="postHeader">
-        <strong className="postAuthor">👤 {post.author}</strong>
+        <strong className="postAuthor">
+          👤 {post.authorId ? (
+            <Link to={`/profile/${post.authorId}`} className="authorLink">{post.author}</Link>
+          ) : post.author}
+        </strong>
         <span className="postRating">{'⭐️'.repeat(Number(post.rating) || 0)}</span>
       </div>
 

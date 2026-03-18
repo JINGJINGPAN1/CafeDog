@@ -43,3 +43,12 @@
 .postActions {
   margin-top: 10px;
 }
+
+.authorLink {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.authorLink:hover {
+  text-decoration: underline;
+}
