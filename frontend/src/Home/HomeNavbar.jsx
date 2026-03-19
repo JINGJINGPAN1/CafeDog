@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logoImg from '../assets/image.png';
 import styles from './Home.module.css';
 
 export default function HomeNavbar({ isLoggedIn, meId, initials, logout }) {
@@ -6,7 +7,8 @@ export default function HomeNavbar({ isLoggedIn, meId, initials, logout }) {
     <header className={styles.hNavbar}>
       <div className={styles.hNavInner}>
         <Link to="/" className={styles.hLogo}>
-          cafedog
+          <img src={logoImg} alt="" style={{ height: '32px', width: '32px', objectFit: 'contain' }} />
+          <span>Café<span className={styles.hLogoAccent}>Dog</span></span>
         </Link>
 
         <div className={styles.hNavRight}>

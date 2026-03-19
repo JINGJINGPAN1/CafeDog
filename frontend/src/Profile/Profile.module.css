@@ -26,12 +26,16 @@
   justify-content: space-between;
 }
 .pfLogo {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.8px;
   color: #262626;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+.pfLogoAccent { color: #e07a5f; }
 .pfBack {
   font-size: 14px;
   font-weight: 600;

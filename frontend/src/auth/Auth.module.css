@@ -19,12 +19,17 @@
 }
 
 .authLogo {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.8px;
   margin-bottom: 28px;
   color: #262626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
+.authLogoAccent { color: #e07a5f; }
 
 .authTitle {
   font-size: 24px;

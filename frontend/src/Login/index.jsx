@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import useLogin from './useLogin';
+import logoImg from '../assets/image.png';
 import styles from '../auth/Auth.module.css';
 
 export default function Login() {
@@ -8,7 +9,10 @@ export default function Login() {
   return (
     <div className={styles.authPage}>
       <div className={styles.authCard}>
-        <div className={styles.authLogo}>cafedog</div>
+        <div className={styles.authLogo}>
+          <img src={logoImg} alt="" style={{ height: '38px', width: '38px', objectFit: 'contain' }} />
+          <span>Café<span className={styles.authLogoAccent}>Dog</span></span>
+        </div>
         <h1 className={styles.authTitle}>Log in</h1>
         <form className={styles.authForm} onSubmit={onSubmit}>
           <div className={styles.authField}>
