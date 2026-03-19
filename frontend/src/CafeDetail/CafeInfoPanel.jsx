@@ -21,7 +21,7 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rat
       <div className={styles.cdStats}>
         <div className={styles.cdStat}>
           <span className={styles.cdStatN}>{postsTotal}</span>
-          <span className={styles.cdStatL}>check-ins</span>
+          <span className={styles.cdStatL}>posts</span>
         </div>
         <div className={styles.cdStat}>
           <span className={styles.cdStatN}>{rating || '-'}</span>

@@ -46,17 +46,28 @@ export function AuthProvider({ children }) {
     setMe(null);
   }, []);
 
+  const updateMe = useCallback(async (payload) => {
+    const data = await apiFetch('/api/me', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload || {}),
+    });
+    if (data?.user) setMe(data.user);
+    return data?.user;
+  }, []);
+
   const value = useMemo(
     () => ({
       me,
       loading,
       refreshMe,
+      updateMe,
       register,
       login,
       logout,
       isLoggedIn: Boolean(me),
     }),
-    [me, loading, refreshMe, register, login, logout],
+    [me, loading, refreshMe, updateMe, register, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

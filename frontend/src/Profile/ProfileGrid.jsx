@@ -11,7 +11,7 @@ function EmptyState({ message }) {
   );
 }
 
-export default function ProfileGrid({ tab, posts, cafes, likedPosts }) {
+export default function ProfileGrid({ tab, posts, likedPosts, savedCafes }) {
   return (
     <div className={styles.pfGrid}>
       {tab === 'posts' && (
@@ -22,19 +22,19 @@ export default function ProfileGrid({ tab, posts, cafes, likedPosts }) {
         )
       )}
 
-      {tab === 'cafes' && (
-        cafes.length === 0 ? (
-          <EmptyState message="No caf&eacute;s added yet." />
-        ) : (
-          cafes.map((c, i) => <ProfileCafeCard key={c._id} cafe={c} index={i} />)
-        )
-      )}
-
       {tab === 'liked' && (
         likedPosts.length === 0 ? (
           <EmptyState message="No liked posts yet." />
         ) : (
           likedPosts.map((p, i) => <ProfilePostCard key={p._id} post={p} index={i} />)
+        )
+      )}
+
+      {tab === 'saved' && (
+        savedCafes.length === 0 ? (
+          <EmptyState message="No saved caf&eacute;s yet." />
+        ) : (
+          savedCafes.map((c, i) => <ProfileCafeCard key={c._id} cafe={c} index={i} />)
         )
       )}
     </div>

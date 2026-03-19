@@ -78,6 +78,75 @@ async function listPostsByCafe(req, res) {
       .limit(limit)
       .toArray();
 
+    // Attach likesCount + viewerHasLiked to each post
+    const viewerId = req.session && req.session.userId;
+    const viewerOid = viewerId && ObjectId.isValid(String(viewerId))
+      ? new ObjectId(String(viewerId))
+      : null;
+
+    async function hydrateMeta(list) {
+      const postIds = list.map((p) => p._id);
+      const likesByPost = new Map();
+      if (postIds.length > 0) {
+        const rows = await db
+          .collection('likes')
+          .aggregate([
+            { $match: { postId: { $in: postIds } } },
+            { $group: { _id: '$postId', count: { $sum: 1 } } },
+          ])
+          .toArray();
+        rows.forEach((r) => likesByPost.set(String(r._id), r.count));
+      }
+
+      const repliesByPost = new Map();
+      if (postIds.length > 0) {
+        const rows = await db
+          .collection('comments')
+          .aggregate([
+            { $match: { postId: { $in: postIds } } },
+            { $group: { _id: '$postId', count: { $sum: 1 } } },
+          ])
+          .toArray();
+        rows.forEach((r) => repliesByPost.set(String(r._id), r.count));
+      }
+
+      // Hydrate latest author display name from users collection
+      const authorIds = [
+        ...new Set(
+          list
+            .map((p) => p.authorId)
+            .filter((id) => id && ObjectId.isValid(String(id)))
+            .map((id) => String(id)),
+        ),
+      ].map((id) => new ObjectId(id));
+
+      const authorMap = new Map();
+      if (authorIds.length > 0) {
+        const userDocs = await db
+          .collection('users')
+          .find({ _id: { $in: authorIds } }, { projection: { username: 1, email: 1 } })
+          .toArray();
+        userDocs.forEach((u) => authorMap.set(String(u._id), u.username || u.email || 'User'));
+      }
+
+      let likedSet = new Set();
+      if (viewerOid && postIds.length > 0) {
+        const likedRows = await db
+          .collection('likes')
+          .find({ userId: viewerOid, postId: { $in: postIds } }, { projection: { postId: 1 } })
+          .toArray();
+        likedSet = new Set(likedRows.map((r) => String(r.postId)));
+      }
+
+      return list.map((p) => ({
+        ...p,
+        author: p.authorId ? (authorMap.get(String(p.authorId)) || p.author) : p.author,
+        likesCount: likesByPost.get(String(p._id)) || 0,
+        viewerHasLiked: likedSet.has(String(p._id)),
+        repliesCount: repliesByPost.get(String(p._id)) || 0,
+      }));
+    }
+
     // Backward compatibility: If posts collection is empty, fall back to legacy "reviews".
     if (posts.length === 0 && page === 1) {
       const reviewsCollection = db.collection('reviews');
@@ -95,10 +164,12 @@ async function listPostsByCafe(req, res) {
         authorId: p.authorId || null,
       }));
 
-      return res.json({ posts: normalized, total: legacyTotal, page, limit });
+      const hydrated = await hydrateMeta(normalized);
+      return res.json({ posts: hydrated, total: legacyTotal, page, limit });
     }
 
-    res.json({ posts, total, page, limit });
+    const hydrated = await hydrateMeta(posts);
+    res.json({ posts: hydrated, total, page, limit });
   } catch (error) {
     console.error('Error fetching posts:', error);
     res.status(500).json({ error: 'Failed to fetch posts' });

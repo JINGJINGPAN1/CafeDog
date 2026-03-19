@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { getDb, ObjectId } = require('../db');
+const { requireAuth } = require('../middleware/requireAuth');
 
 const router = express.Router();
 
@@ -113,6 +114,45 @@ router.get('/me', async (req, res) => {
   }
 });
 
+router.patch('/me', requireAuth, async (req, res) => {
+  try {
+    const userId = new ObjectId(String(req.session.userId));
+    const { username, password } = req.body || {};
+
+    const updates = {};
+    if (username != null) {
+      const u1 = String(username).trim();
+      if (!u1) return res.status(400).json({ error: 'Nickname cannot be empty' });
+      updates.username = u1;
+    }
+    if (password != null && String(password).trim()) {
+      if (normalizedPasswordTooShort(password)) {
+        return res.status(400).json({ error: 'Password must be at least 8 characters' });
+      }
+      updates.passwordHash = await bcrypt.hash(String(password), 12);
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ error: 'No changes provided' });
+    }
+
+    const db = await getDb();
+    await db.collection('users').updateOne(
+      { _id: userId },
+      { $set: updates },
+    );
+
+    const user = await db.collection('users').findOne(
+      { _id: userId },
+      { projection: { passwordHash: 0 } },
+    );
+    res.json({ ok: true, user: sanitizeUser(user) });
+  } catch (err) {
+    console.error('Update me error:', err);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
 router.get('/users/:id', async (req, res) => {
   try {
     const userId = req.params.id;
@@ -122,6 +162,10 @@ router.get('/users/:id', async (req, res) => {
 
     const db = await getDb();
     const oid = new ObjectId(String(userId));
+    const sessionUserId = req.session && req.session.userId;
+    const isSelf = sessionUserId && ObjectId.isValid(String(sessionUserId))
+      ? String(sessionUserId) === String(userId)
+      : false;
 
     const user = await db.collection('users').findOne(
       { _id: oid },
@@ -141,22 +185,44 @@ router.get('/users/:id', async (req, res) => {
       .sort({ _id: -1 })
       .toArray();
 
-    const likesDocs = await db.collection('likes')
-      .find({ userId: oid })
-      .toArray();
-    const likedPostIds = likesDocs.map((l) => l.postId);
-    const likedPosts = likedPostIds.length > 0
-      ? await db.collection('posts')
+    // Saved cafes are personal; only return them for self profile.
+    let savedCafes = [];
+    if (isSelf) {
+      const saves = await db.collection('cafeSaves')
+        .find({ userId: oid })
+        .sort({ createdAt: -1 })
+        .toArray();
+      const savedCafeIds = saves.map((s) => s.cafeId).filter(Boolean);
+      if (savedCafeIds.length > 0) {
+        const cafeDocs = await db.collection('cafes')
+          .find({ _id: { $in: savedCafeIds } })
+          .toArray();
+        const cafeMap = new Map(cafeDocs.map((c) => [String(c._id), c]));
+        savedCafes = savedCafeIds.map((id) => cafeMap.get(String(id))).filter(Boolean);
+      }
+    }
+
+    // Liked posts are also personal; only return them for self profile.
+    let likedPosts = [];
+    if (isSelf) {
+      const likesDocs = await db.collection('likes')
+        .find({ userId: oid })
+        .toArray();
+      const likedPostIds = likesDocs.map((l) => l.postId).filter(Boolean);
+      if (likedPostIds.length > 0) {
+        likedPosts = await db.collection('posts')
           .find({ _id: { $in: likedPostIds } })
           .sort({ createdAt: -1 })
-          .toArray()
-      : [];
+          .toArray();
+      }
+    }
 
     res.json({
       user: sanitizeUser(user),
       posts,
       cafes,
       likedPosts,
+      savedCafes,
     });
   } catch (err) {
     console.error('Profile error:', err);

@@ -7,28 +7,39 @@ import ReviewList from './ReviewList';
 import ReviewForm from './ReviewForm';
 import styles from './CafeDetail.module.css';
 
-const heartSvg = (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#ccc" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-  </svg>
-);
+function HeartIcon({ active }) {
+  const stroke = active ? '#eb5757' : '#ccc';
+  const fill = active ? '#eb5757' : 'none';
+  return (
+    <svg viewBox="0 0 24 24" width="15" height="15" fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
 
-const bookmarkSvg = (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-  </svg>
-);
+function BookmarkIcon({ active }) {
+  const stroke = active ? '#f2c94c' : '#888';
+  const fill = active ? '#f2c94c' : 'none';
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
 
 export default function CafeDetail() {
   const {
     cafe, loading, error,
     isOwner, handleDelete,
     isEditing, editData, startEditing, cancelEditing, handleEditSubmit, handleEditChange,
-    posts, postsTotal, loadingMorePosts, loadMorePosts,
+    posts, postsTotal, loadingMorePosts, loadMorePosts, togglePostLike,
+    deletePost, updatePost, bumpPostRepliesCount,
     formData, handleReviewChange, handleReviewSubmit, setRating,
     formRef, reviewTextRef,
     isLoggedIn, me,
     scrollToForm,
+    toggleLike,
+    toggleSave,
   } = useCafeDetail();
 
   if (loading) {
@@ -52,6 +63,10 @@ export default function CafeDetail() {
       </div>
     );
   }
+
+  const liked = Boolean(cafe.viewerHasLiked);
+  const saved = Boolean(cafe.viewerHasSaved);
+  const likesCount = cafe.likesCount ?? 0;
 
   return (
     <div className={styles.cdPage}>
@@ -89,7 +104,7 @@ export default function CafeDetail() {
         {/* Right column */}
         <div className={styles.cdRight}>
           <div className={styles.cdRh}>
-            <span className={styles.cdRhTitle}>check-ins &amp; reviews</span>
+            <span className={styles.cdRhTitle}>posts &amp; reviews</span>
             <span className={styles.cdRhCount}>{postsTotal} reviews</span>
           </div>
 
@@ -98,6 +113,10 @@ export default function CafeDetail() {
             postsTotal={postsTotal}
             loadingMorePosts={loadingMorePosts}
             onLoadMore={loadMorePosts}
+            onTogglePostLike={togglePostLike}
+            onDeletePost={deletePost}
+            onUpdatePost={updatePost}
+            onBumpPostRepliesCount={bumpPostRepliesCount}
           >
             <ReviewForm
               ref={formRef}
@@ -118,8 +137,24 @@ export default function CafeDetail() {
               </button>
             </div>
             <div className={styles.cdBarActions}>
-              <span className={styles.cdBarAct}>{heartSvg} <span>0 likes</span></span>
-              <span className={styles.cdBarAct}>{bookmarkSvg} <span>save</span></span>
+              <button
+                type="button"
+                className={`${styles.cdBarAct} ${styles.cdBarBtn}`}
+                onClick={toggleLike}
+                aria-pressed={liked}
+              >
+                <HeartIcon active={liked} />
+                <span>{likesCount} likes</span>
+              </button>
+              <button
+                type="button"
+                className={`${styles.cdBarAct} ${styles.cdBarBtn}`}
+                onClick={toggleSave}
+                aria-pressed={saved}
+              >
+                <BookmarkIcon active={saved} />
+                <span>{saved ? 'saved' : 'save'}</span>
+              </button>
             </div>
           </div>
         </div>

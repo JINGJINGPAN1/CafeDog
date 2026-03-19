@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { apiFetch } from '../lib/api';
 import { useAuth } from '../auth/useAuth';
@@ -14,14 +14,22 @@ export default function useProfile() {
 
   const isSelf = me && String(me._id) === String(id);
 
-  useEffect(() => {
+  const refreshProfile = useCallback(async () => {
     setLoading(true);
     setError('');
-    apiFetch(`/api/users/${id}`)
-      .then((data) => setProfile(data))
-      .catch((err) => setError(err instanceof Error ? err.message : String(err)))
-      .finally(() => setLoading(false));
+    try {
+      const data = await apiFetch(`/api/users/${id}`);
+      setProfile(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
-  return { profile, loading, error, tab, setTab, isSelf };
+  useEffect(() => {
+    refreshProfile();
+  }, [refreshProfile]);
+
+  return { profile, loading, error, tab, setTab, isSelf, refreshProfile };
 }

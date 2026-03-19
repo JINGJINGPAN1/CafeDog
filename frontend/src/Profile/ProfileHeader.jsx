@@ -5,7 +5,7 @@ function getInitials(name) {
   return name.slice(0, 2).toUpperCase();
 }
 
-export default function ProfileHeader({ username, email, createdAt, bio, isSelf }) {
+export default function ProfileHeader({ username, email, createdAt, bio, isSelf, onEditProfile }) {
   return (
     <div className={styles.pfHeader}>
       <div className={styles.pfAvatar}>{getInitials(username)}</div>
@@ -18,7 +18,11 @@ export default function ProfileHeader({ username, email, createdAt, bio, isSelf 
         <p className={styles.pfJoined}>Joined {new Date(createdAt).toLocaleDateString()}</p>
         {bio ? <p className={styles.pfBio}>{bio}</p> : null}
       </div>
-      <button type="button" className={styles.pfEditBtn}>Edit Profile</button>
+      {isSelf ? (
+        <button type="button" className={styles.pfEditBtn} onClick={() => onEditProfile?.()}>
+          Edit Profile
+        </button>
+      ) : null}
     </div>
   );
 }
