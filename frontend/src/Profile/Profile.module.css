@@ -424,6 +424,40 @@
   letter-spacing: 1px;
 }
 
+/* Pagination */
+.pfPager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 0 40px;
+}
+.pfPagerBtn {
+  padding: 8px 18px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.pfPagerBtn:hover:not(:disabled) {
+  border-color: #e07a5f;
+  color: #e07a5f;
+}
+.pfPagerBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.pfPagerInfo {
+  font-size: 13px;
+  font-weight: 600;
+  color: #999;
+}
+
 /* Empty state */
 .pfEmpty {
   grid-column: 1 / -1;
