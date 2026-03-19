@@ -163,11 +163,20 @@ export default function useCafeDetail() {
         setPosts((prev) => prev.filter((p) => String(p._id) !== String(postId)));
         setPostsTotal((n) => Math.max(0, (Number(n) || 0) - 1));
         toast.success('Post deleted.');
+        apiFetch(`/api/cafes/${id}`)
+          .then((data) => {
+            setCafe((prev) =>
+              prev
+                ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount }
+                : prev,
+            );
+          })
+          .catch(() => {});
       } catch (err) {
         toast.error('Error deleting post: ' + (err instanceof Error ? err.message : String(err)));
       }
     },
-    [isLoggedIn, toast],
+    [id, isLoggedIn, toast],
   );
 
   const updatePost = useCallback(
@@ -201,11 +210,20 @@ export default function useCafeDetail() {
           }),
         );
         toast.success('Post updated.');
+        apiFetch(`/api/cafes/${id}`)
+          .then((data) => {
+            setCafe((prev) =>
+              prev
+                ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount }
+                : prev,
+            );
+          })
+          .catch(() => {});
       } catch (err) {
         toast.error('Error updating post: ' + (err instanceof Error ? err.message : String(err)));
       }
     },
-    [isLoggedIn, toast],
+    [id, isLoggedIn, toast],
   );
 
   const bumpPostRepliesCount = useCallback((postId, delta) => {
@@ -246,6 +264,10 @@ export default function useCafeDetail() {
       setFormData({ author: '', text: '', photoUrl: '', rating: '5' });
       setPostPhotoFile(null);
       reloadPosts();
+      // Refresh cafe to get updated avgRating
+      apiFetch(`/api/cafes/${id}`).then((data) => {
+        setCafe((prev) => prev ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount } : prev);
+      }).catch(() => {});
     } catch (err) {
       console.error(err);
       toast.error('Error creating post: ' + err.message);

@@ -18,7 +18,6 @@ export default function CafeDetailNav({ name, isOwner, onEdit, onDelete }) {
           <polyline points="15 18 9 12 15 6" />
         </svg>
       </Link>
-      <span className={styles.cdNavTitle}>{name}</span>
       <div className={styles.cdNavRight}>
         {isOwner ? (
           <>

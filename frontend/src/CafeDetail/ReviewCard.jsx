@@ -9,7 +9,20 @@ const AVATAR_THEMES = [
   { bg: '#F5C4B3', color: '#712B13' },
   { bg: '#E1F5EE', color: '#085041' },
   { bg: '#EEEDFE', color: '#3C3489' },
+  { bg: '#FDE8E8', color: '#9B1C1C' },
+  { bg: '#E1EFFE', color: '#1E429F' },
+  { bg: '#FEF3C7', color: '#92400E' },
+  { bg: '#D1FAE5', color: '#065F46' },
 ];
+
+function hashUsername(name) {
+  if (!name) return 0;
+  let h = 0;
+  for (let i = 0; i < name.length; i++) {
+    h = ((h << 5) - h + name.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+}
 
 function timeAgo(dateStr) {
   if (!dateStr) return '';
@@ -55,15 +68,8 @@ function HeartIcon({ active }) {
   );
 }
 
-export default function ReviewCard({
-  post,
-  index,
-  onToggleLike,
-  onDeletePost,
-  onUpdatePost,
-  onBumpRepliesCount,
-}) {
-  const theme = AVATAR_THEMES[index % 3];
+export default function ReviewCard({ post, index, onToggleLike, onDeletePost, onUpdatePost, onBumpRepliesCount }) {
+  const theme = AVATAR_THEMES[hashUsername(post.author) % AVATAR_THEMES.length];
   const liked = Boolean(post.viewerHasLiked);
   const likesCount = post.likesCount ?? 0;
   const initialRepliesCount = post.repliesCount ?? 0;

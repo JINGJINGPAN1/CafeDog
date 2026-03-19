@@ -15,8 +15,8 @@ export default function CafeCard({ cafe }) {
           )}
           <div className={styles.hCardOverlay}>
             <div className={styles.hCardOverlayTop}>
-              {cafe.rating ? (
-                <span className={styles.hRatingBadge}>&#9733; {cafe.rating}</span>
+              {cafe.avgRating != null ? (
+                <span className={styles.hRatingBadge}>&#9733; {cafe.avgRating}</span>
               ) : null}
             </div>
             <div className={styles.hCardOverlayBottom}>

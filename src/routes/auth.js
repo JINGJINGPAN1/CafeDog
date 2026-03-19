@@ -221,13 +221,26 @@ router.get('/users/:id', async (req, res) => {
       }
     }
 
+    // Attach avgRating to all cafe lists
+    const allCafes = [...cafes, ...savedCafes, ...likedCafes];
+    const allCafeIds = [...new Set(allCafes.map((c) => c._id))];
+    const ratingByCafe = new Map();
+    if (allCafeIds.length > 0) {
+      const ratingRows = await db.collection('posts').aggregate([
+        { $match: { cafeId: { $in: allCafeIds }, rating: { $type: 'number', $gt: 0 } } },
+        { $group: { _id: '$cafeId', avg: { $avg: '$rating' } } },
+      ]).toArray();
+      ratingRows.forEach((r) => ratingByCafe.set(String(r._id), Math.round(r.avg * 10) / 10));
+    }
+    const attachRating = (c) => ({ ...c, avgRating: ratingByCafe.get(String(c._id)) ?? null });
+
     res.json({
       user: sanitizeUser(user),
       posts,
-      cafes,
+      cafes: cafes.map(attachRating),
       likedPosts,
-      likedCafes,
-      savedCafes,
+      likedCafes: likedCafes.map(attachRating),
+      savedCafes: savedCafes.map(attachRating),
     });
   } catch (err) {
     console.error('Profile error:', err);

@@ -33,9 +33,9 @@ export default function ProfileCafeCard({ cafe, index }) {
           {cafe.is_quiet ? (
             <span className={`${styles.pfCafePill} ${styles.pfCafePillQuiet}`}>quiet</span>
           ) : null}
-          {cafe.rating ? (
+          {cafe.avgRating != null ? (
             <span className={`${styles.pfCafePill} ${styles.pfCafePillRating}`}>
-              {renderStars(cafe.rating)}
+              {renderStars(cafe.avgRating)}
             </span>
           ) : null}
         </div>

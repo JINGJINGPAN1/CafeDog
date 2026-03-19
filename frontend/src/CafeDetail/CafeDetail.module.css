@@ -162,11 +162,62 @@
 }
 
 /* Info panel */
-.cdName {
-  font-size: 24px;
-  font-weight: 700;
-  color: #262626;
+.cdNameRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 10px;
+}
+.cdName {
+  font-size: 30px;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+  flex: 1;
+  min-width: 0;
+}
+.cdNameActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  padding-top: 6px;
+}
+.cdActBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  border: 1.5px solid #efefef;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.cdActBtn:hover {
+  border-color: #ddd;
+  color: #666;
+}
+.cdActBtnLiked {
+  border-color: rgba(235, 87, 87, 0.3);
+  color: #eb5757;
+  background: #fef5f5;
+}
+.cdActBtnLiked:hover {
+  border-color: rgba(235, 87, 87, 0.5);
+}
+.cdActBtnSaved {
+  border-color: rgba(242, 201, 76, 0.4);
+  color: #d4a017;
+  background: #fefcf0;
+}
+.cdActBtnSaved:hover {
+  border-color: rgba(242, 201, 76, 0.6);
 }
 .cdAddr {
   display: flex;
@@ -197,17 +248,10 @@
   border-radius: 14px;
   border: none;
 }
-.cdBadgeWifi {
-  background: #fff3e0;
-  color: #e65100;
-}
+.cdBadgeWifi,
 .cdBadgeQuiet {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-.cdBadgeRating {
-  background: #f3e8ff;
-  color: #7c3aed;
+  background: #f0f0f0;
+  color: #666;
 }
 
 .cdHr {
@@ -219,7 +263,7 @@
 
 .cdStats {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   text-align: center;
 }
 .cdStat {
@@ -231,6 +275,13 @@
   font-size: 18px;
   font-weight: 700;
   color: #e07a5f;
+}
+.cdStatNRating {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f59e0b;
+  display: flex;
+  justify-content: center;
 }
 .cdStatL {
   font-size: 12px;
@@ -341,6 +392,10 @@
   padding: 16px;
   background: #fafafa;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid #f0f0f0;
+}
+.cdRv:last-of-type {
+  border-bottom: none;
 }
 .cdRvHead {
   display: flex;
