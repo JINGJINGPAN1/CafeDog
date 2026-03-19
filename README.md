@@ -31,7 +31,7 @@ Email: kong.yin@northeastern.edu
 
 ## Live Demo
 
-- **[CaféDog App](https://cafedog.onrender.com/)** – Try FocusFlow online (may take 30–60s to wake if idle)
+- **[CaféDog App](https://cafedog.onrender.com/)** – Try CaféDog online (may take 30–60s to wake if idle)
 - **[Video Introduction]()** – Watch on YouTube
 - **[Presentation Slides](https://docs.google.com/presentation/d/1w4XbNmxJuYF50cAYwc1aHL0473fEScwAsBk3-wYQbNo/edit?slide=id.p18#slide=id.p18)** – Project overview
 
