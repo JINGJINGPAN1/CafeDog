@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { coverImageSrc } from '../lib/coverImage';
 import styles from './Profile.module.css';
+import tag from '../styles/cafeTags.module.css';
 
 function RatingStars({ value }) {
   const rounded = Math.round(value * 2) / 2;
@@ -46,10 +47,10 @@ export default function ProfileCafeCard({ cafe, index }) {
         ) : null}
         <div className={styles.pfCafeBadges}>
           {cafe.has_good_wifi ? (
-            <span className={`${styles.pfCafePill} ${styles.pfCafePillWifi}`}>wifi</span>
+            <span className={`${tag.pill} ${tag.wifi}`}>wifi</span>
           ) : null}
           {cafe.is_quiet ? (
-            <span className={`${styles.pfCafePill} ${styles.pfCafePillQuiet}`}>quiet</span>
+            <span className={`${tag.pill} ${tag.quiet}`}>quiet</span>
           ) : null}
         </div>
       </div>

@@ -1,4 +1,5 @@
 import styles from './CafeDetail.module.css';
+import tag from '../styles/cafeTags.module.css';
 
 function HeartIcon({ active }) {
   const stroke = active ? '#eb5757' : '#ccc';
@@ -75,9 +76,9 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, avg
 
       <div className={styles.cdBadges}>
         {hasGoodWifi ? (
-          <span className={`${styles.cdBadge} ${styles.cdBadgeWifi}`}>wifi</span>
+          <span className={`${tag.pill} ${tag.wifi}`}>wifi</span>
         ) : null}
-        {isQuiet ? <span className={`${styles.cdBadge} ${styles.cdBadgeQuiet}`}>quiet</span> : null}
+        {isQuiet ? <span className={`${tag.pill} ${tag.quiet}`}>quiet</span> : null}
       </div>
 
       <div className={styles.cdHr} />

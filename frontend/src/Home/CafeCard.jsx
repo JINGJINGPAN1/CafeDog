@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { coverImageSrc } from '../lib/coverImage';
 import styles from './Home.module.css';
+import tag from '../styles/cafeTags.module.css';
 
 export default function CafeCard({ cafe }) {
   const src = coverImageSrc(cafe.cover_image);
@@ -20,8 +21,8 @@ export default function CafeCard({ cafe }) {
               ) : null}
             </div>
             <div className={styles.hCardOverlayBottom}>
-              {cafe.has_good_wifi ? <span className={styles.hTagOverlay}>wifi</span> : null}
-              {cafe.is_quiet ? <span className={styles.hTagOverlay}>quiet</span> : null}
+              {cafe.has_good_wifi ? <span className={`${tag.pill} ${tag.wifi}`}>wifi</span> : null}
+              {cafe.is_quiet ? <span className={`${tag.pill} ${tag.quiet}`}>quiet</span> : null}
             </div>
           </div>
         </div>
