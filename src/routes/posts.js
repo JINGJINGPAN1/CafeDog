@@ -5,12 +5,12 @@ const { getDb, ObjectId } = require('../db');
 const router = express.Router();
 
 async function resolveAuthorFromSession(req, db) {
-  const sessionUserId = req.session && req.session.userId;
-  if (!sessionUserId || !ObjectId.isValid(String(sessionUserId))) return null;
+  const id = req.user && req.user._id;
+  if (!id || !ObjectId.isValid(String(id))) return null;
 
   const users = db.collection('users');
   const user = await users.findOne(
-    { _id: new ObjectId(String(sessionUserId)) },
+    { _id: new ObjectId(String(id)) },
     { projection: { username: 1, email: 1 } },
   );
   if (!user) return null;
@@ -79,7 +79,7 @@ async function listPostsByCafe(req, res) {
       .toArray();
 
     // Attach likesCount + viewerHasLiked to each post
-    const viewerId = req.session && req.session.userId;
+    const viewerId = req.user && req.user._id;
     const viewerOid = viewerId && ObjectId.isValid(String(viewerId))
       ? new ObjectId(String(viewerId))
       : null;
@@ -203,7 +203,7 @@ router.delete('/posts/:postId', requireAuth, async (req, res) => {
     if (!post) {
       return res.status(404).json({ error: 'Post not found.' });
     }
-    if (String(post.authorId) !== String(req.session.userId)) {
+    if (String(post.authorId) !== String(req.user._id)) {
       return res.status(403).json({ error: 'You can only delete your own posts.' });
     }
 
@@ -229,7 +229,7 @@ router.put('/posts/:postId', requireAuth, async (req, res) => {
     if (!post) {
       return res.status(404).json({ error: 'Post not found.' });
     }
-    if (String(post.authorId) !== String(req.session.userId)) {
+    if (String(post.authorId) !== String(req.user._id)) {
       return res.status(403).json({ error: 'You can only edit your own posts.' });
     }
 

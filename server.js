@@ -3,8 +3,10 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const { MongoStore } = require('connect-mongo');
+const passport = require('passport');
 
 const { client } = require('./src/db');
+require('./src/auth/passport');
 const { cafesRouter } = require('./src/routes/cafes');
 const { postsRouter } = require('./src/routes/posts');
 const { authRouter } = require('./src/routes/auth');
@@ -50,6 +52,10 @@ app.use(
     }),
   }),
 );
+
+// 2b. passport (session-based auth)
+app.use(passport.initialize());
+app.use(passport.session());
 
 // 3. API routes
 app.use('/api', authRouter);

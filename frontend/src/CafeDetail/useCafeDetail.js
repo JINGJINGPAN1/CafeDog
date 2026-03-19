@@ -18,6 +18,8 @@ export default function useCafeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [editCoverFile, setEditCoverFile] = useState(null);
@@ -300,10 +302,20 @@ export default function useCafeDetail() {
 
   // --- Scroll to review form ---
   const scrollToForm = () => {
-    if (reviewTextRef.current) {
-      reviewTextRef.current.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => reviewTextRef.current?.focus(), 400);
-    }
+    setIsReviewFormOpen(true);
+
+    let tries = 0;
+    const tryScrollAndFocus = () => {
+      if (reviewTextRef.current) {
+        reviewTextRef.current.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => reviewTextRef.current?.focus(), 250);
+        return;
+      }
+      tries += 1;
+      if (tries >= 12) return;
+      setTimeout(tryScrollAndFocus, 50);
+    };
+    setTimeout(tryScrollAndFocus, 0);
   };
 
   const isOwner = me && cafe && cafe.createdBy && String(me._id) === String(cafe.createdBy);
@@ -388,6 +400,8 @@ export default function useCafeDetail() {
     setPostPhotoFile,
     formRef,
     reviewTextRef,
+    isReviewFormOpen,
+    setIsReviewFormOpen,
 
     // Auth
     isLoggedIn,

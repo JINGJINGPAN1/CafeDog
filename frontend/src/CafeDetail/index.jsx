@@ -40,6 +40,8 @@ export default function CafeDetail() {
     postPhotoFile,
     setPostPhotoFile,
     formRef, reviewTextRef,
+    isReviewFormOpen,
+    setIsReviewFormOpen,
     isLoggedIn, me,
     scrollToForm,
     toggleLike,
@@ -136,6 +138,8 @@ export default function CafeDetail() {
               reviewTextRef={reviewTextRef}
               onPhotoFileChange={setPostPhotoFile}
               photoFile={postPhotoFile}
+              isOpen={isReviewFormOpen}
+              onToggleOpen={() => setIsReviewFormOpen((v) => !v)}
             />
           </ReviewList>
 

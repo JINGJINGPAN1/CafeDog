@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const passport = require('passport');
 const { getDb, ObjectId } = require('../db');
 const { requireAuth } = require('../middleware/requireAuth');
 
@@ -48,43 +49,43 @@ router.post('/auth/register', async (req, res) => {
     const result = await users.insertOne(userDoc);
     const user = { ...userDoc, _id: result.insertedId };
 
-    req.session.userId = String(user._id);
-    res.status(201).json({ user: sanitizeUser(user) });
+    req.login(user, (err) => {
+      if (err) {
+        console.error('Register login error:', err);
+        return res.status(500).json({ error: 'Failed to register' });
+      }
+      return res.status(201).json({ user: sanitizeUser(user) });
+    });
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({ error: 'Failed to register' });
   }
 });
 
-router.post('/auth/login', async (req, res) => {
-  try {
-    const { email, password } = req.body || {};
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Missing required fields: email, password' });
+router.post('/auth/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      return res.status(401).json({ error: info?.message || 'Invalid email or password' });
     }
-
-    const normalizedEmail = String(email).trim().toLowerCase();
-    const db = await getDb();
-    const users = db.collection('users');
-
-    const user = await users.findOne({ email: normalizedEmail });
-    if (!user) return res.status(401).json({ error: 'Invalid email or password' });
-
-    const ok = await bcrypt.compare(String(password), String(user.passwordHash || ''));
-    if (!ok) return res.status(401).json({ error: 'Invalid email or password' });
-
-    req.session.userId = String(user._id);
-    res.json({ user: sanitizeUser(user) });
-  } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ error: 'Failed to login' });
-  }
+    req.logIn(user, (err2) => {
+      if (err2) return next(err2);
+      return res.json({ user: sanitizeUser(user) });
+    });
+  })(req, res, next);
 });
 
 router.post('/auth/logout', async (req, res) => {
   try {
-    req.session.destroy(() => {
-      res.json({ ok: true });
+    req.logout((err) => {
+      if (err) {
+        console.error('Logout error:', err);
+        return res.status(500).json({ error: 'Failed to logout' });
+      }
+      req.session.destroy(() => {
+        res.clearCookie('cafedog.sid');
+        res.json({ ok: true });
+      });
     });
   } catch (err) {
     console.error('Logout error:', err);
@@ -94,20 +95,11 @@ router.post('/auth/logout', async (req, res) => {
 
 router.get('/me', async (req, res) => {
   try {
-    const userId = req.session && req.session.userId;
-    if (!userId || !ObjectId.isValid(String(userId))) {
+    const id = req.user && req.user._id;
+    if (!id || !ObjectId.isValid(String(id))) {
       return res.status(401).json({ error: 'Not authenticated' });
     }
-
-    const db = await getDb();
-    const users = db.collection('users');
-    const user = await users.findOne(
-      { _id: new ObjectId(String(userId)) },
-      { projection: { passwordHash: 0 } },
-    );
-    if (!user) return res.status(401).json({ error: 'Not authenticated' });
-
-    res.json({ user: sanitizeUser(user) });
+    res.json({ user: sanitizeUser(req.user) });
   } catch (err) {
     console.error('Me error:', err);
     res.status(500).json({ error: 'Failed to fetch current user' });
@@ -116,7 +108,7 @@ router.get('/me', async (req, res) => {
 
 router.patch('/me', requireAuth, async (req, res) => {
   try {
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
     const { username, password } = req.body || {};
 
     const updates = {};
@@ -162,10 +154,9 @@ router.get('/users/:id', async (req, res) => {
 
     const db = await getDb();
     const oid = new ObjectId(String(userId));
-    const sessionUserId = req.session && req.session.userId;
-    const isSelf = sessionUserId && ObjectId.isValid(String(sessionUserId))
-      ? String(sessionUserId) === String(userId)
-      : false;
+    const viewerId = req.user && req.user._id;
+    const isSelf =
+      viewerId && ObjectId.isValid(String(viewerId)) ? String(viewerId) === String(userId) : false;
 
     const user = await db.collection('users').findOne(
       { _id: oid },

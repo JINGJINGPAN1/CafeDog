@@ -375,6 +375,50 @@
   border-top: 1px solid #f0f0f0; padding-top: 18px; margin-top: 10px;
 }
 .cdFformTitle { font-size: 15px; font-weight: 600; color: #262626; margin: 0 0 12px; }
+.cdFformToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #efefef;
+  background: #fff;
+  color: #262626;
+  cursor: pointer;
+  font: inherit;
+}
+.cdFformToggle:hover {
+  border-color: rgba(224, 122, 95, 0.4);
+  box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.08);
+}
+.cdFformToggle:focus-visible {
+  outline: none;
+  border-color: #e07a5f;
+  box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.15);
+}
+.cdFformToggleTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
+.cdFformChevron {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  transition: transform 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+.cdFformChevronOpen {
+  transform: rotate(180deg);
+  color: #e07a5f;
+}
+.cdFformPanel {
+  margin-top: 12px;
+}
 .cdFformInner { display: flex; flex-direction: column; gap: 10px; }
 .cdFformPosting { font-size: 13px; color: #999; }
 

@@ -1,8 +1,8 @@
 const { ObjectId } = require('../db');
 
 function requireAuth(req, res, next) {
-  const userId = req.session && req.session.userId;
-  if (!userId || !ObjectId.isValid(String(userId))) {
+  const id = req.user && req.user._id;
+  if (!id || !ObjectId.isValid(String(id))) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
   next();

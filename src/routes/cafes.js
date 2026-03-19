@@ -94,7 +94,7 @@ router.get('/cafes/:id', async (req, res) => {
       likes.countDocuments({ cafeId: cafeOid }),
       saves.countDocuments({ cafeId: cafeOid }),
     ]);
-    const viewerId = req.session && req.session.userId;
+    const viewerId = req.user && req.user._id;
     let viewerHasLiked = false;
     let viewerHasSaved = false;
     if (viewerId && ObjectId.isValid(String(viewerId))) {
@@ -130,7 +130,7 @@ router.get('/cafes/:id/likes', async (req, res) => {
     const likes = db.collection('cafeLikes');
 
     const count = await likes.countDocuments({ cafeId });
-    const viewerId = req.session && req.session.userId;
+    const viewerId = req.user && req.user._id;
     let viewerHasLiked = false;
     if (viewerId && ObjectId.isValid(String(viewerId))) {
       const userId = new ObjectId(String(viewerId));
@@ -150,7 +150,7 @@ router.post('/cafes/:id/likes', requireAuth, async (req, res) => {
     const cafeId = parseObjectId(req.params.id);
     if (!cafeId) return res.status(400).json({ error: 'Invalid cafe ID format.' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
     const db = await getDb();
     const likes = db.collection('cafeLikes');
 
@@ -170,7 +170,7 @@ router.delete('/cafes/:id/likes', requireAuth, async (req, res) => {
     const cafeId = parseObjectId(req.params.id);
     if (!cafeId) return res.status(400).json({ error: 'Invalid cafe ID format.' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
     const db = await getDb();
     const likes = db.collection('cafeLikes');
 
@@ -189,7 +189,7 @@ router.get('/cafes/:id/saved', requireAuth, async (req, res) => {
     const cafeId = parseObjectId(req.params.id);
     if (!cafeId) return res.status(400).json({ error: 'Invalid cafe ID format.' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
     const db = await getDb();
     const saves = db.collection('cafeSaves');
 
@@ -206,7 +206,7 @@ router.post('/cafes/:id/saved', requireAuth, async (req, res) => {
     const cafeId = parseObjectId(req.params.id);
     if (!cafeId) return res.status(400).json({ error: 'Invalid cafe ID format.' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
     const db = await getDb();
     const saves = db.collection('cafeSaves');
 
@@ -226,7 +226,7 @@ router.delete('/cafes/:id/saved', requireAuth, async (req, res) => {
     const cafeId = parseObjectId(req.params.id);
     if (!cafeId) return res.status(400).json({ error: 'Invalid cafe ID format.' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
     const db = await getDb();
     const saves = db.collection('cafeSaves');
 
@@ -253,7 +253,7 @@ router.delete('/cafes/:id', requireAuth, async (req, res) => {
     if (!cafe) {
       return res.status(404).json({ error: 'Cafe not found or already deleted.' });
     }
-    if (String(cafe.createdBy) !== String(req.session.userId)) {
+    if (String(cafe.createdBy) !== String(req.user._id)) {
       return res.status(403).json({ error: 'You can only delete your own cafes.' });
     }
 
@@ -305,7 +305,7 @@ router.put('/cafes/:id', requireAuth, async (req, res) => {
     if (!cafe) {
       return res.status(404).json({ error: 'Cafe not found.' });
     }
-    if (String(cafe.createdBy) !== String(req.session.userId)) {
+    if (String(cafe.createdBy) !== String(req.user._id)) {
       return res.status(403).json({ error: 'You can only edit your own cafes.' });
     }
 
@@ -342,7 +342,7 @@ router.post('/cafes', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const sessionUserId = req.session && req.session.userId;
+    const sessionUserId = req.user && req.user._id;
     const newCafe = {
       name: String(name),
       address: String(address),

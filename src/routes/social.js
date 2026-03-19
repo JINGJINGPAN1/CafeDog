@@ -19,7 +19,7 @@ router.get('/posts/:postId/likes', async (req, res) => {
     const likes = db.collection('likes');
 
     const count = await likes.countDocuments({ postId });
-    const viewerId = req.session && req.session.userId;
+    const viewerId = req.user && req.user._id;
     let viewerHasLiked = false;
     if (viewerId && ObjectId.isValid(String(viewerId))) {
       const userId = new ObjectId(String(viewerId));
@@ -39,7 +39,7 @@ router.post('/posts/:postId/likes', requireAuth, async (req, res) => {
     const postId = parseObjectId(req.params.postId);
     if (!postId) return res.status(400).json({ error: 'Invalid postId' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
 
     const db = await getDb();
     const likes = db.collection('likes');
@@ -62,7 +62,7 @@ router.delete('/posts/:postId/likes', requireAuth, async (req, res) => {
     const postId = parseObjectId(req.params.postId);
     if (!postId) return res.status(400).json({ error: 'Invalid postId' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
 
     const db = await getDb();
     const likes = db.collection('likes');
@@ -120,7 +120,7 @@ router.post('/posts/:postId/comments', requireAuth, async (req, res) => {
     const { text } = req.body || {};
     if (!text || !String(text).trim()) return res.status(400).json({ error: 'Missing text' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
     const now = new Date();
 
     const db = await getDb();
@@ -150,7 +150,7 @@ router.patch('/comments/:commentId', requireAuth, async (req, res) => {
     const { text } = req.body || {};
     if (!text || !String(text).trim()) return res.status(400).json({ error: 'Missing text' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
 
     const db = await getDb();
     const comments = db.collection('comments');
@@ -179,7 +179,7 @@ router.delete('/comments/:commentId', requireAuth, async (req, res) => {
     const commentId = parseObjectId(req.params.commentId);
     if (!commentId) return res.status(400).json({ error: 'Invalid commentId' });
 
-    const userId = new ObjectId(String(req.session.userId));
+    const userId = new ObjectId(String(req.user._id));
 
     const db = await getDb();
     const comments = db.collection('comments');
