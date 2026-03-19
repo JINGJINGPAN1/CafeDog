@@ -14,7 +14,7 @@ Email: kong.yin@northeastern.edu
 
 ## Web Application URL
 
-[CS5610 Web Development - Northeastern University](https://cafedog.onrender.com/)
+[CaféDog](https://cafedog.onrender.com/)
 
 ## Project Objective
 
