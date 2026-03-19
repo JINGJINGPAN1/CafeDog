@@ -257,7 +257,33 @@ router.delete('/cafes/:id', requireAuth, async (req, res) => {
       return res.status(403).json({ error: 'You can only delete your own cafes.' });
     }
 
-    await cafesCollection.deleteOne({ _id: new ObjectId(String(cafeId)) });
+    const cafeOid = new ObjectId(String(cafeId));
+
+    // Find all posts belonging to this cafe so we can clean up their likes/comments
+    const postIds = (
+      await db.collection('posts')
+        .find({ cafeId: cafeOid }, { projection: { _id: 1 } })
+        .toArray()
+    ).map((p) => p._id);
+
+    // Cascade delete all related data
+    await Promise.all([
+      // Delete the cafe itself
+      cafesCollection.deleteOne({ _id: cafeOid }),
+      // Delete all posts for this cafe
+      db.collection('posts').deleteMany({ cafeId: cafeOid }),
+      // Delete cafe-level likes and saves
+      db.collection('cafeLikes').deleteMany({ cafeId: cafeOid }),
+      db.collection('cafeSaves').deleteMany({ cafeId: cafeOid }),
+      // Delete post-level likes and comments
+      ...(postIds.length > 0
+        ? [
+            db.collection('likes').deleteMany({ postId: { $in: postIds } }),
+            db.collection('comments').deleteMany({ postId: { $in: postIds } }),
+          ]
+        : []),
+    ]);
+
     res.status(200).json({ message: 'Cafe successfully deleted!' });
   } catch (error) {
     console.error('Error deleting cafe:', error);
