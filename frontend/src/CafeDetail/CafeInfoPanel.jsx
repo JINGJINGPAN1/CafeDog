@@ -1,6 +1,6 @@
 import styles from './CafeDetail.module.css';
 
-export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rating, postsTotal }) {
+export default function CafeInfoPanel({ name, address, location, hasGoodWifi, isQuiet, rating, postsTotal }) {
   return (
     <div className={styles.cdLeftPad}>
       <div className={styles.cdName}>{name}</div>
@@ -35,7 +35,26 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rat
 
       <div className={styles.cdHr} />
 
-      <div className={styles.cdMap}>&#128205; map coming soon</div>
+      {(() => {
+        const apiKey = import.meta.env.VITE_MAPS_API_KEY;
+        if (!apiKey) return <div className={styles.cdMap}>Map unavailable</div>;
+        // GeoJSON: coordinates = [lng, lat]
+        const q = location && location.coordinates
+          ? `${location.coordinates[1]},${location.coordinates[0]}`
+          : encodeURIComponent(address || name);
+        const src = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${q}&zoom=15`;
+        return (
+          <iframe
+            className={styles.cdMap}
+            title="Cafe location"
+            src={src}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            style={{ border: 0, width: '100%' }}
+          />
+        );
+      })()}
     </div>
   );
 }

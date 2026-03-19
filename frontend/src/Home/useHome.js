@@ -3,7 +3,7 @@ import { useAuth } from '../auth/useAuth';
 import { useToast } from '../toast/useToast';
 import { apiFetch } from '../lib/api';
 
-const CAFES_PER_PAGE = 12;
+const CAFES_PER_PAGE = 10;
 const CATEGORIES = ['discover', 'new places', 'top rated'];
 
 export default function useHome() {
