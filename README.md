@@ -12,10 +12,6 @@ Email: kong.yin@northeastern.edu
 
 [CS5610 Web Development - Northeastern University](https://johnguerra.co/classes/webDevelopment_online_spring_2026/)
 
-## Web Application URL
-
-[CaféDog](https://cafedog.onrender.com/)
-
 ## Project Objective
 
 **CaféDog** is a coffee shop discovery and check‑in platform. Users can browse cafés, filter for work-friendly spots (e.g., **good WiFi** / **quiet**), publish **photo-based posts** (reviews) with ratings, and interact via **likes** and **comments**.
@@ -33,9 +29,11 @@ Email: kong.yin@northeastern.edu
 - **[Design Document](design-document.md)** – Project description, user personas, user stories, and design mockups
 - **[API Contract](API_Contract.md)** – API request/response examples
 
-## Video Introduction
+## Live Demo
 
-> Add your video link here (e.g., YouTube / Loom).
+- **[CaféDog App](https://cafedog.onrender.com/)** – Try FocusFlow online (may take 30–60s to wake if idle)
+- **[Video Introduction]()** – Watch on YouTube
+- **[Presentation Slides](https://docs.google.com/presentation/d/1w4XbNmxJuYF50cAYwc1aHL0473fEScwAsBk3-wYQbNo/edit?slide=id.p18#slide=id.p18)** – Project overview
 
 ## Screenshot
 
