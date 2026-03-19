@@ -11,23 +11,23 @@ function EmptyState({ message }) {
   );
 }
 
+function PostList({ items }) {
+  if (items.length === 0) return <EmptyState message="No posts yet." />;
+  return (
+    <div className={styles.pfPostList}>
+      {items.map((p, i) => (
+        <ProfilePostCard key={p._id} post={p} isLast={i === items.length - 1} />
+      ))}
+    </div>
+  );
+}
+
 export default function ProfileGrid({ tab, posts, likedPosts, likedCafes, savedCafes }) {
+  if (tab === 'posts') return <PostList items={posts} />;
+  if (tab === 'liked') return <PostList items={likedPosts} />;
+
   return (
     <div className={styles.pfGrid}>
-      {tab === 'posts' &&
-        (posts.length === 0 ? (
-          <EmptyState message="No posts yet." />
-        ) : (
-          posts.map((p, i) => <ProfilePostCard key={p._id} post={p} index={i} />)
-        ))}
-
-      {tab === 'liked' &&
-        (likedPosts.length === 0 ? (
-          <EmptyState message="No liked posts yet." />
-        ) : (
-          likedPosts.map((p, i) => <ProfilePostCard key={p._id} post={p} index={i} />)
-        ))}
-
       {tab === 'likedCafes' &&
         (likedCafes.length === 0 ? (
           <EmptyState message="No liked cafes yet." />

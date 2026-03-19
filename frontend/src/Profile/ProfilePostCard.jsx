@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { coverImageSrc } from '../lib/coverImage';
 import styles from './Profile.module.css';
 
 function renderStars(n) {
@@ -8,28 +9,37 @@ function renderStars(n) {
   return s;
 }
 
-export default function ProfilePostCard({ post, index }) {
-  const isOdd = index % 2 === 1;
+function getInitials(name) {
+  if (!name) return '?';
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase();
+}
+
+export default function ProfilePostCard({ post, isLast }) {
+  const src = coverImageSrc(post.cafeCoverImage);
   return (
-    <Link to={`/cafe/${post.cafeId}`} className={styles.pfCard}>
-      <div className={styles.pfCardImgWrap}>
-        {post.photoUrl ? (
-          <img className={styles.pfCardImg} src={post.photoUrl} alt="Post" />
-        ) : (
-          <div className={`${styles.pfCardImgPh} ${isOdd ? styles.pfCardImgPhAlt : ''}`}>
-            &#9749;
-          </div>
-        )}
-      </div>
-      <div className={styles.pfCardBody}>
-        {post.cafeName ? <span className={styles.pfCardCafe}>{post.cafeName}</span> : null}
-        <p className={styles.pfCardText}>{post.text}</p>
-        <div className={styles.pfCardFoot}>
-          <span className={styles.pfCardStars}>{renderStars(post.rating)}</span>
-          <span className={styles.pfCardDate}>
+    <Link
+      to={`/cafe/${post.cafeId}`}
+      className={`${styles.pfPostItem} ${isLast ? '' : styles.pfPostItemBorder}`}
+    >
+      {src ? (
+        <img className={styles.pfPostThumb} src={src} alt={post.cafeName} />
+      ) : (
+        <div className={styles.pfPostAv}>{getInitials(post.cafeName)}</div>
+      )}
+      <div className={styles.pfPostBody}>
+        <div className={styles.pfPostTopRow}>
+          <span className={styles.pfPostCafe}>{post.cafeName || 'Unknown café'}</span>
+          <span className={styles.pfPostDate}>
             {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
           </span>
         </div>
+        <span className={styles.pfPostStars}>{renderStars(post.rating)}</span>
+        <p className={styles.pfPostText}>{post.text}</p>
       </div>
     </Link>
   );
