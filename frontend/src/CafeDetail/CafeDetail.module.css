@@ -2,7 +2,15 @@
   height: 100vh;
   overflow: hidden;
   background: #fafafa;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   display: flex;
   flex-direction: column;
@@ -10,9 +18,14 @@
 
 /* Navbar */
 .cdNav {
-  position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 56px; padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 20px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -20,34 +33,72 @@
   flex-shrink: 0;
 }
 .cdBack {
-  width: 34px; height: 34px; border-radius: 50%; background: #f5f5f5;
-  display: flex; align-items: center; justify-content: center;
-  text-decoration: none; flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  flex-shrink: 0;
   transition: background 0.15s;
 }
-.cdBack:hover { background: #eee; }
+.cdBack:hover {
+  background: #eee;
+}
 .cdNavTitle {
-  font-size: 15px; font-weight: 600; color: #262626;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: 15px;
+  font-weight: 600;
+  color: #262626;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   max-width: 40%;
 }
-.cdNavRight { display: flex; gap: 8px; flex-shrink: 0; }
-.cdNavRightSpacer { width: 60px; }
+.cdNavRight {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.cdNavRightSpacer {
+  width: 60px;
+}
 .cdBtnEdit {
-  font-size: 13px; padding: 6px 16px; border-radius: 16px;
-  border: 1.5px solid #e07a5f; background: none; color: #e07a5f;
-  cursor: pointer; font-weight: 600; font-family: inherit;
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: 16px;
+  border: 1.5px solid #e07a5f;
+  background: none;
+  color: #e07a5f;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
   transition: all 0.15s;
 }
-.cdBtnEdit:hover { background: #e07a5f; color: #fff; }
+.cdBtnEdit:hover {
+  background: #e07a5f;
+  color: #fff;
+}
 .cdBtnDel {
-  font-size: 13px; padding: 6px 16px; border-radius: 16px;
-  border: 1.5px solid #e74c3c; background: none; color: #e74c3c;
-  cursor: pointer; font-weight: 600; font-family: inherit;
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: 16px;
+  border: 1.5px solid #e74c3c;
+  background: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
   transition: all 0.15s;
 }
-.cdBtnDel:hover { background: #e74c3c; color: #fff; }
+.cdBtnDel:hover {
+  background: #e74c3c;
+  color: #fff;
+}
 
 /* Two-column body */
 .cdBody {
@@ -59,87 +110,222 @@
 
 /* Left */
 .cdLeft {
-  overflow-y: auto; border-right: 1px solid rgba(0, 0, 0, 0.06);
+  overflow-y: auto;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
   background: #fafafa;
 }
-.cdLeftPad { padding: 24px; }
+.cdLeftPad {
+  padding: 24px;
+}
 
 /* Hero */
-.cdHero { position: relative; width: 100%; }
-.cdHeroImg { width: 100%; height: 300px; object-fit: cover; display: block; }
+.cdHero {
+  position: relative;
+  width: 100%;
+}
+.cdHeroImg {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
 .cdHeroPh {
-  width: 100%; height: 300px;
+  width: 100%;
+  height: 300px;
   background: linear-gradient(160deg, #f5ebe0 0%, #eddcd2 40%, #e3d5ca 100%);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.cdHeroEmoji { font-size: 72px; opacity: 0.15; }
+.cdHeroEmoji {
+  font-size: 72px;
+  opacity: 0.15;
+}
 .cdDots {
-  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 6px; align-items: center;
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
-.cdDot { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.4); }
-.cdDotOn { width: 20px; background: #fff; }
+.cdDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.4);
+}
+.cdDotOn {
+  width: 20px;
+  background: #fff;
+}
 
 /* Info panel */
-.cdName { font-size: 24px; font-weight: 700; color: #262626; margin-bottom: 10px; }
-.cdAddr { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #999; margin-bottom: 14px; }
+.cdName {
+  font-size: 24px;
+  font-weight: 700;
+  color: #262626;
+  margin-bottom: 10px;
+}
+.cdAddr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 14px;
+}
 .cdPin {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #e07a5f; flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e07a5f;
+  flex-shrink: 0;
 }
 
-.cdBadges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.cdBadges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
 .cdBadge {
-  font-size: 12px; font-weight: 600; padding: 5px 14px;
-  border-radius: 14px; border: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 14px;
+  border: none;
 }
-.cdBadgeWifi { background: #fff3e0; color: #e65100; }
-.cdBadgeQuiet { background: #e8f5e9; color: #2e7d32; }
-.cdBadgeRating { background: #f3e8ff; color: #7c3aed; }
+.cdBadgeWifi {
+  background: #fff3e0;
+  color: #e65100;
+}
+.cdBadgeQuiet {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.cdBadgeRating {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
 
-.cdHr { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; height: 0; }
+.cdHr {
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  margin: 16px 0;
+  height: 0;
+}
 
-.cdStats { display: grid; grid-template-columns: 1fr 1fr 1fr; text-align: center; }
-.cdStat { display: flex; flex-direction: column; gap: 3px; }
-.cdStatN { font-size: 18px; font-weight: 700; color: #e07a5f; }
-.cdStatL { font-size: 12px; color: #bbb; }
+.cdStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+}
+.cdStat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cdStatN {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e07a5f;
+}
+.cdStatL {
+  font-size: 12px;
+  color: #bbb;
+}
 
 .cdMap {
-  height: 200px; background: #f5f5f5; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: #ccc; margin-top: 4px;
+  height: 200px;
+  background: #f5f5f5;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 4px;
   overflow: hidden;
 }
 
 /* Edit form */
-.cdEform { display: flex; flex-direction: column; gap: 12px; }
-.cdEformTitle { font-size: 18px; font-weight: 700; color: #262626; margin: 0 0 4px; }
-.cdEformRow { display: flex; gap: 16px; }
-.cdEformActions { display: flex; gap: 8px; }
-.cdCk { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #555; cursor: pointer; }
-.cdCancel {
-  padding: 11px 22px; border-radius: 14px; border: 1.5px solid #efefef;
-  background: #fff; color: #666; cursor: pointer; font-size: 14px;
-  font-family: inherit; transition: all 0.15s;
+.cdEform {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.cdCancel:hover { border-color: #ddd; }
+.cdEformTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #262626;
+  margin: 0 0 4px;
+}
+.cdEformRow {
+  display: flex;
+  gap: 16px;
+}
+.cdEformActions {
+  display: flex;
+  gap: 8px;
+}
+.cdCk {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+.cdCancel {
+  padding: 11px 22px;
+  border-radius: 14px;
+  border: 1.5px solid #efefef;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.cdCancel:hover {
+  border-color: #ddd;
+}
 
 /* Right column */
 .cdRight {
-  display: flex; flex-direction: column; background: #fff;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
   overflow: hidden;
 }
 
 .cdRh {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 18px 24px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
 }
-.cdRhTitle { font-size: 16px; font-weight: 600; color: #262626; }
-.cdRhCount { font-size: 13px; color: #bbb; }
+.cdRhTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+}
+.cdRhCount {
+  font-size: 13px;
+  color: #bbb;
+}
 
 .cdReviews {
-  flex: 1; overflow-y: auto; padding: 16px 24px;
-  display: flex; flex-direction: column; gap: 14px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .cdEmpty {
@@ -152,32 +338,96 @@
 /* Review card */
 .cdRv {
   border-radius: 16px;
-  padding: 16px; background: #fafafa;
+  padding: 16px;
+  background: #fafafa;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
-.cdRvHead { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.cdRvLeft { display: flex; gap: 10px; align-items: center; }
+.cdRvHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.cdRvLeft {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 .cdAv {
-  width: 34px; height: 34px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; flex-shrink: 0; letter-spacing: 0.3px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
 }
-.cdRvAuthor { font-size: 14px; font-weight: 600; color: #262626; }
-.cdRvAuthorLink { color: #262626; text-decoration: none; }
-.cdRvAuthorLink:hover { color: #e07a5f; }
-.cdRvTime { font-size: 11px; color: #ccc; margin-top: 1px; }
-.cdRvStars { font-size: 14px; color: #f59e0b; flex-shrink: 0; letter-spacing: 1px; }
+.cdRvAuthor {
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+}
+.cdRvAuthorLink {
+  color: #262626;
+  text-decoration: none;
+}
+.cdRvAuthorLink:hover {
+  color: #e07a5f;
+}
+.cdRvTime {
+  font-size: 11px;
+  color: #ccc;
+  margin-top: 1px;
+}
+.cdRvStars {
+  font-size: 14px;
+  color: #f59e0b;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+}
 
-.cdRvText { font-size: 14px; line-height: 1.65; color: #333; margin: 0 0 8px; white-space: pre-wrap; }
-.cdRvPhoto {
-  width: 100%; height: 180px; object-fit: cover;
-  border-radius: 12px; margin: 10px 0; display: block;
+.cdRvText {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #333;
+  margin: 0 0 8px;
+  white-space: pre-wrap;
 }
-.cdRvFoot { display: flex; justify-content: flex-end; gap: 14px; align-items: center; }
-.cdRvAct { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #ccc; }
-.cdRvReply { color: #ccc; font-size: 12px; }
-.cdRvDanger { color: #e74c3c; font-weight: 700; }
-.cdRvDanger:hover { color: #c0392b; }
+.cdRvPhoto {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 10px 0;
+  display: block;
+}
+.cdRvFoot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  align-items: center;
+}
+.cdRvAct {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #ccc;
+}
+.cdRvReply {
+  color: #ccc;
+  font-size: 12px;
+}
+.cdRvDanger {
+  color: #e74c3c;
+  font-weight: 700;
+}
+.cdRvDanger:hover {
+  color: #c0392b;
+}
 .cdReplyCount {
   margin-left: 6px;
   display: inline-flex;
@@ -360,12 +610,25 @@
 }
 
 .cdMore {
-  padding: 8px 28px; font-size: 14px; font-weight: 600;
-  background: #fff; border: 1.5px solid #efefef; border-radius: 20px;
-  color: #888; cursor: pointer; transition: all 0.2s; font-family: inherit;
+  padding: 8px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #fff;
+  border: 1.5px solid #efefef;
+  border-radius: 20px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
 }
-.cdMore:hover { border-color: #e07a5f; color: #e07a5f; }
-.cdMore:disabled { opacity: 0.5; cursor: not-allowed; }
+.cdMore:hover {
+  border-color: #e07a5f;
+  color: #e07a5f;
+}
+.cdMore:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .cdMoreWrap {
   text-align: center;
@@ -374,9 +637,16 @@
 
 /* Review form */
 .cdFform {
-  border-top: 1px solid #f0f0f0; padding-top: 18px; margin-top: 10px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 18px;
+  margin-top: 10px;
 }
-.cdFformTitle { font-size: 15px; font-weight: 600; color: #262626; margin: 0 0 12px; }
+.cdFformTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0 0 12px;
+}
 .cdFformToggle {
   width: 100%;
   display: flex;
@@ -411,7 +681,9 @@
   align-items: center;
   justify-content: center;
   color: #999;
-  transition: transform 0.15s ease, color 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease;
   flex-shrink: 0;
 }
 .cdFformChevronOpen {
@@ -421,18 +693,44 @@
 .cdFformPanel {
   margin-top: 12px;
 }
-.cdFformInner { display: flex; flex-direction: column; gap: 10px; }
-.cdFformPosting { font-size: 13px; color: #999; }
+.cdFformInner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cdFformPosting {
+  font-size: 13px;
+  color: #999;
+}
 
 /* Shared inputs */
 .cdInp {
-  padding: 12px 16px; border-radius: 14px; border: 1.5px solid #efefef;
-  font-size: 14px; outline: none; background: #fafafa; color: #262626;
-  transition: border-color 0.2s, box-shadow 0.2s; font-family: inherit;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #efefef;
+  font-size: 14px;
+  outline: none;
+  background: #fafafa;
+  color: #262626;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  font-family: inherit;
 }
-.cdInp::placeholder { color: #bbb; }
-.cdInp:focus { border-color: #e07a5f; background: #fff; box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1); }
-.cdTa { resize: vertical; min-height: 70px; line-height: 1.55; color: #262626; }
+.cdInp::placeholder {
+  color: #bbb;
+}
+.cdInp:focus {
+  border-color: #e07a5f;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
+}
+.cdTa {
+  resize: vertical;
+  min-height: 70px;
+  line-height: 1.55;
+  color: #262626;
+}
 
 /* Photo picker */
 .cdFileInputHidden {
@@ -491,51 +789,105 @@
 }
 
 /* Star picker */
-.cdStarRow { display: flex; align-items: center; gap: 10px; }
-.cdStarLabel { font-size: 14px; color: #999; }
-.cdStars { display: flex; gap: 4px; }
-.cdStar {
-  font-size: 26px; cursor: pointer; background: none; border: none;
-  padding: 0; line-height: 1; transition: transform 0.15s;
+.cdStarRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.cdStar:hover { transform: scale(1.25); }
-.cdStarOn { color: #f59e0b; }
-.cdStarOff { color: #e5e5e5; }
+.cdStarLabel {
+  font-size: 14px;
+  color: #999;
+}
+.cdStars {
+  display: flex;
+  gap: 4px;
+}
+.cdStar {
+  font-size: 26px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+.cdStar:hover {
+  transform: scale(1.25);
+}
+.cdStarOn {
+  color: #f59e0b;
+}
+.cdStarOff {
+  color: #e5e5e5;
+}
 
 .cdPostBtn {
-  padding: 13px; border-radius: 20px; border: none;
-  background: linear-gradient(135deg, #e07a5f, #c96a4f); color: #fff;
-  font-size: 15px; font-weight: 700;
-  cursor: pointer; width: 100%;
-  transition: transform 0.15s, box-shadow 0.15s; font-family: inherit;
+  padding: 13px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(135deg, #e07a5f, #c96a4f);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+  font-family: inherit;
 }
-.cdPostBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35); }
-.cdPostBtnFlex { flex: 1; }
+.cdPostBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35);
+}
+.cdPostBtnFlex {
+  flex: 1;
+}
 
 /* Bottom bar */
 .cdBar {
-  flex-shrink: 0; padding: 14px 24px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06); background: #fff;
-  position: sticky; bottom: 0;
+  flex-shrink: 0;
+  padding: 14px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  position: sticky;
+  bottom: 0;
 }
 .cdBarInputRow {
-  display: flex; gap: 10px; align-items: center; margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
 }
 .cdBarPill {
-  flex: 1; padding: 10px 20px; border-radius: 24px;
-  background: #fef7f4; color: #e07a5f;
+  flex: 1;
+  padding: 10px 20px;
+  border-radius: 24px;
+  background: #fef7f4;
+  color: #e07a5f;
   border: 1.5px solid rgba(224, 122, 95, 0.2);
-  font-size: 14px; font-family: inherit; font-weight: 500;
-  cursor: pointer; text-align: left;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
   transition: all 0.15s;
 }
-.cdBarPill:hover { background: #fef0ea; border-color: rgba(224, 122, 95, 0.35); }
+.cdBarPill:hover {
+  background: #fef0ea;
+  border-color: rgba(224, 122, 95, 0.35);
+}
 .cdBarActions {
-  display: flex; gap: 20px; align-items: center;
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 .cdBarAct {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: #bbb;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #bbb;
 }
 
 .cdBarBtn {

@@ -10,7 +10,6 @@ import { apiFetch } from '../lib/api';
 import { useToast } from '../toast/useToast';
 
 export default function PostCard({ post, onUpdate, onDelete }) {
-
   const { me } = useAuth();
   const toast = useToast();
   const isOwner = me && post.authorId && String(me._id) === String(post.authorId);
@@ -20,7 +19,6 @@ export default function PostCard({ post, onUpdate, onDelete }) {
   const [editPhotoUrl, setEditPhotoUrl] = useState(post.photoUrl || '');
   const [editRating, setEditRating] = useState(String(post.rating || 5));
   const [saving, setSaving] = useState(false);
-
 
   const handleSave = async () => {
     setSaving(true);
@@ -54,9 +52,14 @@ export default function PostCard({ post, onUpdate, onDelete }) {
     <div className="postCard">
       <div className="postHeader">
         <strong className="postAuthor">
-          👤 {post.authorId ? (
-            <Link to={`/profile/${post.authorId}`} className="authorLink">{post.author}</Link>
-          ) : post.author}
+          👤{' '}
+          {post.authorId ? (
+            <Link to={`/profile/${post.authorId}`} className="authorLink">
+              {post.author}
+            </Link>
+          ) : (
+            post.author
+          )}
         </strong>
         <span className="postRating">{'⭐️'.repeat(Number(post.rating) || 0)}</span>
       </div>
@@ -91,7 +94,12 @@ export default function PostCard({ post, onUpdate, onDelete }) {
             <button type="button" className="primaryButton" onClick={handleSave} disabled={saving}>
               {saving ? 'Saving...' : 'Save'}
             </button>
-            <button type="button" className="dangerButton" onClick={() => setEditing(false)} disabled={saving}>
+            <button
+              type="button"
+              className="dangerButton"
+              onClick={() => setEditing(false)}
+              disabled={saving}
+            >
               Cancel
             </button>
           </div>

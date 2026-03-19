@@ -45,7 +45,10 @@ const ReviewForm = forwardRef(function ReviewForm(
         aria-controls="cd-review-form-panel"
       >
         <span className={styles.cdFformToggleTitle}>Share your experience</span>
-        <span className={`${styles.cdFformChevron} ${isOpen ? styles.cdFformChevronOpen : ''}`} aria-hidden="true">
+        <span
+          className={`${styles.cdFformChevron} ${isOpen ? styles.cdFformChevronOpen : ''}`}
+          aria-hidden="true"
+        >
           ▾
         </span>
       </button>
@@ -58,10 +61,34 @@ const ReviewForm = forwardRef(function ReviewForm(
                 Posting as <strong>{displayName}</strong>
               </div>
             ) : (
-              <input className={styles.cdInp} type="text" name="author" placeholder="Your name" value={formData.author} onChange={onChange} required />
+              <input
+                className={styles.cdInp}
+                type="text"
+                name="author"
+                placeholder="Your name"
+                value={formData.author}
+                onChange={onChange}
+                required
+              />
             )}
-            <textarea className={`${styles.cdInp} ${styles.cdTa}`} ref={reviewTextRef} name="text" placeholder="What did you love about this place?" value={formData.text} onChange={onChange} required rows="3" />
-            <input className={styles.cdInp} type="text" name="photoUrl" placeholder="Photo URL (optional)" value={formData.photoUrl} onChange={onChange} />
+            <textarea
+              className={`${styles.cdInp} ${styles.cdTa}`}
+              ref={reviewTextRef}
+              name="text"
+              placeholder="What did you love about this place?"
+              value={formData.text}
+              onChange={onChange}
+              required
+              rows="3"
+            />
+            <input
+              className={styles.cdInp}
+              type="text"
+              name="photoUrl"
+              placeholder="Photo URL (optional)"
+              value={formData.photoUrl}
+              onChange={onChange}
+            />
             <div className={styles.cdPhotoRow}>
               <input
                 ref={fileInputRef}
@@ -78,7 +105,11 @@ const ReviewForm = forwardRef(function ReviewForm(
                 {photoFile || previewUrl ? 'Change photo' : 'Add photo'}
               </button>
               {photoFile ? (
-                <button type="button" className={styles.cdPhotoRemove} onClick={() => onPhotoFileChange?.(null)}>
+                <button
+                  type="button"
+                  className={styles.cdPhotoRemove}
+                  onClick={() => onPhotoFileChange?.(null)}
+                >
                   Remove
                 </button>
               ) : null}
@@ -103,7 +134,9 @@ const ReviewForm = forwardRef(function ReviewForm(
                 ))}
               </div>
             </div>
-            <button type="submit" className={styles.cdPostBtn}>Post Check-in</button>
+            <button type="submit" className={styles.cdPostBtn}>
+              Post Check-in
+            </button>
           </form>
         ) : null}
       </div>

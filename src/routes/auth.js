@@ -129,15 +129,11 @@ router.patch('/me', requireAuth, async (req, res) => {
     }
 
     const db = await getDb();
-    await db.collection('users').updateOne(
-      { _id: userId },
-      { $set: updates },
-    );
+    await db.collection('users').updateOne({ _id: userId }, { $set: updates });
 
-    const user = await db.collection('users').findOne(
-      { _id: userId },
-      { projection: { passwordHash: 0 } },
-    );
+    const user = await db
+      .collection('users')
+      .findOne({ _id: userId }, { projection: { passwordHash: 0 } });
     res.json({ ok: true, user: sanitizeUser(user) });
   } catch (err) {
     console.error('Update me error:', err);
@@ -158,34 +154,33 @@ router.get('/users/:id', async (req, res) => {
     const isSelf =
       viewerId && ObjectId.isValid(String(viewerId)) ? String(viewerId) === String(userId) : false;
 
-    const user = await db.collection('users').findOne(
-      { _id: oid },
-      { projection: { passwordHash: 0 } },
-    );
+    const user = await db
+      .collection('users')
+      .findOne({ _id: oid }, { projection: { passwordHash: 0 } });
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
 
-    const posts = await db.collection('posts')
+    const posts = await db
+      .collection('posts')
       .find({ authorId: oid })
       .sort({ createdAt: -1 })
       .toArray();
 
-    const cafes = await db.collection('cafes')
-      .find({ createdBy: oid })
-      .sort({ _id: -1 })
-      .toArray();
+    const cafes = await db.collection('cafes').find({ createdBy: oid }).sort({ _id: -1 }).toArray();
 
     // Saved cafes are personal; only return them for self profile.
     let savedCafes = [];
     if (isSelf) {
-      const saves = await db.collection('cafeSaves')
+      const saves = await db
+        .collection('cafeSaves')
         .find({ userId: oid })
         .sort({ createdAt: -1 })
         .toArray();
       const savedCafeIds = saves.map((s) => s.cafeId).filter(Boolean);
       if (savedCafeIds.length > 0) {
-        const cafeDocs = await db.collection('cafes')
+        const cafeDocs = await db
+          .collection('cafes')
           .find({ _id: { $in: savedCafeIds } })
           .toArray();
         const cafeMap = new Map(cafeDocs.map((c) => [String(c._id), c]));
@@ -196,12 +191,11 @@ router.get('/users/:id', async (req, res) => {
     // Liked posts are also personal; only return them for self profile.
     let likedPosts = [];
     if (isSelf) {
-      const likesDocs = await db.collection('likes')
-        .find({ userId: oid })
-        .toArray();
+      const likesDocs = await db.collection('likes').find({ userId: oid }).toArray();
       const likedPostIds = likesDocs.map((l) => l.postId).filter(Boolean);
       if (likedPostIds.length > 0) {
-        likedPosts = await db.collection('posts')
+        likedPosts = await db
+          .collection('posts')
           .find({ _id: { $in: likedPostIds } })
           .sort({ createdAt: -1 })
           .toArray();
@@ -211,13 +205,15 @@ router.get('/users/:id', async (req, res) => {
     // Liked cafes are also personal; only return them for self profile.
     let likedCafes = [];
     if (isSelf) {
-      const cafeLikesDocs = await db.collection('cafeLikes')
+      const cafeLikesDocs = await db
+        .collection('cafeLikes')
         .find({ userId: oid })
         .sort({ createdAt: -1 })
         .toArray();
       const likedCafeIds = cafeLikesDocs.map((l) => l.cafeId).filter(Boolean);
       if (likedCafeIds.length > 0) {
-        const cafeDocs = await db.collection('cafes')
+        const cafeDocs = await db
+          .collection('cafes')
           .find({ _id: { $in: likedCafeIds } })
           .toArray();
         const cafeMap = new Map(cafeDocs.map((c) => [String(c._id), c]));

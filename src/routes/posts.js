@@ -80,9 +80,8 @@ async function listPostsByCafe(req, res) {
 
     // Attach likesCount + viewerHasLiked to each post
     const viewerId = req.user && req.user._id;
-    const viewerOid = viewerId && ObjectId.isValid(String(viewerId))
-      ? new ObjectId(String(viewerId))
-      : null;
+    const viewerOid =
+      viewerId && ObjectId.isValid(String(viewerId)) ? new ObjectId(String(viewerId)) : null;
 
     async function hydrateMeta(list) {
       const postIds = list.map((p) => p._id);
@@ -140,7 +139,7 @@ async function listPostsByCafe(req, res) {
 
       return list.map((p) => ({
         ...p,
-        author: p.authorId ? (authorMap.get(String(p.authorId)) || p.author) : p.author,
+        author: p.authorId ? authorMap.get(String(p.authorId)) || p.author : p.author,
         likesCount: likesByPost.get(String(p._id)) || 0,
         viewerHasLiked: likedSet.has(String(p._id)),
         repliesCount: repliesByPost.get(String(p._id)) || 0,
@@ -215,7 +214,6 @@ router.delete('/posts/:postId', requireAuth, async (req, res) => {
   }
 });
 
-
 router.put('/posts/:postId', requireAuth, async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -245,10 +243,9 @@ router.put('/posts/:postId', requireAuth, async (req, res) => {
       updatedAt: new Date(),
     };
 
-    await db.collection('posts').updateOne(
-      { _id: new ObjectId(String(postId)) },
-      { $set: updates }
-    );
+    await db
+      .collection('posts')
+      .updateOne({ _id: new ObjectId(String(postId)) }, { $set: updates });
 
     res.json({ message: 'Post updated.' });
   } catch (error) {
@@ -256,7 +253,6 @@ router.put('/posts/:postId', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to update post.' });
   }
 });
-
 
 // Deprecated aliases
 router.post('/reviews', createPost);

@@ -15,9 +15,7 @@ export default function ReviewList({
   return (
     <div className={styles.cdReviews}>
       {posts.length === 0 ? (
-        <p className={styles.cdEmpty}>
-          No posts yet. Be the first to post!
-        </p>
+        <p className={styles.cdEmpty}>No posts yet. Be the first to post!</p>
       ) : (
         posts.map((post, idx) => (
           <ReviewCard
@@ -34,7 +32,12 @@ export default function ReviewList({
 
       {posts.length < postsTotal ? (
         <div className={styles.cdMoreWrap}>
-          <button type="button" className={styles.cdMore} onClick={onLoadMore} disabled={loadingMorePosts}>
+          <button
+            type="button"
+            className={styles.cdMore}
+            onClick={onLoadMore}
+            disabled={loadingMorePosts}
+          >
             {loadingMorePosts ? 'Loading...' : 'Load More'}
           </button>
         </div>

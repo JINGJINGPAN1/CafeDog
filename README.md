@@ -41,7 +41,6 @@ Email: kong.yin@northeastern.edu
 
 ![CaféDog Application Screenshot](docs/CafeDog.png)
 
-
 ## Instructions to Build
 
 ### Prerequisites
@@ -292,8 +291,7 @@ CafeDog/
 ✅ Image upload (Cloudinary) + Google Places photo proxy  
 ✅ Prettier formatting scripts  
 ✅ No exposed credentials (uses environment variables)  
-✅ No prohibited libraries used (no `axios`, `mongoose`, or `cors` package)  
-
+✅ No prohibited libraries used (no `axios`, `mongoose`, or `cors` package)
 
 ## License
 

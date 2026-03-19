@@ -116,10 +116,21 @@ export default function useHome() {
       await apiFetch('/api/cafes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, cover_image: coverUrl, rating: Number(formData.rating) }),
+        body: JSON.stringify({
+          ...formData,
+          cover_image: coverUrl,
+          rating: Number(formData.rating),
+        }),
       });
       toast.success('Cafe successfully published!');
-      setFormData({ name: '', address: '', has_good_wifi: false, is_quiet: false, rating: '', cover_image: '' });
+      setFormData({
+        name: '',
+        address: '',
+        has_good_wifi: false,
+        is_quiet: false,
+        rating: '',
+        cover_image: '',
+      });
       setCoverFile(null);
       setShowForm(false);
       fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true);
@@ -146,15 +157,33 @@ export default function useHome() {
       : 'CD';
 
   return {
-    cafes, initialLoading, searching, loadingMore, error, total,
-    searchTerm, setSearchTerm,
-    filterWifi, toggleWifi,
-    filterQuiet, toggleQuiet,
-    activeTab, setActiveTab, categories: CATEGORIES,
-    showForm, openForm, closeForm,
-    formData, handleFormChange, handleFormSubmit,
-    coverFile, setCoverFile,
+    cafes,
+    initialLoading,
+    searching,
+    loadingMore,
+    error,
+    total,
+    searchTerm,
+    setSearchTerm,
+    filterWifi,
+    toggleWifi,
+    filterQuiet,
+    toggleQuiet,
+    activeTab,
+    setActiveTab,
+    categories: CATEGORIES,
+    showForm,
+    openForm,
+    closeForm,
+    formData,
+    handleFormChange,
+    handleFormSubmit,
+    coverFile,
+    setCoverFile,
     handleLoadMore,
-    me, isLoggedIn, logout, initials,
+    me,
+    isLoggedIn,
+    logout,
+    initials,
   };
 }

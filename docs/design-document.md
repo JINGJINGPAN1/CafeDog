@@ -8,14 +8,14 @@ Unlike map-first tools that focus on navigation, CaféDog centers on a lightweig
 
 ### Core Features
 
-| Feature | Description |
-| --- | --- |
-| **Café Discovery** | Browse a paginated list of cafés with search by name, filters (WiFi / quiet), and category tabs (Discover / New places / Top rated). |
-| **Café Detail Page** | View café info (name, address, rating, cover image) plus aggregated engagement (likes/saves). |
-| **Posts (Reviews)** | Create posts linked to a café with text, rating, and optional photo upload; view a feed of posts per café with pagination. |
-| **Social Interactions** | Like/unlike posts; comment CRUD (create/edit/delete) on posts; like/save cafés. |
-| **Auth & Profiles** | Session-based login (email + password), registration, logout; profile page shows user posts and cafés, plus personal tabs for liked/saved items. |
-| **Image Handling** | Upload images to Cloudinary; support Google Places photo references via a backend proxy route so keys never reach the client. |
+| Feature                 | Description                                                                                                                                      |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Café Discovery**      | Browse a paginated list of cafés with search by name, filters (WiFi / quiet), and category tabs (Discover / New places / Top rated).             |
+| **Café Detail Page**    | View café info (name, address, rating, cover image) plus aggregated engagement (likes/saves).                                                    |
+| **Posts (Reviews)**     | Create posts linked to a café with text, rating, and optional photo upload; view a feed of posts per café with pagination.                       |
+| **Social Interactions** | Like/unlike posts; comment CRUD (create/edit/delete) on posts; like/save cafés.                                                                  |
+| **Auth & Profiles**     | Session-based login (email + password), registration, logout; profile page shows user posts and cafés, plus personal tabs for liked/saved items. |
+| **Image Handling**      | Upload images to Cloudinary; support Google Places photo references via a backend proxy route so keys never reach the client.                    |
 
 ### Technology Stack
 

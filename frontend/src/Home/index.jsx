@@ -8,15 +8,34 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const {
-    cafes, initialLoading, searching, loadingMore, error, total,
-    searchTerm, setSearchTerm,
-    filterWifi, toggleWifi,
-    filterQuiet, toggleQuiet,
-    activeTab, setActiveTab, categories,
-    showForm, openForm, closeForm,
-    formData, handleFormChange, handleFormSubmit, coverFile, setCoverFile,
+    cafes,
+    initialLoading,
+    searching,
+    loadingMore,
+    error,
+    total,
+    searchTerm,
+    setSearchTerm,
+    filterWifi,
+    toggleWifi,
+    filterQuiet,
+    toggleQuiet,
+    activeTab,
+    setActiveTab,
+    categories,
+    showForm,
+    openForm,
+    closeForm,
+    formData,
+    handleFormChange,
+    handleFormSubmit,
+    coverFile,
+    setCoverFile,
     handleLoadMore,
-    me, isLoggedIn, logout, initials,
+    me,
+    isLoggedIn,
+    logout,
+    initials,
   } = useHome();
 
   if (initialLoading) {
@@ -30,9 +49,7 @@ export default function Home() {
   if (error) {
     return (
       <div className={styles.hPage}>
-        <p className={`${styles.hStatus} ${styles.hStatusError}`}>
-          Something went wrong: {error}
-        </p>
+        <p className={`${styles.hStatus} ${styles.hStatusError}`}>Something went wrong: {error}</p>
       </div>
     );
   }
@@ -58,12 +75,25 @@ export default function Home() {
 
         <div className={styles.hGridWrap}>
           {searching && <div className={styles.hSearchingOverlay} />}
-          <CafeGrid cafes={cafes} total={total} loadingMore={loadingMore} onLoadMore={handleLoadMore} />
+          <CafeGrid
+            cafes={cafes}
+            total={total}
+            loadingMore={loadingMore}
+            onLoadMore={handleLoadMore}
+          />
         </div>
       </div>
 
       <button type="button" className={styles.hFab} onClick={openForm} aria-label="Add cafe">
-        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
+        <svg
+          viewBox="0 0 24 24"
+          width="26"
+          height="26"
+          fill="none"
+          stroke="white"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        >
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>

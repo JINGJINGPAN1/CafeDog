@@ -16,7 +16,9 @@ export default function ProfilePostCard({ post, index }) {
         {post.photoUrl ? (
           <img className={styles.pfCardImg} src={post.photoUrl} alt="Post" />
         ) : (
-          <div className={`${styles.pfCardImgPh} ${isOdd ? styles.pfCardImgPhAlt : ''}`}>&#9749;</div>
+          <div className={`${styles.pfCardImgPh} ${isOdd ? styles.pfCardImgPhAlt : ''}`}>
+            &#9749;
+          </div>
         )}
       </div>
       <div className={styles.pfCardBody}>

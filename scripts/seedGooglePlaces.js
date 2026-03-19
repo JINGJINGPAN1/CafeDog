@@ -14,7 +14,11 @@ if (!MONGODB_URI) {
   console.error('Missing MONGODB_URI in .env');
   process.exit(1);
 }
-if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+if (
+  !process.env.CLOUDINARY_CLOUD_NAME ||
+  !process.env.CLOUDINARY_API_KEY ||
+  !process.env.CLOUDINARY_API_SECRET
+) {
   console.error('Missing Cloudinary credentials in .env');
   process.exit(1);
 }
@@ -162,13 +166,11 @@ async function uploadPhotoToCloudinary(photoName, placeId) {
 // --- Transform ---
 
 function transformPlace(place) {
-  const photoRef =
-    place.photos && place.photos.length > 0 ? place.photos[0].name : null;
+  const photoRef = place.photos && place.photos.length > 0 ? place.photos[0].name : null;
 
-  const location =
-    place.location
-      ? { type: 'Point', coordinates: [place.location.longitude, place.location.latitude] }
-      : null;
+  const location = place.location
+    ? { type: 'Point', coordinates: [place.location.longitude, place.location.latitude] }
+    : null;
 
   return {
     name: place.displayName?.text || '',
@@ -207,7 +209,7 @@ async function main() {
 
     const city = CITY_CENTERS[i];
     console.log(
-      `[${i + 1}/${CITY_CENTERS.length}] Searching ${city.name} (${city.lat}, ${city.lng})...`
+      `[${i + 1}/${CITY_CENTERS.length}] Searching ${city.name} (${city.lat}, ${city.lng})...`,
     );
 
     try {
@@ -216,7 +218,12 @@ async function main() {
       for (const radius of radii) {
         if (cafes.length >= TARGET) break;
 
-        const results = await fetchAllPagesForCenter(city.lat, city.lng, radius, TARGET - cafes.length);
+        const results = await fetchAllPagesForCenter(
+          city.lat,
+          city.lng,
+          radius,
+          TARGET - cafes.length,
+        );
 
         let added = 0;
         for (const place of results) {
@@ -229,7 +236,7 @@ async function main() {
         }
 
         console.log(
-          `  radius=${radius}m -> ${results.length} results, ${added} new | total: ${cafes.length}`
+          `  radius=${radius}m -> ${results.length} results, ${added} new | total: ${cafes.length}`,
         );
 
         await sleep(500);

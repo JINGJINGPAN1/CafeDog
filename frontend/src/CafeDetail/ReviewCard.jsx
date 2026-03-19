@@ -40,13 +40,29 @@ function HeartIcon({ active }) {
   const stroke = active ? '#eb5757' : '#ccc';
   const fill = active ? '#eb5757' : 'none';
   return (
-    <svg viewBox="0 0 24 24" width="15" height="15" fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="15"
+      height="15"
+      fill={fill}
+      stroke={stroke}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 0 0 0 0-7.78z" />
     </svg>
   );
 }
 
-export default function ReviewCard({ post, index, onToggleLike, onDeletePost, onUpdatePost, onBumpRepliesCount }) {
+export default function ReviewCard({
+  post,
+  index,
+  onToggleLike,
+  onDeletePost,
+  onUpdatePost,
+  onBumpRepliesCount,
+}) {
   const theme = AVATAR_THEMES[index % 3];
   const liked = Boolean(post.viewerHasLiked);
   const likesCount = post.likesCount ?? 0;
@@ -55,7 +71,8 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
   const { isLoggedIn, me } = useAuth();
 
   const postId = useMemo(() => String(post._id || ''), [post._id]);
-  const isPostOwner = Boolean(me?._id) && Boolean(post.authorId) && String(post.authorId) === String(me._id);
+  const isPostOwner =
+    Boolean(me?._id) && Boolean(post.authorId) && String(post.authorId) === String(me._id);
 
   const [replyOpen, setReplyOpen] = useState(false);
   const [loadingReplies, setLoadingReplies] = useState(false);
@@ -137,7 +154,9 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
     setDeletingReplyId(String(commentId));
     try {
       await apiFetch(`/api/comments/${commentId}`, { method: 'DELETE' });
-      setReplies((prev) => (Array.isArray(prev) ? prev.filter((r) => String(r._id) !== String(commentId)) : prev));
+      setReplies((prev) =>
+        Array.isArray(prev) ? prev.filter((r) => String(r._id) !== String(commentId)) : prev,
+      );
       onBumpRepliesCount?.(postId, -1);
     } catch (err) {
       toast.error('Error deleting reply: ' + (err instanceof Error ? err.message : String(err)));
@@ -159,7 +178,11 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
     e.preventDefault();
     const text = String(editText).trim();
     if (!text) return;
-    await onUpdatePost?.(postId, { text, photoUrl: String(editPhotoUrl || ''), rating: Number(editRating) });
+    await onUpdatePost?.(postId, {
+      text,
+      photoUrl: String(editPhotoUrl || ''),
+      rating: Number(editRating),
+    });
     setIsEditingPost(false);
   };
 
@@ -173,8 +196,12 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
           <div>
             <div className={styles.cdRvAuthor}>
               {post.authorId ? (
-                <Link to={`/profile/${post.authorId}`} className={styles.cdRvAuthorLink}>{post.author}</Link>
-              ) : post.author}
+                <Link to={`/profile/${post.authorId}`} className={styles.cdRvAuthorLink}>
+                  {post.author}
+                </Link>
+              ) : (
+                post.author
+              )}
             </div>
             <div className={styles.cdRvTime}>{timeAgo(post.createdAt || post.createAt)}</div>
           </div>
@@ -197,7 +224,11 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
               onChange={(e) => setEditPhotoUrl(e.target.value)}
               placeholder="Photo URL (optional)"
             />
-            <select className={styles.cdPostEditSelect} value={editRating} onChange={(e) => setEditRating(e.target.value)}>
+            <select
+              className={styles.cdPostEditSelect}
+              value={editRating}
+              onChange={(e) => setEditRating(e.target.value)}
+            >
               <option value="1">1★</option>
               <option value="2">2★</option>
               <option value="3">3★</option>
@@ -206,7 +237,11 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
             </select>
           </div>
           <div className={styles.cdPostEditActions}>
-            <button type="button" className={`${styles.cdPostEditGhost} ${styles.cdBarBtn}`} onClick={cancelEditPost}>
+            <button
+              type="button"
+              className={`${styles.cdPostEditGhost} ${styles.cdBarBtn}`}
+              onClick={cancelEditPost}
+            >
               Cancel
             </button>
             <button type="submit" className={styles.cdPostEditSave} disabled={!canSavePost}>
@@ -260,7 +295,10 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
           aria-expanded={replyOpen}
           disabled={isEditingPost}
         >
-          reply{repliesCountForDisplay > 0 ? <span className={styles.cdReplyCount}>{repliesCountForDisplay}</span> : null}
+          reply
+          {repliesCountForDisplay > 0 ? (
+            <span className={styles.cdReplyCount}>{repliesCountForDisplay}</span>
+          ) : null}
         </button>
       </div>
 
@@ -268,7 +306,12 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
         <div className={styles.cdReplies}>
           <div className={styles.cdRepliesTop}>
             <span className={styles.cdRepliesTitle}>Replies</span>
-            <button type="button" className={`${styles.cdRepliesRefresh} ${styles.cdBarBtn}`} onClick={loadReplies} disabled={loadingReplies}>
+            <button
+              type="button"
+              className={`${styles.cdRepliesRefresh} ${styles.cdBarBtn}`}
+              onClick={loadReplies}
+              disabled={loadingReplies}
+            >
               {loadingReplies ? 'Loading…' : 'Refresh'}
             </button>
           </div>
@@ -283,7 +326,10 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
                 <div key={r._id} className={styles.cdReply}>
                   <div className={styles.cdReplyHead}>
                     <span className={styles.cdReplyAuthor}>
-                      {r.authorUsername || (String(r.userId) === String(me?._id) ? (me?.username || me?.email || 'You') : 'User')}
+                      {r.authorUsername ||
+                        (String(r.userId) === String(me?._id)
+                          ? me?.username || me?.email || 'You'
+                          : 'User')}
                     </span>
                     <span className={styles.cdReplyHeadRight}>
                       <span className={styles.cdReplyTime}>{timeAgo(r.createdAt)}</span>
@@ -313,7 +359,11 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
               placeholder={isLoggedIn ? 'Write a reply…' : 'Log in to reply…'}
               disabled={!isLoggedIn || submittingReply}
             />
-            <button type="submit" className={styles.cdReplyBtn} disabled={!isLoggedIn || !canSubmitReply}>
+            <button
+              type="submit"
+              className={styles.cdReplyBtn}
+              disabled={!isLoggedIn || !canSubmitReply}
+            >
               {submittingReply ? 'Sending…' : 'Send'}
             </button>
           </form>

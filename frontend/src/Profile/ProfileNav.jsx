@@ -7,10 +7,18 @@ export default function ProfileNav() {
     <header className={styles.pfNav}>
       <div className={styles.pfNavInner}>
         <Link to="/" className={styles.pfLogo}>
-          <img src={logoImg} alt="" style={{ height: '32px', width: '32px', objectFit: 'contain' }} />
-          <span>Café<span className={styles.pfLogoAccent}>Dog</span></span>
+          <img
+            src={logoImg}
+            alt=""
+            style={{ height: '32px', width: '32px', objectFit: 'contain' }}
+          />
+          <span>
+            Café<span className={styles.pfLogoAccent}>Dog</span>
+          </span>
         </Link>
-        <Link to="/" className={styles.pfBack}>&larr; back to home</Link>
+        <Link to="/" className={styles.pfBack}>
+          &larr; back to home
+        </Link>
       </div>
     </header>
   );

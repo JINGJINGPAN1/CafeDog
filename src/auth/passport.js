@@ -41,10 +41,9 @@ passport.deserializeUser(async (id, done) => {
     if (!id || !ObjectId.isValid(String(id))) return done(null, false);
 
     const db = await getDb();
-    const user = await db.collection('users').findOne(
-      { _id: new ObjectId(String(id)) },
-      { projection: { passwordHash: 0 } },
-    );
+    const user = await db
+      .collection('users')
+      .findOne({ _id: new ObjectId(String(id)) }, { projection: { passwordHash: 0 } });
     if (!user) return done(null, false);
     return done(null, user);
   } catch (err) {

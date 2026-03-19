@@ -26,5 +26,15 @@ export default function useRegister() {
     }
   };
 
-  return { email, setEmail, username, setUsername, password, setPassword, submitting, error, onSubmit };
+  return {
+    email,
+    setEmail,
+    username,
+    setUsername,
+    password,
+    setPassword,
+    submitting,
+    error,
+    onSubmit,
+  };
 }

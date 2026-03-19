@@ -97,36 +97,47 @@ export default function useCafeDetail() {
     }
   }, [id]);
 
-  const togglePostLike = useCallback(async (postId) => {
-    if (!isLoggedIn) {
-      toast.error('Please log in to like this post.');
-      return;
-    }
-    if (!postId) return;
+  const togglePostLike = useCallback(
+    async (postId) => {
+      if (!isLoggedIn) {
+        toast.error('Please log in to like this post.');
+        return;
+      }
+      if (!postId) return;
 
-    const current = posts.find((p) => String(p._id) === String(postId));
-    const hasLiked = Boolean(current?.viewerHasLiked);
+      const current = posts.find((p) => String(p._id) === String(postId));
+      const hasLiked = Boolean(current?.viewerHasLiked);
 
-    try {
-      const data = await apiFetch(`/api/posts/${postId}/likes`, { method: hasLiked ? 'DELETE' : 'POST' });
-      setPosts((prev) => prev.map((p) => {
-        if (String(p._id) !== String(postId)) return p;
-        return {
-          ...p,
-          likesCount: data?.count ?? p.likesCount ?? 0,
-          viewerHasLiked: Boolean(data?.viewerHasLiked),
-        };
-      }));
-    } catch (err) {
-      toast.error('Error updating post like: ' + (err instanceof Error ? err.message : String(err)));
-    }
-  }, [isLoggedIn, posts, toast]);
+      try {
+        const data = await apiFetch(`/api/posts/${postId}/likes`, {
+          method: hasLiked ? 'DELETE' : 'POST',
+        });
+        setPosts((prev) =>
+          prev.map((p) => {
+            if (String(p._id) !== String(postId)) return p;
+            return {
+              ...p,
+              likesCount: data?.count ?? p.likesCount ?? 0,
+              viewerHasLiked: Boolean(data?.viewerHasLiked),
+            };
+          }),
+        );
+      } catch (err) {
+        toast.error(
+          'Error updating post like: ' + (err instanceof Error ? err.message : String(err)),
+        );
+      }
+    },
+    [isLoggedIn, posts, toast],
+  );
 
   const loadMorePosts = async () => {
     const nextPage = postsPage + 1;
     setLoadingMorePosts(true);
     try {
-      const data = await apiFetch(`/api/cafes/${id}/posts?page=${nextPage}&limit=${POSTS_PER_PAGE}`);
+      const data = await apiFetch(
+        `/api/cafes/${id}/posts?page=${nextPage}&limit=${POSTS_PER_PAGE}`,
+      );
       const newPosts = Array.isArray(data.posts) ? data.posts : [];
       setPosts((prev) => [...prev, ...newPosts]);
       setPostsTotal(data.total || 0);
@@ -138,62 +149,73 @@ export default function useCafeDetail() {
     }
   };
 
-  const deletePost = useCallback(async (postId) => {
-    if (!isLoggedIn) {
-      toast.error('Please log in.');
-      return;
-    }
-    const ok = await toast.confirm('Delete this post? This cannot be undone.', 'Delete post');
-    if (!ok) return;
+  const deletePost = useCallback(
+    async (postId) => {
+      if (!isLoggedIn) {
+        toast.error('Please log in.');
+        return;
+      }
+      const ok = await toast.confirm('Delete this post? This cannot be undone.', 'Delete post');
+      if (!ok) return;
 
-    try {
-      await apiFetch(`/api/posts/${postId}`, { method: 'DELETE' });
-      setPosts((prev) => prev.filter((p) => String(p._id) !== String(postId)));
-      setPostsTotal((n) => Math.max(0, (Number(n) || 0) - 1));
-      toast.success('Post deleted.');
-    } catch (err) {
-      toast.error('Error deleting post: ' + (err instanceof Error ? err.message : String(err)));
-    }
-  }, [isLoggedIn, toast]);
+      try {
+        await apiFetch(`/api/posts/${postId}`, { method: 'DELETE' });
+        setPosts((prev) => prev.filter((p) => String(p._id) !== String(postId)));
+        setPostsTotal((n) => Math.max(0, (Number(n) || 0) - 1));
+        toast.success('Post deleted.');
+      } catch (err) {
+        toast.error('Error deleting post: ' + (err instanceof Error ? err.message : String(err)));
+      }
+    },
+    [isLoggedIn, toast],
+  );
 
-  const updatePost = useCallback(async (postId, updates) => {
-    if (!isLoggedIn) {
-      toast.error('Please log in.');
-      return;
-    }
-    try {
-      const payload = {
-        text: updates?.text,
-        photoUrl: updates?.photoUrl,
-        rating: updates?.rating,
-      };
-      await apiFetch(`/api/posts/${postId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      setPosts((prev) => prev.map((p) => {
-        if (String(p._id) !== String(postId)) return p;
-        return {
-          ...p,
-          text: String(payload.text),
-          photoUrl: payload.photoUrl != null ? String(payload.photoUrl) : '',
-          rating: payload.rating != null && payload.rating !== '' ? Number(payload.rating) : p.rating,
-          updatedAt: new Date().toISOString(),
+  const updatePost = useCallback(
+    async (postId, updates) => {
+      if (!isLoggedIn) {
+        toast.error('Please log in.');
+        return;
+      }
+      try {
+        const payload = {
+          text: updates?.text,
+          photoUrl: updates?.photoUrl,
+          rating: updates?.rating,
         };
-      }));
-      toast.success('Post updated.');
-    } catch (err) {
-      toast.error('Error updating post: ' + (err instanceof Error ? err.message : String(err)));
-    }
-  }, [isLoggedIn, toast]);
+        await apiFetch(`/api/posts/${postId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        setPosts((prev) =>
+          prev.map((p) => {
+            if (String(p._id) !== String(postId)) return p;
+            return {
+              ...p,
+              text: String(payload.text),
+              photoUrl: payload.photoUrl != null ? String(payload.photoUrl) : '',
+              rating:
+                payload.rating != null && payload.rating !== '' ? Number(payload.rating) : p.rating,
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+        );
+        toast.success('Post updated.');
+      } catch (err) {
+        toast.error('Error updating post: ' + (err instanceof Error ? err.message : String(err)));
+      }
+    },
+    [isLoggedIn, toast],
+  );
 
   const bumpPostRepliesCount = useCallback((postId, delta) => {
-    setPosts((prev) => prev.map((p) => {
-      if (String(p._id) !== String(postId)) return p;
-      const next = (p.repliesCount ?? 0) + (Number(delta) || 0);
-      return { ...p, repliesCount: Math.max(0, next) };
-    }));
+    setPosts((prev) =>
+      prev.map((p) => {
+        if (String(p._id) !== String(postId)) return p;
+        const next = (p.repliesCount ?? 0) + (Number(delta) || 0);
+        return { ...p, repliesCount: Math.max(0, next) };
+      }),
+    );
   }, []);
 
   // --- Review form ---
@@ -330,12 +352,18 @@ export default function useCafeDetail() {
 
     const hasLiked = Boolean(cafe.viewerHasLiked);
     try {
-      const data = await apiFetch(`/api/cafes/${id}/likes`, { method: hasLiked ? 'DELETE' : 'POST' });
-      setCafe((prev) => prev ? ({
-        ...prev,
-        likesCount: data?.count ?? prev.likesCount ?? 0,
-        viewerHasLiked: Boolean(data?.viewerHasLiked),
-      }) : prev);
+      const data = await apiFetch(`/api/cafes/${id}/likes`, {
+        method: hasLiked ? 'DELETE' : 'POST',
+      });
+      setCafe((prev) =>
+        prev
+          ? {
+              ...prev,
+              likesCount: data?.count ?? prev.likesCount ?? 0,
+              viewerHasLiked: Boolean(data?.viewerHasLiked),
+            }
+          : prev,
+      );
     } catch (err) {
       toast.error('Error updating like: ' + (err instanceof Error ? err.message : String(err)));
     }
@@ -350,12 +378,18 @@ export default function useCafeDetail() {
 
     const hasSaved = Boolean(cafe.viewerHasSaved);
     try {
-      const data = await apiFetch(`/api/cafes/${id}/saved`, { method: hasSaved ? 'DELETE' : 'POST' });
-      setCafe((prev) => prev ? ({
-        ...prev,
-        savesCount: data?.savesCount ?? prev.savesCount ?? 0,
-        viewerHasSaved: Boolean(data?.viewerHasSaved),
-      }) : prev);
+      const data = await apiFetch(`/api/cafes/${id}/saved`, {
+        method: hasSaved ? 'DELETE' : 'POST',
+      });
+      setCafe((prev) =>
+        prev
+          ? {
+              ...prev,
+              savesCount: data?.savesCount ?? prev.savesCount ?? 0,
+              viewerHasSaved: Boolean(data?.viewerHasSaved),
+            }
+          : prev,
+      );
     } catch (err) {
       toast.error('Error updating saved: ' + (err instanceof Error ? err.message : String(err)));
     }

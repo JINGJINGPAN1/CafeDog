@@ -10,18 +10,36 @@ export default function Login() {
     <div className={styles.authPage}>
       <div className={styles.authCard}>
         <div className={styles.authLogo}>
-          <img src={logoImg} alt="" style={{ height: '38px', width: '38px', objectFit: 'contain' }} />
-          <span>Café<span className={styles.authLogoAccent}>Dog</span></span>
+          <img
+            src={logoImg}
+            alt=""
+            style={{ height: '38px', width: '38px', objectFit: 'contain' }}
+          />
+          <span>
+            Café<span className={styles.authLogoAccent}>Dog</span>
+          </span>
         </div>
         <h1 className={styles.authTitle}>Log in</h1>
         <form className={styles.authForm} onSubmit={onSubmit}>
           <div className={styles.authField}>
             <label className={styles.authLabel}>Email</label>
-            <input className={styles.authInput} value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+            <input
+              className={styles.authInput}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              required
+            />
           </div>
           <div className={styles.authField}>
             <label className={styles.authLabel}>Password</label>
-            <input className={styles.authInput} value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+            <input
+              className={styles.authInput}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              required
+            />
           </div>
           {error ? <p className={styles.authError}>{error}</p> : null}
           <button className={styles.authSubmit} type="submit" disabled={submitting}>
@@ -29,7 +47,10 @@ export default function Login() {
           </button>
         </form>
         <p className={styles.authBottom}>
-          New here? <Link to="/register" className={styles.authLink}>Create an account</Link>
+          New here?{' '}
+          <Link to="/register" className={styles.authLink}>
+            Create an account
+          </Link>
         </p>
       </div>
     </div>

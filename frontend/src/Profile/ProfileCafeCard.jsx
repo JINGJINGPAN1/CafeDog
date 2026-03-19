@@ -18,16 +18,26 @@ export default function ProfileCafeCard({ cafe, index }) {
         {src ? (
           <img className={styles.pfCardImg} src={src} alt={cafe.name} />
         ) : (
-          <div className={`${styles.pfCardImgPh} ${isOdd ? styles.pfCardImgPhAlt : ''}`}>&#9749;</div>
+          <div className={`${styles.pfCardImgPh} ${isOdd ? styles.pfCardImgPhAlt : ''}`}>
+            &#9749;
+          </div>
         )}
       </div>
       <div className={styles.pfCardBody}>
         <span className={styles.pfCafeName}>{cafe.name}</span>
         {cafe.address ? <span className={styles.pfCafeAddr}>{cafe.address}</span> : null}
         <div className={styles.pfCafeBadges}>
-          {cafe.has_good_wifi ? <span className={`${styles.pfCafePill} ${styles.pfCafePillWifi}`}>wifi</span> : null}
-          {cafe.is_quiet ? <span className={`${styles.pfCafePill} ${styles.pfCafePillQuiet}`}>quiet</span> : null}
-          {cafe.rating ? <span className={`${styles.pfCafePill} ${styles.pfCafePillRating}`}>{renderStars(cafe.rating)}</span> : null}
+          {cafe.has_good_wifi ? (
+            <span className={`${styles.pfCafePill} ${styles.pfCafePillWifi}`}>wifi</span>
+          ) : null}
+          {cafe.is_quiet ? (
+            <span className={`${styles.pfCafePill} ${styles.pfCafePillQuiet}`}>quiet</span>
+          ) : null}
+          {cafe.rating ? (
+            <span className={`${styles.pfCafePill} ${styles.pfCafePillRating}`}>
+              {renderStars(cafe.rating)}
+            </span>
+          ) : null}
         </div>
       </div>
     </Link>

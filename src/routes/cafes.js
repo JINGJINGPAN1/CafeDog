@@ -31,11 +31,7 @@ router.get('/cafes', async (req, res) => {
 
     const sortParam = String(req.query.sort || '').toLowerCase();
     const sort =
-      sortParam === 'new'
-        ? { _id: -1 }
-        : sortParam === 'top'
-          ? { rating: -1, _id: -1 }
-          : null;
+      sortParam === 'new' ? { _id: -1 } : sortParam === 'top' ? { rating: -1, _id: -1 } : null;
 
     const total = await cafesCollection.countDocuments(filter);
     const cafes = await cafesCollection
@@ -261,7 +257,8 @@ router.delete('/cafes/:id', requireAuth, async (req, res) => {
 
     // Find all posts belonging to this cafe so we can clean up their likes/comments
     const postIds = (
-      await db.collection('posts')
+      await db
+        .collection('posts')
         .find({ cafeId: cafeOid }, { projection: { _id: 1 } })
         .toArray()
     ).map((p) => p._id);
@@ -290,7 +287,6 @@ router.delete('/cafes/:id', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Server error during deletion.' });
   }
 });
-
 
 router.put('/cafes/:id', requireAuth, async (req, res) => {
   try {
@@ -323,10 +319,9 @@ router.put('/cafes/:id', requireAuth, async (req, res) => {
       cover_image: cover_image ? String(cover_image) : '',
     };
 
-    await db.collection('cafes').updateOne(
-      { _id: new ObjectId(String(cafeId)) },
-      { $set: updates },
-    );
+    await db
+      .collection('cafes')
+      .updateOne({ _id: new ObjectId(String(cafeId)) }, { $set: updates });
 
     res.json({ message: 'Cafe updated successfully.' });
   } catch (error) {
@@ -350,9 +345,10 @@ router.post('/cafes', async (req, res) => {
       is_quiet: Boolean(is_quiet),
       rating: rating != null && rating !== '' ? Number(rating) : null,
       cover_image: cover_image ? String(cover_image) : '',
-      createdBy: sessionUserId && ObjectId.isValid(String(sessionUserId))
-        ? new ObjectId(String(sessionUserId))
-        : null,
+      createdBy:
+        sessionUserId && ObjectId.isValid(String(sessionUserId))
+          ? new ObjectId(String(sessionUserId))
+          : null,
     };
 
     const db = await getDb();

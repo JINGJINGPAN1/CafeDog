@@ -4,7 +4,15 @@
 .hPage {
   min-height: 100vh;
   background: #fafafa;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   padding-bottom: 80px;
 }
@@ -47,7 +55,9 @@
   align-items: center;
   gap: 8px;
 }
-.hLogoAccent { color: #e07a5f; }
+.hLogoAccent {
+  color: #e07a5f;
+}
 .hNavRight {
   display: flex;
   align-items: center;
@@ -68,7 +78,9 @@
   text-decoration: none;
   letter-spacing: 0.5px;
   box-shadow: 0 2px 8px rgba(224, 122, 95, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 .hAvatar:hover {
   transform: scale(1.08);
@@ -94,7 +106,9 @@
   font-weight: 500;
   transition: color 0.15s;
 }
-.hAuthLink:hover { color: #262626; }
+.hAuthLink:hover {
+  color: #262626;
+}
 .hAuthLinkRegister {
   background: linear-gradient(135deg, #e07a5f, #c96a4f);
   color: #fff;
@@ -102,7 +116,9 @@
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
 }
 .hAuthLinkRegister:hover {
   color: #fff;
@@ -119,7 +135,9 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.hTabs::-webkit-scrollbar { display: none; }
+.hTabs::-webkit-scrollbar {
+  display: none;
+}
 .hTab {
   flex-shrink: 0;
   padding: 8px 20px;
@@ -164,7 +182,9 @@
   padding: 10px 16px;
   flex: 1;
   min-width: 180px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 .hFilterSearch:focus-within {
   border-color: #e07a5f;
@@ -179,8 +199,13 @@
   color: #262626;
   font-family: inherit;
 }
-.hFilterInput::placeholder { color: #bbb; }
-.hSearchIcon { flex-shrink: 0; color: #bbb; }
+.hFilterInput::placeholder {
+  color: #bbb;
+}
+.hSearchIcon {
+  flex-shrink: 0;
+  color: #bbb;
+}
 
 .hPill {
   padding: 8px 16px;
@@ -252,8 +277,9 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              box-shadow 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition:
+    transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .hCard:hover {
   transform: translateY(-4px);
@@ -423,7 +449,9 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 20px rgba(224, 122, 95, 0.45);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   z-index: 90;
 }
 .hFab:hover {
@@ -476,7 +504,9 @@
   border-radius: 50%;
   transition: background 0.15s;
 }
-.hModalClose:hover { background: #eee; }
+.hModalClose:hover {
+  background: #eee;
+}
 
 .hForm {
   display: flex;
@@ -489,7 +519,9 @@
   border: 1.5px solid #efefef;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   background: #fafafa;
   font-family: inherit;
   color: #262626;
@@ -521,7 +553,9 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 6px;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
   font-family: inherit;
 }
 .hSubmitBtn:hover {
@@ -598,30 +632,57 @@
 
 /* -------- Animations -------- */
 @keyframes hFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes hScaleIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* -------- Responsive -------- */
 @media (min-width: 640px) {
-  .hGrid { grid-template-columns: repeat(3, 1fr); }
+  .hGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 @media (min-width: 900px) {
-  .hGrid { grid-template-columns: repeat(4, 1fr); }
+  .hGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 @media (min-width: 1200px) {
-  .hGrid { grid-template-columns: repeat(5, 1fr); }
+  .hGrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 @media (max-width: 480px) {
-  .hGrid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .hContainer { padding: 0 12px; }
-  .hNavInner { padding: 0 12px; }
-  .hCardBody { padding: 10px 12px 12px; }
-  .hModalBackdrop { align-items: flex-end; }
+  .hGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .hContainer {
+    padding: 0 12px;
+  }
+  .hNavInner {
+    padding: 0 12px;
+  }
+  .hCardBody {
+    padding: 10px 12px 12px;
+  }
+  .hModalBackdrop {
+    align-items: flex-end;
+  }
   .hModal {
     width: 100%;
     max-width: 100%;
@@ -631,6 +692,10 @@
 }
 
 @keyframes hSlideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

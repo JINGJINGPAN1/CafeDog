@@ -11,7 +11,16 @@ function HeartIcon({ active }) {
   const stroke = active ? '#eb5757' : '#ccc';
   const fill = active ? '#eb5757' : 'none';
   return (
-    <svg viewBox="0 0 24 24" width="15" height="15" fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="15"
+      height="15"
+      fill={fill}
+      stroke={stroke}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     </svg>
   );
@@ -21,7 +30,16 @@ function BookmarkIcon({ active }) {
   const stroke = active ? '#f2c94c' : '#888';
   const fill = active ? '#f2c94c' : 'none';
   return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill={fill}
+      stroke={stroke}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
     </svg>
   );
@@ -29,20 +47,39 @@ function BookmarkIcon({ active }) {
 
 export default function CafeDetail() {
   const {
-    cafe, loading, error,
-    isOwner, handleDelete,
-    isEditing, editData, startEditing, cancelEditing, handleEditSubmit, handleEditChange,
-    posts, postsTotal, loadingMorePosts, loadMorePosts, togglePostLike,
-    deletePost, updatePost, bumpPostRepliesCount,
-    formData, handleReviewChange, handleReviewSubmit, setRating,
+    cafe,
+    loading,
+    error,
+    isOwner,
+    handleDelete,
+    isEditing,
+    editData,
+    startEditing,
+    cancelEditing,
+    handleEditSubmit,
+    handleEditChange,
+    posts,
+    postsTotal,
+    loadingMorePosts,
+    loadMorePosts,
+    togglePostLike,
+    deletePost,
+    updatePost,
+    bumpPostRepliesCount,
+    formData,
+    handleReviewChange,
+    handleReviewSubmit,
+    setRating,
     editCoverFile,
     setEditCoverFile,
     postPhotoFile,
     setPostPhotoFile,
-    formRef, reviewTextRef,
+    formRef,
+    reviewTextRef,
     isReviewFormOpen,
     setIsReviewFormOpen,
-    isLoggedIn, me,
+    isLoggedIn,
+    me,
     scrollToForm,
     toggleLike,
     toggleSave,

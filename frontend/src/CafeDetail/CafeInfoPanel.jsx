@@ -1,6 +1,14 @@
 import styles from './CafeDetail.module.css';
 
-export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rating, postsTotal, savesCount }) {
+export default function CafeInfoPanel({
+  name,
+  address,
+  hasGoodWifi,
+  isQuiet,
+  rating,
+  postsTotal,
+  savesCount,
+}) {
   return (
     <div className={styles.cdLeftPad}>
       <div className={styles.cdName}>{name}</div>
@@ -11,9 +19,13 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rat
       </div>
 
       <div className={styles.cdBadges}>
-        {hasGoodWifi ? <span className={`${styles.cdBadge} ${styles.cdBadgeWifi}`}>wifi</span> : null}
+        {hasGoodWifi ? (
+          <span className={`${styles.cdBadge} ${styles.cdBadgeWifi}`}>wifi</span>
+        ) : null}
         {isQuiet ? <span className={`${styles.cdBadge} ${styles.cdBadgeQuiet}`}>quiet</span> : null}
-        {rating ? <span className={`${styles.cdBadge} ${styles.cdBadgeRating}`}>&#9733; {rating}</span> : null}
+        {rating ? (
+          <span className={`${styles.cdBadge} ${styles.cdBadgeRating}`}>&#9733; {rating}</span>
+        ) : null}
       </div>
 
       <div className={styles.cdHr} />
@@ -35,7 +47,15 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rat
 
       <div className={styles.cdHr} />
 
-      <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', marginTop: '4px' }}>
+      <div
+        style={{
+          width: '100%',
+          height: '300px',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          marginTop: '4px',
+        }}
+      >
         <iframe
           title="Cafe location"
           src={`https://maps.google.com/maps?q=${encodeURIComponent(address || name)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
