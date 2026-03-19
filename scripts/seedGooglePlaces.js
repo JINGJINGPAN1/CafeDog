@@ -110,13 +110,9 @@ async function fetchAllPagesForCenter(lat, lng, radius, maxResults) {
   return allResults;
 }
 
-function buildPhotoUrl(photoName) {
-  // New API photo format: places/{placeId}/photos/{photoRef}/media
-  return `https://places.googleapis.com/v1/${photoName}/media?maxWidthPx=800&key=${GOOGLE_API_KEY}`;
-}
-
 function transformPlace(place) {
-  const photoName =
+  // Store only the photo reference name — the backend proxy will add the API key at request time
+  const photoRef =
     place.photos && place.photos.length > 0 ? place.photos[0].name : null;
 
   const location =
@@ -129,7 +125,7 @@ function transformPlace(place) {
     address: place.formattedAddress || '',
     location,
     rating: place.rating ? Math.min(5, Math.max(1, Math.round(place.rating))) : 4,
-    cover_image: photoName ? buildPhotoUrl(photoName) : '',
+    cover_image: photoRef || '',
     has_good_wifi: Math.random() > 0.4,
     is_quiet: Math.random() > 0.5,
     googlePlaceId: place.id, // used for deduplication

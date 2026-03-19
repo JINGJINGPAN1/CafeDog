@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom';
+import { coverImageSrc } from '../lib/coverImage';
 import styles from './Home.module.css';
 
 export default function CafeCard({ cafe }) {
+  const src = coverImageSrc(cafe.cover_image);
   return (
     <Link to={`/cafe/${cafe._id}`} className={styles.hCardLink}>
       <div className={styles.hCard}>
         <div className={styles.hCardImgWrap}>
-          {cafe.cover_image ? (
-            <img className={styles.hCardImg} src={cafe.cover_image} alt={cafe.name} />
+          {src ? (
+            <img className={styles.hCardImg} src={src} alt={cafe.name} />
           ) : (
             <div className={styles.hCardPlaceholder}>&#9749;</div>
           )}

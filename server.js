@@ -10,6 +10,7 @@ const { postsRouter } = require('./src/routes/posts');
 const { authRouter } = require('./src/routes/auth');
 const { socialRouter } = require('./src/routes/social');
 const { uploadsRouter } = require('./src/routes/uploads');
+const { placesRouter } = require('./src/routes/places');
 
 const app = express();
 const port = Number(process.env.PORT) || 5001;
@@ -56,6 +57,7 @@ app.use('/api', cafesRouter);
 app.use('/api', postsRouter);
 app.use('/api', socialRouter);
 app.use('/api', uploadsRouter);
+app.use('/api', placesRouter);
 
 // 4. serve frontend (same-origin) in production
 const distPath = path.join(__dirname, 'frontend', 'dist');

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { coverImageSrc } from '../lib/coverImage';
 import styles from './Profile.module.css';
 
 function renderStars(n) {
@@ -10,11 +11,12 @@ function renderStars(n) {
 
 export default function ProfileCafeCard({ cafe, index }) {
   const isOdd = index % 2 === 1;
+  const src = coverImageSrc(cafe.cover_image);
   return (
     <Link to={`/cafe/${cafe._id}`} className={styles.pfCard}>
       <div className={styles.pfCardImgWrap}>
-        {cafe.cover_image ? (
-          <img className={styles.pfCardImg} src={cafe.cover_image} alt={cafe.name} />
+        {src ? (
+          <img className={styles.pfCardImg} src={src} alt={cafe.name} />
         ) : (
           <div className={`${styles.pfCardImgPh} ${isOdd ? styles.pfCardImgPhAlt : ''}`}>&#9749;</div>
         )}
