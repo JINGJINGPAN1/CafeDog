@@ -117,7 +117,7 @@ export default function CafeDetail() {
         {/* Right column */}
         <div className={styles.cdRight}>
           <div className={styles.cdRh}>
-            <span className={styles.cdRhTitle}>posts &amp; reviews</span>
+            <span className={styles.cdRhTitle}> Reviews</span>
             <span className={styles.cdRhCount}>{postsTotal} reviews</span>
           </div>
 
