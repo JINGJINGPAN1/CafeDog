@@ -9,7 +9,7 @@
     "seed": "node scripts/seed.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "build": "npm --prefix frontend run build"
+    "build": "npm --prefix frontend install && npm --prefix frontend run build"
   },
   "keywords": [],
   "author": "",
