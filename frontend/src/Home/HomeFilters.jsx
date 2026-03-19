@@ -38,14 +38,14 @@ export default function HomeFilters({
         className={`${styles.hPill} ${filterWifi ? styles.hPillActive : ''}`}
         onClick={onToggleWifi}
       >
-        wifi only
+        wifi
       </button>
       <button
         type="button"
         className={`${styles.hPill} ${filterQuiet ? styles.hPillActive : ''}`}
         onClick={onToggleQuiet}
       >
-        quiet only
+        quiet
       </button>
     </div>
   );
