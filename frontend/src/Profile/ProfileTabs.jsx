@@ -5,17 +5,24 @@ export default function ProfileTabs({ tab, onTabChange }) {
     <div className={styles.pfTabs}>
       <button
         type="button"
+        className={`${styles.pfTab} ${tab === 'cafes' ? styles.pfTabOn : ''}`}
+        onClick={() => onTabChange('cafes')}
+      >
+        Added Cafes
+      </button>
+      <button
+        type="button"
         className={`${styles.pfTab} ${tab === 'posts' ? styles.pfTabOn : ''}`}
         onClick={() => onTabChange('posts')}
       >
-        Posts
+        My Reviews
       </button>
       <button
         type="button"
         className={`${styles.pfTab} ${tab === 'liked' ? styles.pfTabOn : ''}`}
         onClick={() => onTabChange('liked')}
       >
-        Liked Posts
+        Liked Reviews
       </button>
       <button
         type="button"

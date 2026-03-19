@@ -22,25 +22,22 @@ function PostList({ items }) {
   );
 }
 
-export default function ProfileGrid({ tab, posts, likedPosts, likedCafes, savedCafes }) {
-  if (tab === 'posts') return <PostList items={posts} />;
-  if (tab === 'liked') return <PostList items={likedPosts} />;
-
+function CafeGrid({ items, emptyMsg }) {
+  if (items.length === 0) return <EmptyState message={emptyMsg} />;
   return (
     <div className={styles.pfGrid}>
-      {tab === 'likedCafes' &&
-        (likedCafes.length === 0 ? (
-          <EmptyState message="No liked cafes yet." />
-        ) : (
-          likedCafes.map((c, i) => <ProfileCafeCard key={c._id} cafe={c} index={i} />)
-        ))}
-
-      {tab === 'saved' &&
-        (savedCafes.length === 0 ? (
-          <EmptyState message="No saved cafes yet." />
-        ) : (
-          savedCafes.map((c, i) => <ProfileCafeCard key={c._id} cafe={c} index={i} />)
-        ))}
+      {items.map((c, i) => (
+        <ProfileCafeCard key={c._id} cafe={c} index={i} />
+      ))}
     </div>
   );
+}
+
+export default function ProfileGrid({ tab, posts, cafes, likedPosts, likedCafes, savedCafes }) {
+  if (tab === 'posts') return <PostList items={posts} />;
+  if (tab === 'cafes') return <CafeGrid items={cafes} emptyMsg="No cafes created yet." />;
+  if (tab === 'liked') return <PostList items={likedPosts} />;
+  if (tab === 'likedCafes') return <CafeGrid items={likedCafes} emptyMsg="No liked cafes yet." />;
+  if (tab === 'saved') return <CafeGrid items={savedCafes} emptyMsg="No saved cafes yet." />;
+  return null;
 }

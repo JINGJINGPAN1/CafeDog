@@ -2,7 +2,6 @@ import { useState } from 'react';
 import useProfile from './useProfile';
 import ProfileNav from './ProfileNav';
 import ProfileHeader from './ProfileHeader';
-import ProfileStats from './ProfileStats';
 import ProfileTabs from './ProfileTabs';
 import ProfileGrid from './ProfileGrid';
 import EditProfileModal from './EditProfileModal';
@@ -34,7 +33,7 @@ export default function Profile() {
     );
   }
 
-  const { user, posts, likedPosts, likedCafes, savedCafes } = profile;
+  const { user, posts, cafes, likedPosts, likedCafes, savedCafes } = profile;
 
   return (
     <div className={styles.pfPage}>
@@ -50,18 +49,12 @@ export default function Profile() {
           onEditProfile={() => setEditOpen(true)}
         />
 
-        <ProfileStats
-          postsCount={posts.length}
-          likedPostsCount={(likedPosts || []).length}
-          likedCafesCount={(likedCafes || []).length}
-          savedCount={(savedCafes || []).length}
-        />
-
         <ProfileTabs tab={tab} onTabChange={setTab} />
 
         <ProfileGrid
           tab={tab}
           posts={posts}
+          cafes={cafes || []}
           likedPosts={likedPosts || []}
           likedCafes={likedCafes || []}
           savedCafes={savedCafes || []}
