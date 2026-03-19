@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../auth/useAuth';
 import { useToast } from '../toast/useToast';
+import { apiFetch } from '../lib/api';
 
 const CAFES_PER_PAGE = 12;
-const CATEGORIES = ['discover', 'wifi spots', 'quiet study', 'new places', 'top rated'];
+const CATEGORIES = ['discover', 'new places', 'top rated'];
 
 export default function useHome() {
   const { me, isLoggedIn, logout } = useAuth();
@@ -29,12 +30,13 @@ export default function useHome() {
     rating: '',
     cover_image: '',
   });
+  const [coverFile, setCoverFile] = useState(null);
 
   const [activeTab, setActiveTab] = useState('discover');
   const debounceRef = useRef(null);
   const hasLoadedOnce = useRef(false);
 
-  const fetchCafes = useCallback((search, wifi, quiet, pg, reset) => {
+  const fetchCafes = useCallback((search, wifi, quiet, tab, pg, reset) => {
     if (reset) {
       if (!hasLoadedOnce.current) setInitialLoading(true);
       else setSearching(true);
@@ -46,6 +48,8 @@ export default function useHome() {
     if (search) params.append('search', search);
     if (wifi) params.append('wifi', 'true');
     if (quiet) params.append('quiet', 'true');
+    if (tab === 'new places') params.append('sort', 'new');
+    if (tab === 'top rated') params.append('sort', 'top');
     params.append('page', String(pg));
     params.append('limit', String(CAFES_PER_PAGE));
 
@@ -77,13 +81,13 @@ export default function useHome() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setPage(1);
-      fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
+      fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true);
     }, 300);
     return () => clearTimeout(debounceRef.current);
-  }, [searchTerm, filterWifi, filterQuiet, fetchCafes]);
+  }, [searchTerm, filterWifi, filterQuiet, activeTab, fetchCafes]);
 
   const handleLoadMore = () => {
-    fetchCafes(searchTerm, filterWifi, filterQuiet, page + 1, false);
+    fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, page + 1, false);
   };
 
   const handleFormChange = (e) => {
@@ -101,24 +105,37 @@ export default function useHome() {
       return;
     }
     try {
-      const response = await fetch('/api/cafes', {
+      let coverUrl = formData.cover_image;
+      if (coverFile) {
+        const fd = new FormData();
+        fd.append('file', coverFile);
+        const uploaded = await apiFetch('/api/uploads/image', { method: 'POST', body: fd });
+        coverUrl = uploaded?.url || coverUrl;
+      }
+
+      await apiFetch('/api/cafes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ ...formData, rating: Number(formData.rating) }),
+        body: JSON.stringify({ ...formData, cover_image: coverUrl, rating: Number(formData.rating) }),
       });
-      if (!response.ok) throw new Error('Failed to save, backend returned an error');
       toast.success('Cafe successfully published!');
       setFormData({ name: '', address: '', has_good_wifi: false, is_quiet: false, rating: '', cover_image: '' });
+      setCoverFile(null);
       setShowForm(false);
-      fetchCafes(searchTerm, filterWifi, filterQuiet, 1, true);
+      fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true);
     } catch (err) {
       toast.error('Error submitting: ' + err.message);
     }
   };
 
-  const openForm = () => setShowForm(true);
-  const closeForm = () => setShowForm(false);
+  const openForm = () => {
+    setCoverFile(null);
+    setShowForm(true);
+  };
+  const closeForm = () => {
+    setCoverFile(null);
+    setShowForm(false);
+  };
   const toggleWifi = () => setFilterWifi((v) => !v);
   const toggleQuiet = () => setFilterQuiet((v) => !v);
 
@@ -136,6 +153,7 @@ export default function useHome() {
     activeTab, setActiveTab, categories: CATEGORIES,
     showForm, openForm, closeForm,
     formData, handleFormChange, handleFormSubmit,
+    coverFile, setCoverFile,
     handleLoadMore,
     me, isLoggedIn, logout, initials,
   };

@@ -35,6 +35,10 @@ export default function CafeDetail() {
     posts, postsTotal, loadingMorePosts, loadMorePosts, togglePostLike,
     deletePost, updatePost, bumpPostRepliesCount,
     formData, handleReviewChange, handleReviewSubmit, setRating,
+    editCoverFile,
+    setEditCoverFile,
+    postPhotoFile,
+    setPostPhotoFile,
     formRef, reviewTextRef,
     isLoggedIn, me,
     scrollToForm,
@@ -88,6 +92,8 @@ export default function CafeDetail() {
               onChange={handleEditChange}
               onSubmit={handleEditSubmit}
               onCancel={cancelEditing}
+              onCoverFileChange={setEditCoverFile}
+              coverFile={editCoverFile}
             />
           ) : (
             <CafeInfoPanel
@@ -127,6 +133,8 @@ export default function CafeDetail() {
               isLoggedIn={isLoggedIn}
               displayName={me?.username || me?.email}
               reviewTextRef={reviewTextRef}
+              onPhotoFileChange={setPostPhotoFile}
+              photoFile={postPhotoFile}
             />
           </ReviewList>
 

@@ -20,6 +20,7 @@ export default function useCafeDetail() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
+  const [editCoverFile, setEditCoverFile] = useState(null);
 
   const [posts, setPosts] = useState([]);
   const [postsPage, setPostsPage] = useState(1);
@@ -32,6 +33,14 @@ export default function useCafeDetail() {
     photoUrl: '',
     rating: '5',
   });
+  const [postPhotoFile, setPostPhotoFile] = useState(null);
+
+  const uploadImage = useCallback(async (file) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    const data = await apiFetch('/api/uploads/image', { method: 'POST', body: fd });
+    return data?.url;
+  }, []);
 
   // --- Fetch cafe + initial posts ---
   useEffect(() => {
@@ -194,6 +203,11 @@ export default function useCafeDetail() {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
+      let photoUrl = formData.photoUrl;
+      if (postPhotoFile) {
+        const uploadedUrl = await uploadImage(postPhotoFile);
+        if (uploadedUrl) photoUrl = uploadedUrl;
+      }
       await apiFetch('/api/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -201,11 +215,12 @@ export default function useCafeDetail() {
           cafeId: id,
           author: formData.author,
           text: formData.text,
-          photoUrl: formData.photoUrl,
+          photoUrl,
           rating: formData.rating,
         }),
       });
       setFormData({ author: '', text: '', photoUrl: '', rating: '5' });
+      setPostPhotoFile(null);
       reloadPosts();
     } catch (err) {
       console.error(err);
@@ -244,22 +259,31 @@ export default function useCafeDetail() {
       rating: cafe.rating ?? '',
       cover_image: cafe.cover_image || '',
     });
+    setEditCoverFile(null);
     setIsEditing(true);
   };
 
   const cancelEditing = () => {
+    setEditCoverFile(null);
     setIsEditing(false);
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
+      let coverUrl = editData.cover_image;
+      if (editCoverFile) {
+        const uploadedUrl = await uploadImage(editCoverFile);
+        if (uploadedUrl) coverUrl = uploadedUrl;
+      }
+      const payload = { ...editData, cover_image: coverUrl };
       await apiFetch(`/api/cafes/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editData),
+        body: JSON.stringify(payload),
       });
-      setCafe((prev) => ({ ...prev, ...editData }));
+      setCafe((prev) => ({ ...prev, ...payload }));
+      setEditCoverFile(null);
       setIsEditing(false);
     } catch (err) {
       toast.error('Error updating cafe: ' + err.message);
@@ -341,6 +365,8 @@ export default function useCafeDetail() {
     cancelEditing,
     handleEditSubmit,
     handleEditChange,
+    editCoverFile,
+    setEditCoverFile,
 
     // Posts / reviews
     posts,
@@ -357,6 +383,8 @@ export default function useCafeDetail() {
     handleReviewChange,
     handleReviewSubmit,
     setRating,
+    postPhotoFile,
+    setPostPhotoFile,
     formRef,
     reviewTextRef,
 

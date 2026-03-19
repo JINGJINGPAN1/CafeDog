@@ -29,9 +29,18 @@ router.get('/cafes', async (req, res) => {
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 12));
     const skip = (page - 1) * limit;
 
+    const sortParam = String(req.query.sort || '').toLowerCase();
+    const sort =
+      sortParam === 'new'
+        ? { _id: -1 }
+        : sortParam === 'top'
+          ? { rating: -1, _id: -1 }
+          : null;
+
     const total = await cafesCollection.countDocuments(filter);
     const cafes = await cafesCollection
       .find(filter)
+      .sort(sort || undefined)
       .skip(skip)
       .limit(limit)
       .toArray();

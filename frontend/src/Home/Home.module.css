@@ -525,6 +525,62 @@
   box-shadow: 0 4px 14px rgba(224, 122, 95, 0.35);
 }
 
+/* Photo picker */
+.hFileInputHidden {
+  display: none;
+}
+.hPhotoRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hPhotoBtn {
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(224, 122, 95, 0.25);
+  background: #fef7f4;
+  color: #e07a5f;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  flex: 1;
+}
+.hPhotoBtn:hover {
+  background: #fef0ea;
+  border-color: rgba(224, 122, 95, 0.4);
+}
+.hPhotoRemove {
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1.5px solid #efefef;
+  background: #fff;
+  color: #888;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.hPhotoRemove:hover {
+  border-color: #ddd;
+  color: #666;
+}
+.hPhotoPreviewWrap {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+}
+.hPhotoPreviewImg {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
 /* -------- Loading / Error -------- */
 .hStatus {
   text-align: center;

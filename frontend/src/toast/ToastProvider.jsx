@@ -1,7 +1,6 @@
-import { createContext, useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import styles from './Toast.module.css';
-
-export const ToastContext = createContext(null);
+import { ToastContext } from './ToastContext';
 
 let idCounter = 0;
 

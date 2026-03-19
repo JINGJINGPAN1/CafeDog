@@ -14,7 +14,7 @@ export default function Home() {
     filterQuiet, toggleQuiet,
     activeTab, setActiveTab, categories,
     showForm, openForm, closeForm,
-    formData, handleFormChange, handleFormSubmit,
+    formData, handleFormChange, handleFormSubmit, coverFile, setCoverFile,
     handleLoadMore,
     me, isLoggedIn, logout, initials,
   } = useHome();
@@ -75,6 +75,8 @@ export default function Home() {
         formData={formData}
         onChange={handleFormChange}
         onSubmit={handleFormSubmit}
+        onCoverFileChange={setCoverFile}
+        coverFile={coverFile}
       />
     </div>
   );
