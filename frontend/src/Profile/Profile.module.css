@@ -397,6 +397,9 @@
   color: #999;
   margin-bottom: 6px;
 }
+.pfCafeStars {
+  margin-bottom: 4px;
+}
 .pfCafeBadges {
   display: flex;
   gap: 5px;

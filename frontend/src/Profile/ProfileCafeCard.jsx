@@ -2,11 +2,24 @@ import { Link } from 'react-router-dom';
 import { coverImageSrc } from '../lib/coverImage';
 import styles from './Profile.module.css';
 
-function renderStars(n) {
-  const count = Number(n) || 0;
-  let s = '';
-  for (let i = 0; i < 5; i++) s += i < count ? '\u2605' : '\u2606';
-  return s;
+function RatingStars({ value }) {
+  const rounded = Math.round(value * 2) / 2;
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    if (i <= rounded) {
+      stars.push(<span key={i} style={{ color: '#f59e0b', fontSize: 14 }}>★</span>);
+    } else if (i - 0.5 <= rounded) {
+      stars.push(
+        <span key={i} style={{ position: 'relative', display: 'inline-block', width: 14, fontSize: 14 }}>
+          <span style={{ color: '#e5e5e5' }}>★</span>
+          <span style={{ position: 'absolute', left: 0, top: 0, overflow: 'hidden', width: '50%', color: '#f59e0b' }}>★</span>
+        </span>
+      );
+    } else {
+      stars.push(<span key={i} style={{ color: '#e5e5e5', fontSize: 14 }}>★</span>);
+    }
+  }
+  return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>{stars}</span>;
 }
 
 export default function ProfileCafeCard({ cafe, index }) {
@@ -26,17 +39,17 @@ export default function ProfileCafeCard({ cafe, index }) {
       <div className={styles.pfCardBody}>
         <span className={styles.pfCafeName}>{cafe.name}</span>
         {cafe.address ? <span className={styles.pfCafeAddr}>{cafe.address}</span> : null}
+        {cafe.avgRating != null ? (
+          <div className={styles.pfCafeStars}>
+            <RatingStars value={cafe.avgRating} />
+          </div>
+        ) : null}
         <div className={styles.pfCafeBadges}>
           {cafe.has_good_wifi ? (
             <span className={`${styles.pfCafePill} ${styles.pfCafePillWifi}`}>wifi</span>
           ) : null}
           {cafe.is_quiet ? (
             <span className={`${styles.pfCafePill} ${styles.pfCafePillQuiet}`}>quiet</span>
-          ) : null}
-          {cafe.avgRating != null ? (
-            <span className={`${styles.pfCafePill} ${styles.pfCafePillRating}`}>
-              {renderStars(cafe.avgRating)}
-            </span>
           ) : null}
         </div>
       </div>
