@@ -99,7 +99,6 @@ export default function CafeDetail() {
             <CafeInfoPanel
               name={cafe.name}
               address={cafe.address}
-              location={cafe.location}
               hasGoodWifi={cafe.has_good_wifi}
               isQuiet={cafe.is_quiet}
               rating={cafe.rating}
