@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const { MongoClient } = require('mongodb');
+const { v2: cloudinary } = require('cloudinary');
 
 const GOOGLE_API_KEY = process.env.Maps_API_KEY;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -13,6 +14,16 @@ if (!MONGODB_URI) {
   console.error('Missing MONGODB_URI in .env');
   process.exit(1);
 }
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+  console.error('Missing Cloudinary credentials in .env');
+  process.exit(1);
+}
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Usage: node scripts/seedGooglePlaces.js --limit 10
 const limitArg = process.argv.find((a) => a.startsWith('--limit'));
@@ -47,8 +58,8 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Places API (New) — Nearby Search
-// Docs: https://developers.google.com/maps/documentation/places/web-service/nearby-search
+// --- Google Places API (New) ---
+
 async function fetchNearby(lat, lng, radius, pageToken) {
   const url = 'https://places.googleapis.com/v1/places:searchNearby';
 
@@ -92,7 +103,6 @@ async function fetchNearby(lat, lng, radius, pageToken) {
   };
 }
 
-// Fetch all pages for a given center point.
 async function fetchAllPagesForCenter(lat, lng, radius, maxResults) {
   const allResults = [];
   let pageToken = null;
@@ -110,8 +120,48 @@ async function fetchAllPagesForCenter(lat, lng, radius, maxResults) {
   return allResults;
 }
 
+// --- Photo: Google → Cloudinary ---
+
+async function downloadGooglePhoto(photoName) {
+  const googleUrl = `https://places.googleapis.com/v1/${photoName}/media?maxWidthPx=800&key=${GOOGLE_API_KEY}`;
+  const res = await fetch(googleUrl, { redirect: 'follow' });
+  if (!res.ok) return null;
+  return Buffer.from(await res.arrayBuffer());
+}
+
+function uploadBufferToCloudinary(buffer, publicId) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: 'image',
+        folder: 'cafedog/seed',
+        public_id: publicId,
+        overwrite: false,
+      },
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      },
+    );
+    stream.end(buffer);
+  });
+}
+
+async function uploadPhotoToCloudinary(photoName, placeId) {
+  try {
+    const buffer = await downloadGooglePhoto(photoName);
+    if (!buffer) return '';
+    const result = await uploadBufferToCloudinary(buffer, placeId);
+    return result.secure_url;
+  } catch (err) {
+    console.error(`    Photo upload failed for ${placeId}: ${err.message}`);
+    return '';
+  }
+}
+
+// --- Transform ---
+
 function transformPlace(place) {
-  // Store only the photo reference name — the backend proxy will add the API key at request time
   const photoRef =
     place.photos && place.photos.length > 0 ? place.photos[0].name : null;
 
@@ -125,17 +175,19 @@ function transformPlace(place) {
     address: place.formattedAddress || '',
     location,
     rating: place.rating ? Math.min(5, Math.max(1, Math.round(place.rating))) : 4,
-    cover_image: photoRef || '',
+    cover_image: '', // will be filled after Cloudinary upload
     has_good_wifi: Math.random() > 0.4,
     is_quiet: Math.random() > 0.5,
-    googlePlaceId: place.id, // used for deduplication
+    googlePlaceId: place.id,
+    _photoRef: photoRef, // temp field, removed before DB insert
   };
 }
 
-async function main() {
-  console.log(`Target: ${TARGET} unique cafes from Google Places API (New)\n`);
+// --- Main ---
 
-  // Pre-load existing googlePlaceIds from DB to skip duplicates
+async function main() {
+  console.log(`Target: ${TARGET} unique cafes (Google Places → Cloudinary)\n`);
+
   const client = new MongoClient(MONGODB_URI);
   await client.connect();
   const db = client.db('cafedog');
@@ -149,6 +201,7 @@ async function main() {
 
   const cafes = [];
 
+  // Step 1: Fetch cafe data from Google Places
   for (let i = 0; i < CITY_CENTERS.length; i++) {
     if (cafes.length >= TARGET) break;
 
@@ -188,12 +241,31 @@ async function main() {
     await sleep(1000);
   }
 
-  console.log(`\nFetched ${cafes.length} unique cafes. Inserting into MongoDB...`);
+  // Step 2: Upload photos to Cloudinary
+  console.log(`\nUploading ${cafes.length} photos to Cloudinary...`);
+
+  for (let i = 0; i < cafes.length; i++) {
+    const cafe = cafes[i];
+    if (cafe._photoRef) {
+      const cloudinaryUrl = await uploadPhotoToCloudinary(cafe._photoRef, cafe.googlePlaceId);
+      cafe.cover_image = cloudinaryUrl;
+      // Small delay to avoid Cloudinary rate limits
+      if ((i + 1) % 10 === 0) await sleep(1000);
+    }
+    delete cafe._photoRef;
+
+    if ((i + 1) % 10 === 0 || i === cafes.length - 1) {
+      console.log(`  [${i + 1}/${cafes.length}] photos uploaded`);
+    }
+  }
+
+  // Step 3: Insert into MongoDB
+  console.log(`\nInserting ${cafes.length} cafes into MongoDB...`);
 
   try {
     if (cafes.length > 0) {
       const result = await collection.insertMany(cafes);
-      console.log(`Inserted ${result.insertedCount} cafes into the "cafes" collection.`);
+      console.log(`Inserted ${result.insertedCount} cafes.`);
     } else {
       console.log('No new cafes to insert.');
     }
