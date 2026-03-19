@@ -1,6 +1,6 @@
 import styles from './CafeDetail.module.css';
 
-export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rating, postsTotal }) {
+export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rating, postsTotal, savesCount }) {
   return (
     <div className={styles.cdLeftPad}>
       <div className={styles.cdName}>{name}</div>
@@ -28,7 +28,7 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, rat
           <span className={styles.cdStatL}>avg rating</span>
         </div>
         <div className={styles.cdStat}>
-          <span className={styles.cdStatN}>0</span>
+          <span className={styles.cdStatN}>{savesCount}</span>
           <span className={styles.cdStatL}>saves</span>
         </div>
       </div>

@@ -90,7 +90,10 @@ router.get('/cafes/:id', async (req, res) => {
     const likes = db.collection('cafeLikes');
     const saves = db.collection('cafeSaves');
 
-    const likesCount = await likes.countDocuments({ cafeId: cafeOid });
+    const [likesCount, savesCount] = await Promise.all([
+      likes.countDocuments({ cafeId: cafeOid }),
+      saves.countDocuments({ cafeId: cafeOid }),
+    ]);
     const viewerId = req.session && req.session.userId;
     let viewerHasLiked = false;
     let viewerHasSaved = false;
@@ -107,6 +110,7 @@ router.get('/cafes/:id', async (req, res) => {
     res.status(200).json({
       ...cafe,
       likesCount,
+      savesCount,
       viewerHasLiked,
       viewerHasSaved,
     });
@@ -209,7 +213,8 @@ router.post('/cafes/:id/saved', requireAuth, async (req, res) => {
     const existing = await saves.findOne({ cafeId, userId }, { projection: { _id: 1 } });
     if (!existing) await saves.insertOne({ cafeId, userId, createdAt: new Date() });
 
-    res.json({ ok: true, viewerHasSaved: true });
+    const savesCount = await saves.countDocuments({ cafeId });
+    res.json({ ok: true, savesCount, viewerHasSaved: true });
   } catch (err) {
     console.error('Save cafe error:', err);
     res.status(500).json({ error: 'Failed to save cafe' });
@@ -226,7 +231,8 @@ router.delete('/cafes/:id/saved', requireAuth, async (req, res) => {
     const saves = db.collection('cafeSaves');
 
     await saves.deleteOne({ cafeId, userId });
-    res.json({ ok: true, viewerHasSaved: false });
+    const savesCount = await saves.countDocuments({ cafeId });
+    res.json({ ok: true, savesCount, viewerHasSaved: false });
   } catch (err) {
     console.error('Unsave cafe error:', err);
     res.status(500).json({ error: 'Failed to unsave cafe' });

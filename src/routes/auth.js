@@ -217,11 +217,29 @@ router.get('/users/:id', async (req, res) => {
       }
     }
 
+    // Liked cafes are also personal; only return them for self profile.
+    let likedCafes = [];
+    if (isSelf) {
+      const cafeLikesDocs = await db.collection('cafeLikes')
+        .find({ userId: oid })
+        .sort({ createdAt: -1 })
+        .toArray();
+      const likedCafeIds = cafeLikesDocs.map((l) => l.cafeId).filter(Boolean);
+      if (likedCafeIds.length > 0) {
+        const cafeDocs = await db.collection('cafes')
+          .find({ _id: { $in: likedCafeIds } })
+          .toArray();
+        const cafeMap = new Map(cafeDocs.map((c) => [String(c._id), c]));
+        likedCafes = likedCafeIds.map((id) => cafeMap.get(String(id))).filter(Boolean);
+      }
+    }
+
     res.json({
       user: sanitizeUser(user),
       posts,
       cafes,
       likedPosts,
+      likedCafes,
       savedCafes,
     });
   } catch (err) {

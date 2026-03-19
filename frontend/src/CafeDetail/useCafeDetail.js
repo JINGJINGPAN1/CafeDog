@@ -341,6 +341,7 @@ export default function useCafeDetail() {
       const data = await apiFetch(`/api/cafes/${id}/saved`, { method: hasSaved ? 'DELETE' : 'POST' });
       setCafe((prev) => prev ? ({
         ...prev,
+        savesCount: data?.savesCount ?? prev.savesCount ?? 0,
         viewerHasSaved: Boolean(data?.viewerHasSaved),
       }) : prev);
     } catch (err) {

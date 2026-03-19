@@ -34,7 +34,7 @@ export default function Profile() {
     );
   }
 
-  const { user, posts, likedPosts, savedCafes } = profile;
+  const { user, posts, likedPosts, likedCafes, savedCafes } = profile;
 
   return (
     <div className={styles.pfPage}>
@@ -53,6 +53,7 @@ export default function Profile() {
         <ProfileStats
           postsCount={posts.length}
           likedPostsCount={(likedPosts || []).length}
+          likedCafesCount={(likedCafes || []).length}
           savedCount={(savedCafes || []).length}
         />
 
@@ -62,6 +63,7 @@ export default function Profile() {
           tab={tab}
           posts={posts}
           likedPosts={likedPosts || []}
+          likedCafes={likedCafes || []}
           savedCafes={savedCafes || []}
         />
       </div>

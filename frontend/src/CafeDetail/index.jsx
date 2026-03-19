@@ -103,6 +103,7 @@ export default function CafeDetail() {
               isQuiet={cafe.is_quiet}
               rating={cafe.rating}
               postsTotal={postsTotal}
+              savesCount={cafe.savesCount ?? 0}
             />
           )}
         </div>
