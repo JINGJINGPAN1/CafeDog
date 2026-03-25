@@ -358,7 +358,10 @@ router.put('/cafes/:id', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to update cafe.' });
   }
 });
-
+//use router.post('/cafes', requireAuth, async (req, res) => {
+// as every other write route has above : router.delete('/cafes/:id', requireAuth, async (req, res) => {  
+//router.put('/cafes/:id',    requireAuth, async (req, res) => {  
+//router.post('/cafes',       async (req, res) => {           
 router.post('/cafes', async (req, res) => {
   try {
     const { name, address, has_good_wifi, is_quiet, rating, cover_image } = req.body || {};
