@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useMemo, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './CafeDetail.module.css';
 
 const ReviewForm = forwardRef(function ReviewForm(
@@ -12,8 +13,6 @@ const ReviewForm = forwardRef(function ReviewForm(
     reviewTextRef,
     onPhotoFileChange,
     photoFile,
-    isOpen = false,
-    onToggleOpen,
   },
   ref,
 ) {
@@ -37,40 +36,21 @@ const ReviewForm = forwardRef(function ReviewForm(
 
   return (
     <div className={styles.cdFform} ref={ref}>
-      <button
-        type="button"
-        className={styles.cdFformToggle}
-        onClick={() => onToggleOpen?.()}
-        aria-expanded={isOpen}
-        aria-controls="cd-review-form-panel"
-      >
-        <span className={styles.cdFformToggleTitle}>Share your experience</span>
-        <span
-          className={`${styles.cdFformChevron} ${isOpen ? styles.cdFformChevronOpen : ''}`}
-          aria-hidden="true"
-        >
-          ▾
-        </span>
-      </button>
-
-      <div id="cd-review-form-panel" className={styles.cdFformPanel} hidden={!isOpen}>
-        {isOpen ? (
+      {!isLoggedIn ? (
+        <div className={styles.cdFformLoginPrompt}>
+          <span className={styles.cdFformLoginPromptText}>
+            <Link to="/login" className={styles.cdFformLoginLink}>
+              Log in
+            </Link>{' '}
+            to share your experience.
+          </span>
+        </div>
+      ) : (
+        <div id="cd-review-form-panel" className={styles.cdFformPanel}>
           <form onSubmit={onSubmit} className={styles.cdFformInner}>
-            {isLoggedIn ? (
-              <div className={styles.cdFformPosting}>
-                Posting as <strong>{displayName}</strong>
-              </div>
-            ) : (
-              <input
-                className={styles.cdInp}
-                type="text"
-                name="author"
-                placeholder="Your name"
-                value={formData.author}
-                onChange={onChange}
-                required
-              />
-            )}
+            <div className={styles.cdFformPosting}>
+              Posting as <strong>{displayName}</strong>
+            </div>
             <textarea
               className={`${styles.cdInp} ${styles.cdTa}`}
               ref={reviewTextRef}
@@ -138,8 +118,8 @@ const ReviewForm = forwardRef(function ReviewForm(
               Post Check-in
             </button>
           </form>
-        ) : null}
-      </div>
+        </div>
+      )}
     </div>
   );
 });

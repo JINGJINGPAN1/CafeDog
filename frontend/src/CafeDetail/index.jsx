@@ -143,8 +143,6 @@ export default function CafeDetail() {
               reviewTextRef={reviewTextRef}
               onPhotoFileChange={setPostPhotoFile}
               photoFile={postPhotoFile}
-              isOpen={isReviewFormOpen}
-              onToggleOpen={toggleReviewForm}
             />
           </ReviewList>
 

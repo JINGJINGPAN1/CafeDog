@@ -757,6 +757,27 @@
   font-size: 13px;
   color: #999;
 }
+.cdFformLoginPrompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  border-radius: 14px;
+  border: 1.5px dashed #efefef;
+  background: #fafafa;
+}
+.cdFformLoginPromptText {
+  font-size: 14px;
+  color: #666;
+}
+.cdFformLoginLink {
+  color: #e07a5f;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cdFformLoginLink:hover {
+  text-decoration: underline;
+}
 
 /* Shared inputs */
 .cdInp {
