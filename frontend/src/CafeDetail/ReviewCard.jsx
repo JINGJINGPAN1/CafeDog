@@ -151,7 +151,7 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
 
   const deleteReply = async (commentId) => {
     if (!isLoggedIn) {
-      toast.error('Please log in.');
+      toast.error('Please log in to delete this reply.');
       return;
     }
     const ok = await toast.confirm('Delete this reply? This cannot be undone.', 'Delete reply');

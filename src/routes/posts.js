@@ -176,7 +176,7 @@ async function listPostsByCafe(req, res) {
 }
 
 // Canonical routes
-router.post('/posts', createPost);
+router.post('/posts', requireAuth, createPost);
 router.get('/cafes/:id/posts', listPostsByCafe);
 
 // Query-based route
@@ -255,7 +255,7 @@ router.put('/posts/:postId', requireAuth, async (req, res) => {
 });
 
 // Deprecated aliases
-router.post('/reviews', createPost);
+router.post('/reviews', requireAuth, createPost);
 router.get('/cafes/:id/reviews', listPostsByCafe);
 
 module.exports = { postsRouter: router };

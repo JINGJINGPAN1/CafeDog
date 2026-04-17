@@ -100,6 +100,10 @@ export default function useHome() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      toast.error('Please log in to recommend a cafe.');
+      return;
+    }
     if (!formData.name || !formData.address) {
       toast.error('Name and address are required!');
       return;

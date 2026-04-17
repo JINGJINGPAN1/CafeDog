@@ -152,7 +152,7 @@ export default function useCafeDetail() {
   const deletePost = useCallback(
     async (postId) => {
       if (!isLoggedIn) {
-        toast.error('Please log in.');
+        toast.error('Please log in to delete this post.');
         return;
       }
       const ok = await toast.confirm('Delete this post? This cannot be undone.', 'Delete post');
@@ -182,7 +182,7 @@ export default function useCafeDetail() {
   const updatePost = useCallback(
     async (postId, updates) => {
       if (!isLoggedIn) {
-        toast.error('Please log in.');
+        toast.error('Please log in to edit this post.');
         return;
       }
       try {
@@ -244,6 +244,10 @@ export default function useCafeDetail() {
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      toast.error("Please log in to submit a review");
+      return;
+    }
     try {
       let photoUrl = formData.photoUrl;
       if (postPhotoFile) {

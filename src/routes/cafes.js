@@ -359,14 +359,14 @@ router.put('/cafes/:id', requireAuth, async (req, res) => {
   }
 });
 
-router.post('/cafes', async (req, res) => {
+router.post('/cafes', requireAuth, async (req, res) => {
   try {
     const { name, address, has_good_wifi, is_quiet, rating, cover_image } = req.body || {};
     if (!name || !address) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const sessionUserId = req.user && req.user._id;
+    const db = await getDb();
     const newCafe = {
       name: String(name),
       address: String(address),
@@ -374,13 +374,8 @@ router.post('/cafes', async (req, res) => {
       is_quiet: Boolean(is_quiet),
       rating: rating != null && rating !== '' ? Number(rating) : null,
       cover_image: cover_image ? String(cover_image) : '',
-      createdBy:
-        sessionUserId && ObjectId.isValid(String(sessionUserId))
-          ? new ObjectId(String(sessionUserId))
-          : null,
+      createdBy:new ObjectId(String(req.user._id)),
     };
-
-    const db = await getDb();
     const cafesCollection = db.collection('cafes');
     const result = await cafesCollection.insertOne(newCafe);
 
