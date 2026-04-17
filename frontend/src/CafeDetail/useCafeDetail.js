@@ -348,8 +348,22 @@ export default function useCafeDetail() {
     }));
   };
 
+  // ---toggleReviewForm ---
+  const toggleReviewForm = () => {                                                                                                             
+    if (!isLoggedIn) {
+      toast.error('Please log in to write a review.');
+      return;                                                                                                                                  
+    }
+    setIsReviewFormOpen((v) => !v);                                                                                                            
+  };  
+
   // --- Scroll to review form ---
   const scrollToForm = () => {
+    if (!isLoggedIn) {        
+      toast.error('Please log in to write a review.');
+      return;                                                                                                                                  
+    } 
+
     setIsReviewFormOpen(true);
 
     let tries = 0;
@@ -469,6 +483,9 @@ export default function useCafeDetail() {
 
     // Scroll
     scrollToForm,
+
+    // toggle
+    toggleReviewForm,
 
     // Cafe actions
     toggleLike,

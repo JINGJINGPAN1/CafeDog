@@ -43,6 +43,7 @@ export default function CafeDetail() {
     isLoggedIn,
     me,
     scrollToForm,
+    toggleReviewForm,
     toggleLike,
     toggleSave,
   } = useCafeDetail();
@@ -143,7 +144,7 @@ export default function CafeDetail() {
               onPhotoFileChange={setPostPhotoFile}
               photoFile={postPhotoFile}
               isOpen={isReviewFormOpen}
-              onToggleOpen={() => setIsReviewFormOpen((v) => !v)}
+              onToggleOpen={toggleReviewForm}
             />
           </ReviewList>
 
