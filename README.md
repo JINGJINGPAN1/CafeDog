@@ -3,10 +3,10 @@
 ## Author
 
 **Jingjing Pan**  
-Email: pan.jingj@northeastern.edu
+Email: <pan.jingj@northeastern.edu>
 
 **Yingyi Kong**  
-Email: kong.yin@northeastern.edu
+Email: <kong.yin@northeastern.edu>
 
 ## Class Link
 
@@ -27,7 +27,7 @@ Email: kong.yin@northeastern.edu
 
 ## Documentation
 
-- **[Design Document](design-document.md)** – Project description, user personas, user stories, and design mockups
+- **[Design Document](docs/design-document.md)** – Project description, user personas, user stories, and design mockups
 - **[API Contract](API_Contract.md)** – API request/response examples
 
 ## Live Demo
