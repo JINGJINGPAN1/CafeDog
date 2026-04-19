@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import useRegister from './useRegister';
 import logoImg from '../assets/image.png';
 import styles from '../auth/Auth.module.css';
@@ -75,3 +76,5 @@ export default function Register() {
     </div>
   );
 }
+
+Register.propTypes = {};

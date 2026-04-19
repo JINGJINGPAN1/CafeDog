@@ -8,17 +8,17 @@ Unlike map-first tools that focus on navigation, CaféDog centers on a lightweig
 
 ### Core Features
 
-| Feature                         | Description                                                                                                                                                                  |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Café Discovery**              | Browse a paginated list of cafés with search by name/address, filters (WiFi / quiet), and tabs (**Discover / Nearby / New places / Top rated**).                            |
-| **Nearby (Geo)**                | Use browser Geolocation to request “Nearby” cafés; backend uses MongoDB `2dsphere` + `$nearSphere` to rank results by distance.                                              |
-| **Recommend a café**            | Logged-in users can recommend a café using **Google Places Autocomplete** (address dropdown); the app stores `lat/lng` + optional cover image.                               |
-| **Café Detail Page**            | View café info plus aggregated engagement (**likes/saves**) and rating summary (average rating + rating count computed from posts).                                           |
-| **Posts (Reviews)**             | Create/edit/delete posts linked to a café with text, rating, and optional photo; per-café feed is paginated and sorted newest-first.                                          |
-| **One review per user per café**| Enforced at DB level with a unique compound index on `(authorId, cafeId)`; creating a duplicate returns `409` and the UI guides the user to edit their existing review.       |
-| **Social Interactions**         | Like/unlike posts; comment CRUD (create/edit/delete) on posts; like/save cafés.                                                                                              |
-| **Auth & Profiles**             | Session-based login (email + password), registration, logout; profile page shows user posts and cafés, plus personal tabs for liked/saved items (only visible to the owner). |
-| **Image Handling**              | Upload images to Cloudinary; support Google Places photo references via a backend proxy route so keys never reach the client.                                                |
+| Feature                          | Description                                                                                                                                                                  |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Café Discovery**               | Browse a paginated list of cafés with search by name/address, filters (WiFi / quiet), and tabs (**Discover / Nearby / New places / Top rated**).                             |
+| **Nearby (Geo)**                 | Use browser Geolocation to request “Nearby” cafés; backend uses MongoDB `2dsphere` + `$nearSphere` to rank results by distance.                                              |
+| **Recommend a café**             | Logged-in users can recommend a café using **Google Places Autocomplete** (address dropdown); the app stores `lat/lng` + optional cover image.                               |
+| **Café Detail Page**             | View café info plus aggregated engagement (**likes/saves**) and rating summary (average rating + rating count computed from posts).                                          |
+| **Posts (Reviews)**              | Create/edit/delete posts linked to a café with text, rating, and optional photo; per-café feed is paginated and sorted newest-first.                                         |
+| **One review per user per café** | Enforced at DB level with a unique compound index on `(authorId, cafeId)`; creating a duplicate returns `409` and the UI guides the user to edit their existing review.      |
+| **Social Interactions**          | Like/unlike posts; comment CRUD (create/edit/delete) on posts; like/save cafés.                                                                                              |
+| **Auth & Profiles**              | Session-based login (email + password), registration, logout; profile page shows user posts and cafés, plus personal tabs for liked/saved items (only visible to the owner). |
+| **Image Handling**               | Upload images to Cloudinary; support Google Places photo references via a backend proxy route so keys never reach the client.                                                |
 
 ### Technology Stack
 

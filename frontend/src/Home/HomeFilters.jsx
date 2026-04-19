@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from './Home.module.css';
 
 export default function HomeFilters({
@@ -50,3 +51,12 @@ export default function HomeFilters({
     </div>
   );
 }
+
+HomeFilters.propTypes = {
+  searchTerm: PropTypes.string.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
+  filterWifi: PropTypes.bool.isRequired,
+  onToggleWifi: PropTypes.func.isRequired,
+  filterQuiet: PropTypes.bool.isRequired,
+  onToggleQuiet: PropTypes.func.isRequired,
+};

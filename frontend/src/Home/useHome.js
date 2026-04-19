@@ -41,60 +41,65 @@ export default function useHome() {
   const debounceRef = useRef(null);
   const hasLoadedOnce = useRef(false);
 
-  const fetchCafes = useCallback((search, wifi, quiet, tab, pg, reset, nearbyCoords) => {
-    if (reset) {
-      if (!hasLoadedOnce.current) setInitialLoading(true);
-      else setSearching(true);
-    } else {
-      setLoadingMore(true);
-    }
+  const fetchCafes = useCallback(
+    (search, wifi, quiet, tab, pg, reset, nearbyCoords) => {
+      setError(null);
+      if (reset) {
+        if (!hasLoadedOnce.current) setInitialLoading(true);
+        else setSearching(true);
+      } else {
+        setLoadingMore(true);
+      }
 
-    const params = new URLSearchParams();
-    if (search) params.append('search', search);
-    if (wifi) params.append('wifi', 'true');
-    if (quiet) params.append('quiet', 'true');
-    if (tab === 'new places') params.append('sort', 'new');
-    if (tab === 'top rated') params.append('sort', 'top');
-    if (nearbyCoords) {
-      params.append('nearby', 'true');
-      params.append('lat', String(nearbyCoords.lat));
-      params.append('lng', String(nearbyCoords.lng));
-    }
-    params.append('page', String(pg));
-    params.append('limit', String(CAFES_PER_PAGE));
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (wifi) params.append('wifi', 'true');
+      if (quiet) params.append('quiet', 'true');
+      if (tab === 'new places') params.append('sort', 'new');
+      if (tab === 'top rated') params.append('sort', 'top');
+      if (nearbyCoords) {
+        params.append('nearby', 'true');
+        params.append('lat', String(nearbyCoords.lat));
+        params.append('lng', String(nearbyCoords.lng));
+      }
+      params.append('page', String(pg));
+      params.append('limit', String(CAFES_PER_PAGE));
 
-    fetch(`/api/cafes?${params.toString()}`, { credentials: 'include' })
-      .then(async (res) => {
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || `Request failed: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        const list = Array.isArray(data.cafes) ? data.cafes : [];
-        if (reset) {
-          setCafes(list);
-        } else {
-          setCafes((prev) => [...prev, ...list]);
-        }
-        setTotal(data.total || 0);
-        setPage(pg);
-        hasLoadedOnce.current = true;
-        setInitialLoading(false);
-        setSearching(false);
-        setLoadingMore(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        if (reset) setCafes([]);
-        setTotal(0);
-        setInitialLoading(false);
-        setSearching(false);
-        setLoadingMore(false);
-        toast.error(err.message || 'Failed to load cafes');
-      });
-  }, []);
+      fetch(`/api/cafes?${params.toString()}`, { credentials: 'include' })
+        .then(async (res) => {
+          if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            throw new Error(body.error || `Request failed: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          const list = Array.isArray(data.cafes) ? data.cafes : [];
+          if (reset) {
+            setCafes(list);
+          } else {
+            setCafes((prev) => [...prev, ...list]);
+          }
+          setTotal(data.total || 0);
+          setPage(pg);
+          hasLoadedOnce.current = true;
+          setInitialLoading(false);
+          setSearching(false);
+          setLoadingMore(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          if (reset) setCafes([]);
+          setTotal(0);
+          setError(err?.message ? String(err.message) : 'Failed to load cafes');
+          setInitialLoading(false);
+          setSearching(false);
+          setLoadingMore(false);
+          toast.error(err.message || 'Failed to load cafes');
+        });
+    },
+    [toast],
+  );
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);

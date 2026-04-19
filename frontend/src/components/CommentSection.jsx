@@ -4,7 +4,7 @@ import { apiFetch } from '../lib/api';
 import { useAuth } from '../auth/useAuth';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
-import './CommentSection.css';
+import styles from './CommentSection.module.css';
 
 export default function CommentSection({ postId }) {
   const { me, isLoggedIn } = useAuth();
@@ -62,18 +62,18 @@ export default function CommentSection({ postId }) {
   );
 
   return (
-    <div className="commentSection">
-      <div className="commentSectionHeader">
+    <div className={styles.commentSection}>
+      <div className={styles.commentSectionHeader}>
         <h4>Comments</h4>
-        <button type="button" className="linkButton" onClick={load}>
+        <button type="button" className={styles.linkButton} onClick={load}>
           Refresh
         </button>
       </div>
 
       <CommentForm disabled={!isLoggedIn} onSubmit={createComment} />
 
-      {loading ? <p className="commentStatus">Loading comments…</p> : null}
-      {error ? <p className="commentError">{error}</p> : null}
+      {loading ? <p className={styles.commentStatus}>Loading comments…</p> : null}
+      {error ? <p className={styles.commentError}>{error}</p> : null}
 
       <CommentList
         comments={comments}

@@ -226,25 +226,36 @@ router.get('/users/:id', async (req, res) => {
     const allCafeIds = [...new Set(allCafes.map((c) => c._id))];
     const ratingByCafe = new Map();
     if (allCafeIds.length > 0) {
-      const ratingRows = await db.collection('posts').aggregate([
-        { $match: { cafeId: { $in: allCafeIds }, rating: { $type: 'number', $gt: 0 } } },
-        { $group: { _id: '$cafeId', avg: { $avg: '$rating' } } },
-      ]).toArray();
+      const ratingRows = await db
+        .collection('posts')
+        .aggregate([
+          { $match: { cafeId: { $in: allCafeIds }, rating: { $type: 'number', $gt: 0 } } },
+          { $group: { _id: '$cafeId', avg: { $avg: '$rating' } } },
+        ])
+        .toArray();
       ratingRows.forEach((r) => ratingByCafe.set(String(r._id), Math.round(r.avg * 10) / 10));
     }
     const attachRating = (c) => ({ ...c, avgRating: ratingByCafe.get(String(c._id)) ?? null });
 
     // Attach cafeName to all post lists
     const allPosts = [...posts, ...likedPosts];
-    const postCafeIds = [...new Set(
-      allPosts.map((p) => p.cafeId).filter(Boolean).map((id) => String(id)),
-    )].map((id) => new ObjectId(id));
+    const postCafeIds = [
+      ...new Set(
+        allPosts
+          .map((p) => p.cafeId)
+          .filter(Boolean)
+          .map((id) => String(id)),
+      ),
+    ].map((id) => new ObjectId(id));
     const cafeInfoMap = new Map();
     if (postCafeIds.length > 0) {
-      const cafeDocs = await db.collection('cafes')
+      const cafeDocs = await db
+        .collection('cafes')
         .find({ _id: { $in: postCafeIds } }, { projection: { name: 1, cover_image: 1 } })
         .toArray();
-      cafeDocs.forEach((c) => cafeInfoMap.set(String(c._id), { name: c.name, cover_image: c.cover_image || '' }));
+      cafeDocs.forEach((c) =>
+        cafeInfoMap.set(String(c._id), { name: c.name, cover_image: c.cover_image || '' }),
+      );
     }
     const attachCafeInfo = (p) => {
       const info = cafeInfoMap.get(String(p.cafeId));

@@ -1,4 +1,5 @@
 import useHome from './useHome';
+import PropTypes from 'prop-types';
 import HomeNavbar from './HomeNavbar';
 import HomeTabs from './HomeTabs';
 import HomeFilters from './HomeFilters';
@@ -91,7 +92,12 @@ export default function Home() {
         </div>
       </div>
 
-      <button type="button" className={styles.hFab} onClick={openForm} aria-label="Recommend a cafe">
+      <button
+        type="button"
+        className={styles.hFab}
+        onClick={openForm}
+        aria-label="Recommend a cafe"
+      >
         <svg
           viewBox="0 0 24 24"
           width="20"
@@ -120,3 +126,5 @@ export default function Home() {
     </div>
   );
 }
+
+Home.propTypes = {};

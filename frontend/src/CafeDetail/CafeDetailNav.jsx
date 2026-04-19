@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styles from './CafeDetail.module.css';
 
-export default function CafeDetailNav({ name, isOwner, onEdit, onDelete }) {
+export default function CafeDetailNav({ isOwner, onEdit, onDelete }) {
   return (
     <header className={styles.cdNav}>
       <Link to="/" className={styles.cdBack}>
@@ -35,3 +36,9 @@ export default function CafeDetailNav({ name, isOwner, onEdit, onDelete }) {
     </header>
   );
 }
+
+CafeDetailNav.propTypes = {
+  isOwner: PropTypes.bool.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};

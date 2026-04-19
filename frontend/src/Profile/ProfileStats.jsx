@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from './Profile.module.css';
 
 export default function ProfileStats({ postsCount, likedPostsCount, likedCafesCount, savedCount }) {
@@ -22,3 +23,10 @@ export default function ProfileStats({ postsCount, likedPostsCount, likedCafesCo
     </div>
   );
 }
+
+ProfileStats.propTypes = {
+  postsCount: PropTypes.number.isRequired,
+  likedPostsCount: PropTypes.number.isRequired,
+  likedCafesCount: PropTypes.number.isRequired,
+  savedCount: PropTypes.number.isRequired,
+};

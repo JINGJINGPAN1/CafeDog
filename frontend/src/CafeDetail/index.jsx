@@ -1,4 +1,5 @@
 import useCafeDetail from './useCafeDetail';
+import PropTypes from 'prop-types';
 import CafeDetailNav from './CafeDetailNav';
 import CafeHero from './CafeHero';
 import CafeInfoPanel from './CafeInfoPanel';
@@ -38,12 +39,9 @@ export default function CafeDetail() {
     setPostPhotoFile,
     formRef,
     reviewTextRef,
-    isReviewFormOpen,
-    setIsReviewFormOpen,
     isLoggedIn,
     me,
     scrollToForm,
-    toggleReviewForm,
     toggleLike,
     toggleSave,
     isEditingReview,
@@ -77,12 +75,7 @@ export default function CafeDetail() {
 
   return (
     <div className={styles.cdPage}>
-      <CafeDetailNav
-        name={cafe.name}
-        isOwner={isOwner}
-        onEdit={startEditing}
-        onDelete={handleDelete}
-      />
+      <CafeDetailNav isOwner={isOwner} onEdit={startEditing} onDelete={handleDelete} />
 
       <div className={styles.cdBody}>
         {/* Left column */}
@@ -158,3 +151,5 @@ export default function CafeDetail() {
     </div>
   );
 }
+
+CafeDetail.propTypes = {};

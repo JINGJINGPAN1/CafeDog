@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import useProfile from './useProfile';
 import ProfileNav from './ProfileNav';
 import ProfileHeader from './ProfileHeader';
@@ -70,3 +71,5 @@ export default function Profile() {
     </div>
   );
 }
+
+Profile.propTypes = {};

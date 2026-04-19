@@ -105,9 +105,7 @@ async function main() {
     console.log('No reviews to create.');
   } else {
     const result = await posts.insertMany(batch);
-    console.log(
-      `Inserted ${result.insertedCount} fake reviews across ${targets.length} cafes.`,
-    );
+    console.log(`Inserted ${result.insertedCount} fake reviews across ${targets.length} cafes.`);
   }
 
   await client.close();

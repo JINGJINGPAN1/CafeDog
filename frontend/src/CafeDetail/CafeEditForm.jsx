@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
+import PropTypes from 'prop-types';
 import styles from './CafeDetail.module.css';
 
 export default function CafeEditForm({
@@ -124,3 +125,19 @@ export default function CafeEditForm({
     </div>
   );
 }
+
+CafeEditForm.propTypes = {
+  editData: PropTypes.shape({
+    name: PropTypes.string,
+    address: PropTypes.string,
+    has_good_wifi: PropTypes.bool,
+    is_quiet: PropTypes.bool,
+    rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    cover_image: PropTypes.string,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onCoverFileChange: PropTypes.func,
+  coverFile: PropTypes.any,
+};

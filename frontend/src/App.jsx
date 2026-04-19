@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Home from './Home';
 import CafeDetail from './CafeDetail';
 import Login from './Login';
@@ -18,5 +19,7 @@ function App() {
     </BrowserRouter>
   );
 }
+
+App.propTypes = {};
 
 export default App;

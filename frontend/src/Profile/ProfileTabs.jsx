@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from './Profile.module.css';
 
 export default function ProfileTabs({ tab, onTabChange }) {
@@ -41,3 +42,8 @@ export default function ProfileTabs({ tab, onTabChange }) {
     </div>
   );
 }
+
+ProfileTabs.propTypes = {
+  tab: PropTypes.string.isRequired,
+  onTabChange: PropTypes.func.isRequired,
+};

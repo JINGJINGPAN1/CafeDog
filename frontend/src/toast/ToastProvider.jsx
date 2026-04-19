@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Toast.module.css';
 import { ToastContext } from './ToastContext';
 
@@ -104,3 +105,7 @@ export function ToastProvider({ children }) {
     </ToastContext.Provider>
   );
 }
+
+ToastProvider.propTypes = {
+  children: PropTypes.node,
+};

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import logoImg from '../assets/image.png';
 import styles from './Profile.module.css';
 
@@ -23,3 +24,5 @@ export default function ProfileNav() {
     </header>
   );
 }
+
+ProfileNav.propTypes = {};

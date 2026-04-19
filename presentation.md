@@ -1,8 +1,8 @@
 marp: true
+
 # CafeDog - Presentation s
 
 ---
-
 
 # CafeDog
 
@@ -14,7 +14,7 @@ Jingjing Pan & Yingyi Kong
 
 ---
 
-##  1. What is CafeDog?
+## 1. What is CafeDog?
 
 CafeDog is a full-stack web application for discovering, reviewing, and sharing great coffee shops.
 
@@ -27,21 +27,21 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  2. Tech Stack
+## 2. Tech Stack
 
 | Layer        | Technology                                    |
 | ------------ | --------------------------------------------- |
 | **Frontend** | React 19, React Router 7, Vite 8, CSS Modules |
 | **Backend**  | Node.js, Express 5                            |
 | **Database** | MongoDB (native driver, no ORM)               |
-| **Auth**     | Passport Local, bcrypt, express-session        |
+| **Auth**     | Passport Local, bcrypt, express-session       |
 | **Storage**  | Cloudinary (image uploads)                    |
 | **APIs**     | Google Places (cafe photos)                   |
 | **Deploy**   | Render (single-origin, same server)           |
 
 ---
 
-##  3. Database Design
+## 3. Database Design
 
 **8 Collections:**
 
@@ -56,7 +56,7 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - Home Page & Discovery
+## 4. Feature - Home Page & Discovery
 
 ### Cafe Discovery
 
@@ -71,7 +71,7 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - Home Page & Discovery
+## 4. Feature - Home Page & Discovery
 
 ### Cafe Cards show:
 
@@ -82,7 +82,7 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - Cafe Detail Page
+## 4. Feature - Cafe Detail Page
 
 ### Left Panel (Info)
 
@@ -93,7 +93,7 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - Cafe Detail Page
+## 4. Feature - Cafe Detail Page
 
 ### Right Panel (Reviews)
 
@@ -106,7 +106,7 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - Cafe Detail Page
+## 4. Feature - Cafe Detail Page
 
 ### Dynamic Average Rating
 
@@ -115,7 +115,7 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - User Profiles
+## 4. Feature - User Profiles
 
 ### Profile Header
 
@@ -125,24 +125,24 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - User Profiles
+## 4. Feature - User Profiles
 
 ### 5 Tabs with Pagination (8 items/page)
 
-| Tab            | Content                   | Visibility |
-| -------------- | ------------------------- | ---------- |
-| Added Cafes    | Cafes user submitted      | Public     |
-| My Reviews     | User's reviews            | Public     |
-| Liked Reviews  | Reviews user liked        | Self only  |
-| Liked Cafes    | Cafes user liked          | Self only  |
-| Saved          | Cafes user saved          | Self only  |
+| Tab           | Content              | Visibility |
+| ------------- | -------------------- | ---------- |
+| Added Cafes   | Cafes user submitted | Public     |
+| My Reviews    | User's reviews       | Public     |
+| Liked Reviews | Reviews user liked   | Self only  |
+| Liked Cafes   | Cafes user liked     | Self only  |
+| Saved         | Cafes user saved     | Self only  |
 
 - Review cards: list layout with cafe thumbnail, star rating, text preview
 - Cafe cards: grid layout with cover image, address, tags
 
 ---
 
-##  4. Feature - Authentication & Authorization
+## 4. Feature - Authentication & Authorization
 
 ### Session-Based Auth
 
@@ -158,10 +158,9 @@ Live demo: https://cafedog.onrender.com
 - **Like/Save**: Login required
 - **Private data**: Liked/saved lists visible only to profile owner
 
-
 ---
 
-##  4. Feature - Image Handling
+## 4. Feature - Image Handling
 
 ### Two Image Sources
 
@@ -174,7 +173,7 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  4. Feature - Image Handling
+## 4. Feature - Image Handling
 
 **2. Google Places Photo Proxy**
 
@@ -191,24 +190,24 @@ Live demo: https://cafedog.onrender.com
 
 ---
 
-##  5: API Design Summary
+## 5: API Design Summary
 
-| Resource  | Endpoints | Key Operations                         |
-| --------- | --------- | -------------------------------------- |
-| Auth      | 5         | Register, Login, Logout, Me, Update    |
-| Cafes     | 11        | CRUD + Like/Unlike + Save/Unsave       |
-| Posts     | 8         | CRUD + Like/Unlike + Pagination        |
-| Comments  | 4         | Full CRUD                              |
-| Uploads   | 1         | Image upload to Cloudinary             |
-| Places    | 1         | Google Places photo proxy              |
-| Users     | 1         | Public profile view                    |
-| **Total** | **31**    |                                        |
+| Resource  | Endpoints | Key Operations                      |
+| --------- | --------- | ----------------------------------- |
+| Auth      | 5         | Register, Login, Logout, Me, Update |
+| Cafes     | 11        | CRUD + Like/Unlike + Save/Unsave    |
+| Posts     | 8         | CRUD + Like/Unlike + Pagination     |
+| Comments  | 4         | Full CRUD                           |
+| Uploads   | 1         | Image upload to Cloudinary          |
+| Places    | 1         | Google Places photo proxy           |
+| Users     | 1         | Public profile view                 |
+| **Total** | **31**    |                                     |
 
 All routes follow RESTful conventions with proper HTTP methods and status codes.
 
 ---
 
-##  15: Demo & Summary
+## 15: Demo & Summary
 
 ### What We Built
 

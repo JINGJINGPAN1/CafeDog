@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { coverImageSrc } from '../lib/coverImage';
 import styles from './Profile.module.css';
 
@@ -44,3 +45,19 @@ export default function ProfilePostCard({ post, isLast }) {
     </Link>
   );
 }
+
+ProfilePostCard.propTypes = {
+  post: PropTypes.shape({
+    cafeId: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    cafeName: PropTypes.string,
+    cafeCoverImage: PropTypes.string,
+    createdAt: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.instanceOf(Date),
+    ]),
+    rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    text: PropTypes.string,
+  }).isRequired,
+  isLast: PropTypes.bool.isRequired,
+};

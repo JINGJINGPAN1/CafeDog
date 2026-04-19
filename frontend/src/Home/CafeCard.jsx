@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { coverImageSrc } from '../lib/coverImage';
 import styles from './Home.module.css';
 import tag from '../styles/cafeTags.module.css';
@@ -50,3 +51,16 @@ export default function CafeCard({ cafe }) {
     </Link>
   );
 }
+
+CafeCard.propTypes = {
+  cafe: PropTypes.shape({
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    name: PropTypes.string.isRequired,
+    address: PropTypes.string,
+    cover_image: PropTypes.string,
+    avgRating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    has_good_wifi: PropTypes.bool,
+    is_quiet: PropTypes.bool,
+    likesCount: PropTypes.number,
+  }).isRequired,
+};

@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import CommentItem from './CommentItem';
-import './CommentList.css';
+import styles from './CommentList.module.css';
 
 export default function CommentList({ comments, meId, onUpdate, onDelete }) {
   if (!comments.length) {
-    return <p className="commentEmpty">No comments yet.</p>;
+    return <p className={styles.commentEmpty}>No comments yet.</p>;
   }
 
   return (
-    <div className="commentList">
+    <div className={styles.commentList}>
       {comments.map((c) => (
         <CommentItem
           key={String(c._id)}

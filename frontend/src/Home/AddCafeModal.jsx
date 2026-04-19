@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Home.module.css';
 import {
   fetchPlaceSuggestions,
@@ -27,8 +28,10 @@ export default function AddCafeModal({
   useEffect(() => {
     if (!showForm) {
       sessionTokenRef.current = null;
-      setSuggestions([]);
-      setShowDropdown(false);
+      queueMicrotask(() => {
+        setSuggestions([]);
+        setShowDropdown(false);
+      });
       return;
     }
     if (GOOGLE_MAPS_CONFIGURED && !sessionTokenRef.current) {
@@ -160,9 +163,7 @@ export default function AddCafeModal({
                       handleSuggestionPick(sug);
                     }}
                   >
-                    <span className={styles.hSuggestionMain}>
-                      {sug.mainText || sug.fullText}
-                    </span>
+                    <span className={styles.hSuggestionMain}>{sug.mainText || sug.fullText}</span>
                     {sug.secondaryText ? (
                       <span className={styles.hSuggestionSecondary}>{sug.secondaryText}</span>
                     ) : null}
@@ -176,9 +177,7 @@ export default function AddCafeModal({
               Please pick a location from the dropdown so it shows up in Nearby search.
             </p>
           ) : null}
-          {formData.placeId ? (
-            <p className={styles.hHelpText}>✓ {formData.address}</p>
-          ) : null}
+          {formData.placeId ? <p className={styles.hHelpText}>✓ {formData.address}</p> : null}
           <input
             type="number"
             name="rating"
@@ -256,3 +255,24 @@ export default function AddCafeModal({
     </div>
   );
 }
+
+AddCafeModal.propTypes = {
+  showForm: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  formData: PropTypes.shape({
+    name: PropTypes.string,
+    address: PropTypes.string,
+    has_good_wifi: PropTypes.bool,
+    is_quiet: PropTypes.bool,
+    rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    cover_image: PropTypes.string,
+    lat: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    lng: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    placeId: PropTypes.string,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onCoverFileChange: PropTypes.func,
+  coverFile: PropTypes.any,
+  onPlaceSelect: PropTypes.func,
+};

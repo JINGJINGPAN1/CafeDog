@@ -67,7 +67,9 @@ async function main() {
   // Also clean up related likes/comments pointing to deleted posts
   const likesRes = await db.collection('likes').deleteMany({ postId: { $in: toDelete } });
   const commentsRes = await db.collection('comments').deleteMany({ postId: { $in: toDelete } });
-  console.log(`Deleted ${likesRes.deletedCount} orphan likes, ${commentsRes.deletedCount} orphan comments.`);
+  console.log(
+    `Deleted ${likesRes.deletedCount} orphan likes, ${commentsRes.deletedCount} orphan comments.`,
+  );
 
   await client.close();
 }

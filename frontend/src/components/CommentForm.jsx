@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import './CommentForm.css';
+import styles from './CommentForm.module.css';
 
 export default function CommentForm({ disabled, onSubmit }) {
   const [text, setText] = useState('');
@@ -23,7 +23,7 @@ export default function CommentForm({ disabled, onSubmit }) {
   };
 
   return (
-    <form className="commentForm" onSubmit={submit}>
+    <form className={styles.commentForm} onSubmit={submit}>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -31,9 +31,9 @@ export default function CommentForm({ disabled, onSubmit }) {
         rows={3}
         disabled={disabled || submitting}
       />
-      {error ? <div className="commentFormError">{error}</div> : null}
+      {error ? <div className={styles.commentFormError}>{error}</div> : null}
       <button
-        className="commentSubmit"
+        className={styles.commentSubmit}
         type="submit"
         disabled={disabled || submitting || !text.trim()}
       >

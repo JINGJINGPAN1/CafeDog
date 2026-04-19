@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import ProfilePostCard from './ProfilePostCard';
 import ProfileCafeCard from './ProfileCafeCard';
 import styles from './Profile.module.css';
@@ -45,7 +46,10 @@ function PostList({ items }) {
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(items.length / PAGE_SIZE);
 
-  useEffect(() => { setPage(1); }, [items]);
+  useEffect(() => {
+    const t = setTimeout(() => setPage(1), 0);
+    return () => clearTimeout(t);
+  }, [items]);
 
   if (items.length === 0) return <EmptyState message="No posts yet." />;
 
@@ -68,7 +72,10 @@ function CafeGrid({ items, emptyMsg }) {
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(items.length / PAGE_SIZE);
 
-  useEffect(() => { setPage(1); }, [items]);
+  useEffect(() => {
+    const t = setTimeout(() => setPage(1), 0);
+    return () => clearTimeout(t);
+  }, [items]);
 
   if (items.length === 0) return <EmptyState message={emptyMsg} />;
 
@@ -95,3 +102,12 @@ export default function ProfileGrid({ tab, posts, cafes, likedPosts, likedCafes,
   if (tab === 'saved') return <CafeGrid items={savedCafes} emptyMsg="No saved cafes yet." />;
   return null;
 }
+
+ProfileGrid.propTypes = {
+  tab: PropTypes.string.isRequired,
+  posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  cafes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  likedPosts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  likedCafes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  savedCafes: PropTypes.arrayOf(PropTypes.object).isRequired,
+};

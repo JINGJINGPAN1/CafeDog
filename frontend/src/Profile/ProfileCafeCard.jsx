@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { coverImageSrc } from '../lib/coverImage';
 import styles from './Profile.module.css';
 import tag from '../styles/cafeTags.module.css';
@@ -8,16 +9,38 @@ function RatingStars({ value }) {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i <= rounded) {
-      stars.push(<span key={i} style={{ color: '#f59e0b', fontSize: 14 }}>★</span>);
+      stars.push(
+        <span key={i} style={{ color: '#f59e0b', fontSize: 14 }}>
+          ★
+        </span>,
+      );
     } else if (i - 0.5 <= rounded) {
       stars.push(
-        <span key={i} style={{ position: 'relative', display: 'inline-block', width: 14, fontSize: 14 }}>
+        <span
+          key={i}
+          style={{ position: 'relative', display: 'inline-block', width: 14, fontSize: 14 }}
+        >
           <span style={{ color: '#e5e5e5' }}>★</span>
-          <span style={{ position: 'absolute', left: 0, top: 0, overflow: 'hidden', width: '50%', color: '#f59e0b' }}>★</span>
-        </span>
+          <span
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              overflow: 'hidden',
+              width: '50%',
+              color: '#f59e0b',
+            }}
+          >
+            ★
+          </span>
+        </span>,
       );
     } else {
-      stars.push(<span key={i} style={{ color: '#e5e5e5', fontSize: 14 }}>★</span>);
+      stars.push(
+        <span key={i} style={{ color: '#e5e5e5', fontSize: 14 }}>
+          ★
+        </span>,
+      );
     }
   }
   return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>{stars}</span>;
@@ -46,14 +69,23 @@ export default function ProfileCafeCard({ cafe, index }) {
           </div>
         ) : null}
         <div className={styles.pfCafeBadges}>
-          {cafe.has_good_wifi ? (
-            <span className={`${tag.pill} ${tag.wifi}`}>wifi</span>
-          ) : null}
-          {cafe.is_quiet ? (
-            <span className={`${tag.pill} ${tag.quiet}`}>quiet</span>
-          ) : null}
+          {cafe.has_good_wifi ? <span className={`${tag.pill} ${tag.wifi}`}>wifi</span> : null}
+          {cafe.is_quiet ? <span className={`${tag.pill} ${tag.quiet}`}>quiet</span> : null}
         </div>
       </div>
     </Link>
   );
 }
+
+ProfileCafeCard.propTypes = {
+  cafe: PropTypes.shape({
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    name: PropTypes.string.isRequired,
+    address: PropTypes.string,
+    cover_image: PropTypes.string,
+    avgRating: PropTypes.number,
+    has_good_wifi: PropTypes.bool,
+    is_quiet: PropTypes.bool,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+};

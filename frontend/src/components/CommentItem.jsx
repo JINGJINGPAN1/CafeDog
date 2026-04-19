@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import './CommentItem.css';
+import styles from './CommentItem.module.css';
 
 export default function CommentItem({ comment, isOwner, onUpdate, onDelete }) {
   const [editing, setEditing] = useState(false);
@@ -33,43 +33,43 @@ export default function CommentItem({ comment, isOwner, onUpdate, onDelete }) {
   };
 
   return (
-    <div className="commentItem">
-      <div className="commentHeader">
-        <div className="commentAuthor">{comment.authorUsername || 'User'}</div>
-        <div className="commentMeta">
+    <div className={styles.commentItem}>
+      <div className={styles.commentHeader}>
+        <div className={styles.commentAuthor}>{comment.authorUsername || 'User'}</div>
+        <div className={styles.commentMeta}>
           {comment.createdAt ? new Date(comment.createdAt).toLocaleString() : null}
         </div>
       </div>
 
       {editing ? (
-        <div className="commentEdit">
+        <div className={styles.commentEdit}>
           <textarea value={text} onChange={(e) => setText(e.target.value)} rows={3} />
-          {error ? <div className="commentError">{error}</div> : null}
-          <div className="commentActions">
+          {error ? <div className={styles.commentError}>{error}</div> : null}
+          <div className={styles.commentActions}>
             <button
               type="button"
-              className="secondaryButton"
+              className={styles.secondaryButton}
               onClick={cancelEdit}
               disabled={saving}
             >
               Cancel
             </button>
-            <button type="button" className="primaryButton" onClick={save} disabled={saving}>
+            <button type="button" className={styles.primaryButton} onClick={save} disabled={saving}>
               {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
         </div>
       ) : (
-        <div className="commentBody">
+        <div className={styles.commentBody}>
           <p>{comment.text}</p>
           {isOwner ? (
-            <div className="commentActions">
-              <button type="button" className="linkButton" onClick={startEdit}>
+            <div className={styles.commentActions}>
+              <button type="button" className={styles.linkButton} onClick={startEdit}>
                 Edit
               </button>
               <button
                 type="button"
-                className="linkButton danger"
+                className={`${styles.linkButton} ${styles.danger}`}
                 onClick={() => onDelete(comment._id)}
               >
                 Delete

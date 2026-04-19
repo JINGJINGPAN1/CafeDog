@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import useLogin from './useLogin';
 import logoImg from '../assets/image.png';
 import styles from '../auth/Auth.module.css';
@@ -56,3 +57,5 @@ export default function Login() {
     </div>
   );
 }
+
+Login.propTypes = {};

@@ -32,13 +32,11 @@ router.get('/cafes', async (req, res) => {
     const skip = (page - 1) * limit;
 
     const sortParam = String(req.query.sort || '').toLowerCase();
-    const sort =
-      sortParam === 'new' ? { _id: -1 } : null;
+    const sort = sortParam === 'new' ? { _id: -1 } : null;
 
     const lat = parseFloat(req.query.lat);
     const lng = parseFloat(req.query.lng);
-    const nearby =
-      req.query.nearby === 'true' && Number.isFinite(lat) && Number.isFinite(lng);
+    const nearby = req.query.nearby === 'true' && Number.isFinite(lat) && Number.isFinite(lng);
     const radiusKm = Math.max(0.1, parseFloat(req.query.radiusKm) || 10);
 
     if (nearby) {
@@ -81,14 +79,20 @@ router.get('/cafes', async (req, res) => {
     const ratingByCafe = new Map();
     if (cafeIds.length > 0) {
       const [likeRows, ratingRows] = await Promise.all([
-        db.collection('cafeLikes').aggregate([
-          { $match: { cafeId: { $in: cafeIds } } },
-          { $group: { _id: '$cafeId', count: { $sum: 1 } } },
-        ]).toArray(),
-        db.collection('posts').aggregate([
-          { $match: { cafeId: { $in: cafeIds }, rating: { $type: 'number', $gt: 0 } } },
-          { $group: { _id: '$cafeId', avg: { $avg: '$rating' } } },
-        ]).toArray(),
+        db
+          .collection('cafeLikes')
+          .aggregate([
+            { $match: { cafeId: { $in: cafeIds } } },
+            { $group: { _id: '$cafeId', count: { $sum: 1 } } },
+          ])
+          .toArray(),
+        db
+          .collection('posts')
+          .aggregate([
+            { $match: { cafeId: { $in: cafeIds }, rating: { $type: 'number', $gt: 0 } } },
+            { $group: { _id: '$cafeId', avg: { $avg: '$rating' } } },
+          ])
+          .toArray(),
       ]);
       likeRows.forEach((r) => likesByCafe.set(String(r._id), r.count));
       ratingRows.forEach((r) => ratingByCafe.set(String(r._id), Math.round(r.avg * 10) / 10));
@@ -135,14 +139,15 @@ router.get('/cafes/:id', async (req, res) => {
     const [likesCount, savesCount, ratingAgg] = await Promise.all([
       likes.countDocuments({ cafeId: cafeOid }),
       saves.countDocuments({ cafeId: cafeOid }),
-      db.collection('posts').aggregate([
-        { $match: { cafeId: cafeOid, rating: { $type: 'number', $gt: 0 } } },
-        { $group: { _id: null, avg: { $avg: '$rating' }, count: { $sum: 1 } } },
-      ]).toArray(),
+      db
+        .collection('posts')
+        .aggregate([
+          { $match: { cafeId: cafeOid, rating: { $type: 'number', $gt: 0 } } },
+          { $group: { _id: null, avg: { $avg: '$rating' }, count: { $sum: 1 } } },
+        ])
+        .toArray(),
     ]);
-    const avgRating = ratingAgg.length > 0
-      ? Math.round(ratingAgg[0].avg * 10) / 10
-      : null;
+    const avgRating = ratingAgg.length > 0 ? Math.round(ratingAgg[0].avg * 10) / 10 : null;
     const ratingsCount = ratingAgg.length > 0 ? ratingAgg[0].count : 0;
 
     const viewerId = req.user && req.user._id;

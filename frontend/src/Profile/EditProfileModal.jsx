@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Profile.module.css';
 import { useAuth } from '../auth/useAuth';
 
@@ -127,3 +128,10 @@ export default function EditProfileModal({ open, onClose, currentUsername, onSav
     </div>
   );
 }
+
+EditProfileModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  currentUsername: PropTypes.string,
+  onSaved: PropTypes.func,
+};

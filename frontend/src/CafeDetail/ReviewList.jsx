@@ -1,4 +1,5 @@
 import ReviewCard from './ReviewCard';
+import PropTypes from 'prop-types';
 import styles from './CafeDetail.module.css';
 
 export default function ReviewList({
@@ -47,3 +48,15 @@ export default function ReviewList({
     </div>
   );
 }
+
+ReviewList.propTypes = {
+  posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  postsTotal: PropTypes.number.isRequired,
+  loadingMorePosts: PropTypes.bool.isRequired,
+  onLoadMore: PropTypes.func.isRequired,
+  onTogglePostLike: PropTypes.func.isRequired,
+  onDeletePost: PropTypes.func.isRequired,
+  onUpdatePost: PropTypes.func.isRequired,
+  onBumpPostRepliesCount: PropTypes.func.isRequired,
+  children: PropTypes.node,
+};

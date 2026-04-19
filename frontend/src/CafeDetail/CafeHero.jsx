@@ -1,4 +1,5 @@
 import { coverImageSrc } from '../lib/coverImage';
+import PropTypes from 'prop-types';
 import styles from './CafeDetail.module.css';
 
 export default function CafeHero({ coverImage, name }) {
@@ -20,3 +21,8 @@ export default function CafeHero({ coverImage, name }) {
     </div>
   );
 }
+
+CafeHero.propTypes = {
+  coverImage: PropTypes.string,
+  name: PropTypes.string.isRequired,
+};

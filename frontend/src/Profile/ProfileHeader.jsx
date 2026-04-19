@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from './Profile.module.css';
 
 function getInitials(name) {
@@ -26,3 +27,13 @@ export default function ProfileHeader({ username, email, createdAt, bio, isSelf,
     </div>
   );
 }
+
+ProfileHeader.propTypes = {
+  username: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)])
+    .isRequired,
+  bio: PropTypes.string,
+  isSelf: PropTypes.bool.isRequired,
+  onEditProfile: PropTypes.func,
+};

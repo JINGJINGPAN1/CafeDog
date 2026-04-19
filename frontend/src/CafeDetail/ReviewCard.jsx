@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styles from './CafeDetail.module.css';
 import { apiFetch } from '../lib/api';
 import { useAuth } from '../auth/useAuth';
@@ -68,7 +69,13 @@ function HeartIcon({ active }) {
   );
 }
 
-export default function ReviewCard({ post, index, onToggleLike, onDeletePost, onUpdatePost, onBumpRepliesCount }) {
+export default function ReviewCard({
+  post,
+  onToggleLike,
+  onDeletePost,
+  onUpdatePost,
+  onBumpRepliesCount,
+}) {
   const theme = AVATAR_THEMES[hashUsername(post.author) % AVATAR_THEMES.length];
   const liked = Boolean(post.viewerHasLiked);
   const likesCount = post.likesCount ?? 0;
@@ -378,3 +385,11 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
     </div>
   );
 }
+
+ReviewCard.propTypes = {
+  post: PropTypes.object.isRequired,
+  onToggleLike: PropTypes.func.isRequired,
+  onDeletePost: PropTypes.func.isRequired,
+  onUpdatePost: PropTypes.func.isRequired,
+  onBumpRepliesCount: PropTypes.func,
+};

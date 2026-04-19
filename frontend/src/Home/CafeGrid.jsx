@@ -1,4 +1,5 @@
 import CafeCard from './CafeCard';
+import PropTypes from 'prop-types';
 import styles from './Home.module.css';
 
 export default function CafeGrid({ cafes, total, loadingMore, onLoadMore }) {
@@ -25,3 +26,10 @@ export default function CafeGrid({ cafes, total, loadingMore, onLoadMore }) {
     </>
   );
 }
+
+CafeGrid.propTypes = {
+  cafes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  total: PropTypes.number.isRequired,
+  loadingMore: PropTypes.bool.isRequired,
+  onLoadMore: PropTypes.func.isRequired,
+};

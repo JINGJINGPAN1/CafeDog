@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import logoImg from '../assets/image.png';
 import styles from './Home.module.css';
 
@@ -55,3 +56,10 @@ export default function HomeNavbar({ isLoggedIn, meId, initials, logout }) {
     </header>
   );
 }
+
+HomeNavbar.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  meId: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  initials: PropTypes.string,
+  logout: PropTypes.func.isRequired,
+};

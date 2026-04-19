@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { apiFetch } from '../lib/api';
 import { useAuth } from '../auth/useAuth';
-import './LikeButton.css';
+import styles from './LikeButton.module.css';
 
 export default function LikeButton({ postId }) {
   const { isLoggedIn } = useAuth();
@@ -36,7 +36,7 @@ export default function LikeButton({ postId }) {
   return (
     <button
       type="button"
-      className={`likeButton ${viewerHasLiked ? 'liked' : ''}`}
+      className={`${styles.likeButton} ${viewerHasLiked ? styles.liked : ''}`}
       onClick={toggle}
       disabled={!isLoggedIn || loading}
       title={!isLoggedIn ? 'Log in to like' : undefined}

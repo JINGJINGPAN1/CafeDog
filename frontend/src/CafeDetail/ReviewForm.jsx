@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styles from './CafeDetail.module.css';
 
 const ReviewForm = forwardRef(function ReviewForm(
@@ -49,7 +50,8 @@ const ReviewForm = forwardRef(function ReviewForm(
       ) : alreadyReviewed ? (
         <div className={styles.cdFformLoginPrompt}>
           <span className={styles.cdFformLoginPromptText}>
-            You&rsquo;ve already reviewed this cafe. Use <strong>edit</strong> on your review above to update it.
+            You&rsquo;ve already reviewed this cafe. Use <strong>edit</strong> on your review above
+            to update it.
           </span>
         </div>
       ) : (
@@ -130,5 +132,23 @@ const ReviewForm = forwardRef(function ReviewForm(
     </div>
   );
 });
+
+ReviewForm.propTypes = {
+  formData: PropTypes.shape({
+    author: PropTypes.string,
+    text: PropTypes.string,
+    photoUrl: PropTypes.string,
+    rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onSetRating: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  displayName: PropTypes.string,
+  reviewTextRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  onPhotoFileChange: PropTypes.func,
+  photoFile: PropTypes.any,
+  alreadyReviewed: PropTypes.bool,
+};
 
 export default ReviewForm;

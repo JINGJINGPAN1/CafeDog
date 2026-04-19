@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from './CafeDetail.module.css';
 import tag from '../styles/cafeTags.module.css';
 
@@ -5,7 +6,16 @@ function HeartIcon({ active }) {
   const stroke = active ? '#eb5757' : '#ccc';
   const fill = active ? '#eb5757' : 'none';
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill={fill}
+      stroke={stroke}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     </svg>
   );
@@ -15,7 +25,16 @@ function BookmarkIcon({ active }) {
   const stroke = active ? '#f2c94c' : '#888';
   const fill = active ? '#f2c94c' : 'none';
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill={fill}
+      stroke={stroke}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
     </svg>
   );
@@ -26,23 +45,58 @@ function RatingStars({ value }) {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i <= rounded) {
-      stars.push(<span key={i} style={{ color: '#f59e0b', fontSize: 18 }}>&#9733;</span>);
+      stars.push(
+        <span key={i} style={{ color: '#f59e0b', fontSize: 18 }}>
+          &#9733;
+        </span>,
+      );
     } else if (i - 0.5 <= rounded) {
       // half star: use a layered approach
       stars.push(
-        <span key={i} style={{ position: 'relative', display: 'inline-block', width: 18, fontSize: 18 }}>
+        <span
+          key={i}
+          style={{ position: 'relative', display: 'inline-block', width: 18, fontSize: 18 }}
+        >
           <span style={{ color: '#e5e5e5' }}>&#9733;</span>
-          <span style={{ position: 'absolute', left: 0, top: 0, overflow: 'hidden', width: '50%', color: '#f59e0b' }}>&#9733;</span>
-        </span>
+          <span
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              overflow: 'hidden',
+              width: '50%',
+              color: '#f59e0b',
+            }}
+          >
+            &#9733;
+          </span>
+        </span>,
       );
     } else {
-      stars.push(<span key={i} style={{ color: '#e5e5e5', fontSize: 18 }}>&#9733;</span>);
+      stars.push(
+        <span key={i} style={{ color: '#e5e5e5', fontSize: 18 }}>
+          &#9733;
+        </span>,
+      );
     }
   }
   return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>{stars}</span>;
 }
 
-export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, avgRating, postsTotal, savesCount, likesCount, liked, saved, onToggleLike, onToggleSave }) {
+export default function CafeInfoPanel({
+  name,
+  address,
+  hasGoodWifi,
+  isQuiet,
+  avgRating,
+  postsTotal,
+  savesCount,
+  likesCount,
+  liked,
+  saved,
+  onToggleLike,
+  onToggleSave,
+}) {
   return (
     <div className={styles.cdLeftPad}>
       <div className={styles.cdNameRow}>
@@ -55,7 +109,9 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, avg
             aria-pressed={liked}
           >
             <HeartIcon active={liked} />
-            <span>{likesCount} {likesCount === 1 ? 'like' : 'likes'}</span>
+            <span>
+              {likesCount} {likesCount === 1 ? 'like' : 'likes'}
+            </span>
           </button>
           <button
             type="button"
@@ -75,9 +131,7 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, avg
       </div>
 
       <div className={styles.cdBadges}>
-        {hasGoodWifi ? (
-          <span className={`${tag.pill} ${tag.wifi}`}>wifi</span>
-        ) : null}
+        {hasGoodWifi ? <span className={`${tag.pill} ${tag.wifi}`}>wifi</span> : null}
         {isQuiet ? <span className={`${tag.pill} ${tag.quiet}`}>quiet</span> : null}
       </div>
 
@@ -92,7 +146,9 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, avg
           <span className={styles.cdStatNRating}>
             {avgRating != null ? <RatingStars value={avgRating} /> : '-'}
           </span>
-          <span className={styles.cdStatL}>{avgRating != null ? avgRating.toFixed(1) : 'no ratings'}</span>
+          <span className={styles.cdStatL}>
+            {avgRating != null ? avgRating.toFixed(1) : 'no ratings'}
+          </span>
         </div>
         <div className={styles.cdStat}>
           <span className={styles.cdStatN}>{likesCount}</span>
@@ -129,3 +185,18 @@ export default function CafeInfoPanel({ name, address, hasGoodWifi, isQuiet, avg
     </div>
   );
 }
+
+CafeInfoPanel.propTypes = {
+  name: PropTypes.string.isRequired,
+  address: PropTypes.string.isRequired,
+  hasGoodWifi: PropTypes.bool,
+  isQuiet: PropTypes.bool,
+  avgRating: PropTypes.number,
+  postsTotal: PropTypes.number,
+  savesCount: PropTypes.number,
+  likesCount: PropTypes.number,
+  liked: PropTypes.bool,
+  saved: PropTypes.bool,
+  onToggleLike: PropTypes.func.isRequired,
+  onToggleSave: PropTypes.func.isRequired,
+};

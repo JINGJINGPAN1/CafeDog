@@ -91,7 +91,10 @@ export default function useCafeDetail() {
     let cancelled = false;
     setMyPost(null);
 
-    if (!isLoggedIn) return () => { cancelled = true; };
+    if (!isLoggedIn)
+      return () => {
+        cancelled = true;
+      };
 
     (async () => {
       try {
@@ -195,9 +198,7 @@ export default function useCafeDetail() {
         apiFetch(`/api/cafes/${id}`)
           .then((data) => {
             setCafe((prev) =>
-              prev
-                ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount }
-                : prev,
+              prev ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount } : prev,
             );
           })
           .catch(() => {});
@@ -245,7 +246,9 @@ export default function useCafeDetail() {
             text: String(payload.text),
             photoUrl: payload.photoUrl != null ? String(payload.photoUrl) : '',
             rating:
-              payload.rating != null && payload.rating !== '' ? Number(payload.rating) : prev.rating,
+              payload.rating != null && payload.rating !== ''
+                ? Number(payload.rating)
+                : prev.rating,
             updatedAt: new Date().toISOString(),
           };
           setFormData({
@@ -260,9 +263,7 @@ export default function useCafeDetail() {
         apiFetch(`/api/cafes/${id}`)
           .then((data) => {
             setCafe((prev) =>
-              prev
-                ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount }
-                : prev,
+              prev ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount } : prev,
             );
           })
           .catch(() => {});
@@ -292,7 +293,7 @@ export default function useCafeDetail() {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      toast.error("Please log in to submit a review");
+      toast.error('Please log in to submit a review');
       return;
     }
     if (myPost) {
@@ -322,11 +323,17 @@ export default function useCafeDetail() {
       try {
         const data = await apiFetch(`/api/cafes/${id}/my-post`);
         if (data?.post) setMyPost(data.post);
-      } catch (_) {}
+      } catch (err) {
+        console.error(err);
+      }
       reloadPosts();
-      apiFetch(`/api/cafes/${id}`).then((data) => {
-        setCafe((prev) => prev ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount } : prev);
-      }).catch(() => {});
+      apiFetch(`/api/cafes/${id}`)
+        .then((data) => {
+          setCafe((prev) =>
+            prev ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount } : prev,
+          );
+        })
+        .catch(() => {});
     } catch (err) {
       console.error(err);
       toast.error('Error creating post: ' + err.message);
