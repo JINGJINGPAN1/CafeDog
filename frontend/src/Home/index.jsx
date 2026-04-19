@@ -91,11 +91,11 @@ export default function Home() {
         </div>
       </div>
 
-      <button type="button" className={styles.hFab} onClick={openForm} aria-label="Add cafe">
+      <button type="button" className={styles.hFab} onClick={openForm} aria-label="Recommend a cafe">
         <svg
           viewBox="0 0 24 24"
-          width="26"
-          height="26"
+          width="20"
+          height="20"
           fill="none"
           stroke="white"
           strokeWidth="2.5"
@@ -104,6 +104,7 @@ export default function Home() {
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
+        <span className={styles.hFabLabel}>Recommend a cafe</span>
       </button>
 
       <AddCafeModal

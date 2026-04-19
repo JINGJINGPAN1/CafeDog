@@ -440,15 +440,16 @@
   position: fixed;
   bottom: 28px;
   right: 28px;
-  width: 56px;
   height: 56px;
-  border-radius: 50%;
+  padding: 0 22px 0 18px;
+  border-radius: 999px;
   background: linear-gradient(135deg, #e07a5f, #c96a4f);
   border: none;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  color: #fff;
   box-shadow: 0 6px 20px rgba(224, 122, 95, 0.45);
   transition:
     transform 0.2s,
@@ -456,8 +457,15 @@
   z-index: 90;
 }
 .hFab:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 28px rgba(224, 122, 95, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(224, 122, 95, 0.55);
+}
+.hFabLabel {
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 /* -------- Modal -------- */
