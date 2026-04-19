@@ -46,16 +46,9 @@ router.get('/cafes', async (req, res) => {
           $maxDistance: radiusKm * 1000,
         },
       };
-      const withLocation = await cafesCollection.countDocuments({
-        location: { $exists: true },
-      });
-      console.log(
-        `[nearby] lat=${lat} lng=${lng} radiusKm=${radiusKm} | cafes with location field: ${withLocation}`,
-      );
     }
 
     const total = await cafesCollection.countDocuments(filter);
-    if (nearby) console.log(`[nearby] matched total: ${total}`);
 
     // For "top" sort we need avgRating computed from posts, so fetch all matching
     // cafes (or paginated subset) and sort in-memory after aggregation.
@@ -384,12 +377,43 @@ router.put('/cafes/:id', requireAuth, async (req, res) => {
 
 router.post('/cafes', requireAuth, async (req, res) => {
   try {
-    const { name, address, has_good_wifi, is_quiet, rating, cover_image } = req.body || {};
+    const { name, address, has_good_wifi, is_quiet, rating, cover_image, lat, lng, placeId } =
+      req.body || {};
     if (!name || !address) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'Name and address are required.' });
+    }
+
+    const latNum = Number(lat);
+    const lngNum = Number(lng);
+    if (
+      !Number.isFinite(latNum) ||
+      !Number.isFinite(lngNum) ||
+      latNum < -90 ||
+      latNum > 90 ||
+      lngNum < -180 ||
+      lngNum > 180
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Please pick an address from the dropdown suggestions.' });
     }
 
     const db = await getDb();
+    const cafesCollection = db.collection('cafes');
+
+    if (placeId) {
+      const existing = await cafesCollection.findOne(
+        { placeId: String(placeId) },
+        { projection: { _id: 1, name: 1 } },
+      );
+      if (existing) {
+        return res.status(409).json({
+          error: `This cafe has already been recommended${existing.name ? ` as "${existing.name}"` : ''}.`,
+          existingId: existing._id,
+        });
+      }
+    }
+
     const newCafe = {
       name: String(name),
       address: String(address),
@@ -397,9 +421,10 @@ router.post('/cafes', requireAuth, async (req, res) => {
       is_quiet: Boolean(is_quiet),
       rating: rating != null && rating !== '' ? Number(rating) : null,
       cover_image: cover_image ? String(cover_image) : '',
-      createdBy:new ObjectId(String(req.user._id)),
+      location: { type: 'Point', coordinates: [lngNum, latNum] },
+      placeId: placeId ? String(placeId) : null,
+      createdBy: new ObjectId(String(req.user._id)),
     };
-    const cafesCollection = db.collection('cafes');
     const result = await cafesCollection.insertOne(newCafe);
 
     res.status(201).json({

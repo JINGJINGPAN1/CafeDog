@@ -32,6 +32,7 @@ export default function Home() {
     formData,
     handleFormChange,
     handleFormSubmit,
+    handlePlaceSelect,
     coverFile,
     setCoverFile,
     handleLoadMore,
@@ -111,6 +112,7 @@ export default function Home() {
         formData={formData}
         onChange={handleFormChange}
         onSubmit={handleFormSubmit}
+        onPlaceSelect={handlePlaceSelect}
         onCoverFileChange={setCoverFile}
         coverFile={coverFile}
       />

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import styles from './Home.module.css';
+import { usePlaceAutocomplete, GOOGLE_MAPS_CONFIGURED } from '../lib/googlePlaces';
 
 export default function AddCafeModal({
   showForm,
@@ -9,8 +10,15 @@ export default function AddCafeModal({
   onSubmit,
   onCoverFileChange,
   coverFile,
+  onPlaceSelect,
 }) {
   const fileInputRef = useRef(null);
+  const addressContainerRef = useRef(null);
+
+  usePlaceAutocomplete(addressContainerRef, onPlaceSelect, {
+    active: showForm && GOOGLE_MAPS_CONFIGURED,
+    placeholder: 'Start typing an address and pick a suggestion *',
+  });
 
   const objectUrl = useMemo(() => {
     if (!coverFile) return '';
@@ -61,15 +69,29 @@ export default function AddCafeModal({
             onChange={onChange}
             required
           />
-          <input
-            type="text"
-            name="address"
-            className={styles.hInput}
-            placeholder="Address *"
-            value={formData.address}
-            onChange={onChange}
-            required
-          />
+          {GOOGLE_MAPS_CONFIGURED ? (
+            <div ref={addressContainerRef} className={styles.hPlaceAutocomplete} />
+          ) : (
+            <input
+              type="text"
+              name="address"
+              className={styles.hInput}
+              placeholder="Address * (Google Places not configured)"
+              value={formData.address}
+              onChange={onChange}
+              required
+            />
+          )}
+          {GOOGLE_MAPS_CONFIGURED && !formData.placeId ? (
+            <p className={styles.hHelpText}>
+              Please pick a location from the dropdown so it shows up in Nearby search.
+            </p>
+          ) : null}
+          {formData.placeId ? (
+            <p className={styles.hHelpText}>
+              ✓ {formData.address}
+            </p>
+          ) : null}
           <input
             type="number"
             name="rating"

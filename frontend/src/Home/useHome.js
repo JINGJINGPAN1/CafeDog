@@ -32,6 +32,9 @@ export default function useHome() {
     is_quiet: false,
     rating: '',
     cover_image: '',
+    lat: null,
+    lng: null,
+    placeId: '',
   });
   const [coverFile, setCoverFile] = useState(null);
 
@@ -102,9 +105,33 @@ export default function useHome() {
 
   const handleFormChange = (e) => {
     const { name, value, type, checked } = e.target;
+    setFormData((prev) => {
+      const next = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+      if (name === 'address') {
+        // User edited the address text — invalidate previously picked place.
+        next.lat = null;
+        next.lng = null;
+        next.placeId = '';
+      }
+      return next;
+    });
+  };
+
+  const handlePlaceSelect = (place) => {
+    if (!place) {
+      setFormData((prev) => ({ ...prev, lat: null, lng: null, placeId: '' }));
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      address: place.address,
+      lat: place.lat,
+      lng: place.lng,
+      placeId: place.placeId,
+      name: prev.name || place.name || '',
     }));
   };
 
@@ -116,6 +143,10 @@ export default function useHome() {
     }
     if (!formData.name || !formData.address) {
       toast.error('Name and address are required!');
+      return;
+    }
+    if (!formData.placeId || formData.lat == null || formData.lng == null) {
+      toast.error('Please pick an address from the dropdown suggestions.');
       return;
     }
     try {
@@ -131,9 +162,15 @@ export default function useHome() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          cover_image: coverUrl,
+          name: formData.name,
+          address: formData.address,
+          has_good_wifi: formData.has_good_wifi,
+          is_quiet: formData.is_quiet,
           rating: Number(formData.rating),
+          cover_image: coverUrl,
+          lat: formData.lat,
+          lng: formData.lng,
+          placeId: formData.placeId,
         }),
       });
       toast.success('Cafe successfully published!');
@@ -144,6 +181,9 @@ export default function useHome() {
         is_quiet: false,
         rating: '',
         cover_image: '',
+        lat: null,
+        lng: null,
+        placeId: '',
       });
       setCoverFile(null);
       setShowForm(false);
@@ -181,7 +221,6 @@ export default function useHome() {
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        console.log('[nearby] got coords:', pos.coords.latitude, pos.coords.longitude);
         setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         setFilterNearby(true);
         setLocating(false);
@@ -230,6 +269,7 @@ export default function useHome() {
     formData,
     handleFormChange,
     handleFormSubmit,
+    handlePlaceSelect,
     coverFile,
     setCoverFile,
     handleLoadMore,
