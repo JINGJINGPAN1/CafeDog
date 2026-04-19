@@ -269,7 +269,7 @@ export default function ReviewCard({ post, index, onToggleLike, onDeletePost, on
           <>
             <button
               type="button"
-              className={`${styles.cdRvReply} ${styles.cdBarBtn}`}
+              className={`${styles.cdRvReply} ${styles.cdRvEdit} ${styles.cdBarBtn}`}
               onClick={startEditPost}
               disabled={isEditingPost}
             >

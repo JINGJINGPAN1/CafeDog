@@ -17,6 +17,21 @@ async function getDb() {
   } catch (err) {
     console.error('Failed to create 2dsphere index:', err);
   }
+  try {
+    await cachedDb.collection('posts').createIndex(
+      { authorId: 1, cafeId: 1 },
+      {
+        unique: true,
+        partialFilterExpression: { authorId: { $type: 'objectId' } },
+        name: 'uniq_author_cafe',
+      },
+    );
+  } catch (err) {
+    console.error(
+      'Failed to create unique (authorId, cafeId) index on posts — run scripts/dedupeReviews.js first:',
+      err.message,
+    );
+  }
   return cachedDb;
 }
 

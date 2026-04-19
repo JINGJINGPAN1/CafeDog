@@ -30,10 +30,26 @@ async function createPost(req, res) {
 
     const db = await getDb();
     const sessionAuthor = await resolveAuthorFromSession(req, db);
+    const cafeOid = new ObjectId(String(cafeId));
+
+    const postsCollection = db.collection('posts');
+
+    if (sessionAuthor) {
+      const existing = await postsCollection.findOne({
+        authorId: sessionAuthor.authorId,
+        cafeId: cafeOid,
+      });
+      if (existing) {
+        return res.status(409).json({
+          error: 'You have already reviewed this cafe. Edit your existing review instead.',
+          postId: existing._id,
+        });
+      }
+    }
 
     const createdAt = new Date();
     const newPost = {
-      cafeId: new ObjectId(String(cafeId)),
+      cafeId: cafeOid,
       authorId: sessionAuthor ? sessionAuthor.authorId : null,
       author: sessionAuthor ? sessionAuthor.authorName : String(author || 'Anonymous'),
       text: String(text),
@@ -42,16 +58,45 @@ async function createPost(req, res) {
       createdAt,
     };
 
-    const postsCollection = db.collection('posts');
-    const result = await postsCollection.insertOne(newPost);
-
-    res.status(201).json({
-      message: 'Post successfully created.',
-      postId: result.insertedId,
-    });
+    try {
+      const result = await postsCollection.insertOne(newPost);
+      res.status(201).json({
+        message: 'Post successfully created.',
+        postId: result.insertedId,
+      });
+    } catch (err) {
+      if (err && err.code === 11000) {
+        return res.status(409).json({
+          error: 'You have already reviewed this cafe. Edit your existing review instead.',
+        });
+      }
+      throw err;
+    }
   } catch (error) {
     console.error('Error creating post: ', error);
     res.status(500).json({ error: 'Server error while creating the post.' });
+  }
+}
+
+async function getMyPostForCafe(req, res) {
+  try {
+    const cafeId = req.params.id;
+    if (!ObjectId.isValid(String(cafeId))) {
+      return res.status(400).json({ error: 'Invalid cafe ID format.' });
+    }
+    const viewerId = req.user && req.user._id;
+    if (!viewerId || !ObjectId.isValid(String(viewerId))) {
+      return res.json({ post: null });
+    }
+    const db = await getDb();
+    const post = await db.collection('posts').findOne({
+      authorId: new ObjectId(String(viewerId)),
+      cafeId: new ObjectId(String(cafeId)),
+    });
+    res.json({ post: post || null });
+  } catch (error) {
+    console.error('Error fetching my post:', error);
+    res.status(500).json({ error: 'Failed to fetch your post.' });
   }
 }
 
@@ -178,6 +223,7 @@ async function listPostsByCafe(req, res) {
 // Canonical routes
 router.post('/posts', requireAuth, createPost);
 router.get('/cafes/:id/posts', listPostsByCafe);
+router.get('/cafes/:id/my-post', getMyPostForCafe);
 
 // Query-based route
 router.get('/posts', async (req, res) => {

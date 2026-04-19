@@ -483,6 +483,13 @@
 .cdRvDanger:hover {
   color: #c0392b;
 }
+.cdRvEdit {
+  color: #e07a5f;
+  font-weight: 700;
+}
+.cdRvEdit:hover {
+  color: #c96a4f;
+}
 .cdReplyCount {
   margin-left: 6px;
   display: inline-flex;

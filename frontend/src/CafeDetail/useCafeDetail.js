@@ -36,6 +36,7 @@ export default function useCafeDetail() {
     rating: '5',
   });
   const [postPhotoFile, setPostPhotoFile] = useState(null);
+  const [myPost, setMyPost] = useState(null);
 
   const uploadImage = useCallback(async (file) => {
     const fd = new FormData();
@@ -84,6 +85,27 @@ export default function useCafeDetail() {
       cancelled = true;
     };
   }, [id]);
+
+  // --- Fetch viewer's existing post for this cafe ---
+  useEffect(() => {
+    let cancelled = false;
+    setMyPost(null);
+
+    if (!isLoggedIn) return () => { cancelled = true; };
+
+    (async () => {
+      try {
+        const data = await apiFetch(`/api/cafes/${id}/my-post`);
+        if (cancelled) return;
+        setMyPost(data?.post || null);
+      } catch (err) {
+        console.error('Error fetching my post:', err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, isLoggedIn]);
 
   // --- Posts ---
   const reloadPosts = useCallback(async () => {
@@ -162,6 +184,13 @@ export default function useCafeDetail() {
         await apiFetch(`/api/posts/${postId}`, { method: 'DELETE' });
         setPosts((prev) => prev.filter((p) => String(p._id) !== String(postId)));
         setPostsTotal((n) => Math.max(0, (Number(n) || 0) - 1));
+        setMyPost((prev) => {
+          if (prev && String(prev._id) === String(postId)) {
+            setFormData({ author: '', text: '', photoUrl: '', rating: '5' });
+            return null;
+          }
+          return prev;
+        });
         toast.success('Post deleted.');
         apiFetch(`/api/cafes/${id}`)
           .then((data) => {
@@ -209,6 +238,24 @@ export default function useCafeDetail() {
             };
           }),
         );
+        setMyPost((prev) => {
+          if (!prev || String(prev._id) !== String(postId)) return prev;
+          const next = {
+            ...prev,
+            text: String(payload.text),
+            photoUrl: payload.photoUrl != null ? String(payload.photoUrl) : '',
+            rating:
+              payload.rating != null && payload.rating !== '' ? Number(payload.rating) : prev.rating,
+            updatedAt: new Date().toISOString(),
+          };
+          setFormData({
+            author: '',
+            text: next.text,
+            photoUrl: next.photoUrl,
+            rating: String(next.rating ?? '5'),
+          });
+          return next;
+        });
         toast.success('Post updated.');
         apiFetch(`/api/cafes/${id}`)
           .then((data) => {
@@ -248,6 +295,10 @@ export default function useCafeDetail() {
       toast.error("Please log in to submit a review");
       return;
     }
+    if (myPost) {
+      toast.error("You've already reviewed this cafe. Edit your existing review instead.");
+      return;
+    }
     try {
       let photoUrl = formData.photoUrl;
       if (postPhotoFile) {
@@ -267,8 +318,12 @@ export default function useCafeDetail() {
       });
       setFormData({ author: '', text: '', photoUrl: '', rating: '5' });
       setPostPhotoFile(null);
+      // Refetch my-post so the form hides + inline edit takes over
+      try {
+        const data = await apiFetch(`/api/cafes/${id}/my-post`);
+        if (data?.post) setMyPost(data.post);
+      } catch (_) {}
       reloadPosts();
-      // Refresh cafe to get updated avgRating
       apiFetch(`/api/cafes/${id}`).then((data) => {
         setCafe((prev) => prev ? { ...prev, avgRating: data.avgRating, ratingsCount: data.ratingsCount } : prev);
       }).catch(() => {});
@@ -349,20 +404,28 @@ export default function useCafeDetail() {
   };
 
   // ---toggleReviewForm ---
-  const toggleReviewForm = () => {                                                                                                             
+  const toggleReviewForm = () => {
     if (!isLoggedIn) {
       toast.error('Please log in to write a review.');
-      return;                                                                                                                                  
+      return;
     }
-    setIsReviewFormOpen((v) => !v);                                                                                                            
-  };  
+    if (myPost) {
+      toast.error("You've already reviewed this cafe. Edit your existing review instead.");
+      return;
+    }
+    setIsReviewFormOpen((v) => !v);
+  };
 
   // --- Scroll to review form ---
   const scrollToForm = () => {
-    if (!isLoggedIn) {        
+    if (!isLoggedIn) {
       toast.error('Please log in to write a review.');
-      return;                                                                                                                                  
-    } 
+      return;
+    }
+    if (myPost) {
+      toast.error("You've already reviewed this cafe. Edit your existing review instead.");
+      return;
+    }
 
     setIsReviewFormOpen(true);
 
@@ -476,6 +539,8 @@ export default function useCafeDetail() {
     reviewTextRef,
     isReviewFormOpen,
     setIsReviewFormOpen,
+    myPost,
+    isEditingReview: Boolean(myPost),
 
     // Auth
     isLoggedIn,

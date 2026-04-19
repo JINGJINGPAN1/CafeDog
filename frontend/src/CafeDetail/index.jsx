@@ -46,6 +46,7 @@ export default function CafeDetail() {
     toggleReviewForm,
     toggleLike,
     toggleSave,
+    isEditingReview,
   } = useCafeDetail();
 
   if (loading) {
@@ -143,6 +144,7 @@ export default function CafeDetail() {
               reviewTextRef={reviewTextRef}
               onPhotoFileChange={setPostPhotoFile}
               photoFile={postPhotoFile}
+              alreadyReviewed={isEditingReview}
             />
           </ReviewList>
 

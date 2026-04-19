@@ -13,6 +13,7 @@ const ReviewForm = forwardRef(function ReviewForm(
     reviewTextRef,
     onPhotoFileChange,
     photoFile,
+    alreadyReviewed,
   },
   ref,
 ) {
@@ -43,6 +44,12 @@ const ReviewForm = forwardRef(function ReviewForm(
               Log in
             </Link>{' '}
             to share your experience.
+          </span>
+        </div>
+      ) : alreadyReviewed ? (
+        <div className={styles.cdFformLoginPrompt}>
+          <span className={styles.cdFformLoginPromptText}>
+            You&rsquo;ve already reviewed this cafe. Use <strong>edit</strong> on your review above to update it.
           </span>
         </div>
       ) : (
