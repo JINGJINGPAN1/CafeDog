@@ -28,7 +28,7 @@ export default function HomeFilters({
         <input
           type="text"
           className={styles.hFilterInput}
-          placeholder="Search cafes..."
+          placeholder="Search by name or city..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
         />

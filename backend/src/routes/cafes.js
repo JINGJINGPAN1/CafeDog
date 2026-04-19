@@ -16,7 +16,9 @@ router.get('/cafes', async (req, res) => {
 
     const filter = {};
     if (req.query.search) {
-      filter.name = { $regex: req.query.search, $options: 'i' };
+      const escaped = String(req.query.search).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const rx = { $regex: escaped, $options: 'i' };
+      filter.$or = [{ name: rx }, { address: rx }];
     }
     if (req.query.wifi === 'true') {
       filter.has_good_wifi = true;
