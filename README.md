@@ -18,9 +18,10 @@ Email: kong.yin@northeastern.edu
 
 ### Key Features
 
-- **Café Discovery**: Search by name, filter (WiFi / quiet), and browse by tabs (Discover / New places / Top rated) with pagination.
-- **Café Detail Page**: View café info plus aggregated engagement (likes/saves) and a posts feed.
-- **Posts (Reviews)**: Create, edit, and delete posts linked to a café with rating and optional photo.
+- **Café Discovery**: Search by name, filter (WiFi / quiet), and browse by tabs (**Discover** / **Nearby** / **New places** / **Top rated**) with pagination. The **Nearby** tab uses the browser Geolocation API and a MongoDB `2dsphere` index to rank results by distance.
+- **Google Places Integration**: Seed real Bay Area cafés via Google Places API (New), with photos proxied to Cloudinary. Address autocomplete in the "Recommend a cafe" form uses Google's Autocomplete Data API with session tokens.
+- **Café Detail Page**: View café info, aggregated engagement (likes/saves), and a posts feed sorted newest-first.
+- **Posts (Reviews)**: Create, edit, and delete posts linked to a café with rating and optional photo. A **unique compound index on `(authorId, cafeId)`** enforces one review per user per café at the DB level; the UI shows an inline "edit" action on the user's own review.
 - **Social Interactions**: Like/unlike posts, full comment CRUD, like/save cafés.
 - **Auth & Profiles**: Session-based login/registration; profile pages show posts and cafés (with private tabs for liked/saved content when viewing your own profile).
 
@@ -50,18 +51,20 @@ Email: kong.yin@northeastern.edu
 
 ### Step 1: Clone and Install
 
+The project is split into two workspaces under the repo root: `backend/` and `frontend/`. Root-level `npm install` auto-installs backend deps via `postinstall`; frontend deps install separately for local development.
+
 ```bash
-# In the project root
+# In the project root — installs root tooling + backend deps (via postinstall)
 npm install
 
-# Install frontend deps
+# Frontend deps (needed for `npm run dev` and `npm run build`)
 cd frontend
 npm install
 ```
 
 ### Step 2: Configure Environment
 
-Create a `.env` file in the project root:
+Create **`backend/.env`** (consumed by the Express server and seed scripts):
 
 ```env
 # Required
@@ -73,11 +76,17 @@ CLOUDINARY_CLOUD_NAME="..."
 CLOUDINARY_API_KEY="..."
 CLOUDINARY_API_SECRET="..."
 
-# Optional (Google Places photo proxy)
-Maps_API_KEY="..."
+# Optional (Google Places photo proxy + seed scripts)
+GOOGLE_MAPS_API_KEY="..."
 
 # Optional (server port)
 PORT=5001
+```
+
+Create **`frontend/.env`** (consumed by Vite at build/dev time — only needed if you use the client-side Google Maps features):
+
+```env
+VITE_GOOGLE_MAPS_API_KEY="..."
 ```
 
 ### Step 3: Start MongoDB
@@ -107,13 +116,13 @@ Open your browser:
 
 ### Step 5: Build & Run (Same-origin Production)
 
-Build the frontend:
+Build (installs backend + frontend deps, then builds the Vite bundle into `frontend/dist`):
 
 ```bash
 npm run build
 ```
 
-Run the server (serves `frontend/dist`):
+Run the server (serves `frontend/dist` + exposes `/api`):
 
 ```bash
 npm start
@@ -123,22 +132,26 @@ Open: `http://localhost:5001`
 
 ## Seed Synthetic Data
 
-Seed up to ~1000 posts (and create cafés/users if missing):
+All seed and maintenance scripts live under `backend/scripts/` and read `backend/.env`.
 
 ```bash
+# Core demo data (users + cafés + posts). Add --drop to reset collections first.
 npm run seed
-```
-
-Drop and recreate seed collections:
-
-```bash
 npm run seed -- --drop
-```
 
-Generate additional posts per café:
+# Pull real Bay Area cafés from Google Places (uploads photos to Cloudinary).
+node backend/scripts/seedGooglePlaces.js --limit 200
 
-```bash
-npm run seed:cafe-posts
+# Generate 2–4 fake reviews per Google-seeded café so avg ratings match.
+node backend/scripts/seedFakeReviews.js
+
+# Geocode cafés that are missing a location (dry-run by default; use --apply to write).
+node backend/scripts/backfillLocation.js
+node backend/scripts/backfillLocation.js --apply
+
+# Collapse duplicate (author, café) reviews before enforcing the unique index.
+node backend/scripts/dedupeReviews.js
+node backend/scripts/dedupeReviews.js --apply
 ```
 
 ## How to Use
@@ -146,14 +159,14 @@ npm run seed:cafe-posts
 ### Home (Discover)
 
 - **Browse cafés**: scroll the list and click a café card to open details.
-- **Search / filter**: search by name, toggle **WiFi** / **Quiet**, switch tabs (Discover / New places / Top rated).
-- **Add a café**: click **+ Add** and submit the form (optional cover image upload).
+- **Search / filter**: search by name, toggle **WiFi** / **Quiet**, switch tabs (**Discover** / **Nearby** / **New places** / **Top rated**). Clicking **Nearby** prompts for location permission and sorts results by distance.
+- **Recommend a café**: click the **Recommend a cafe** pill (bottom-right), pick an address from the autocomplete dropdown, and submit (optional cover image upload).
 
 ### Café Detail
 
 - **Like / Save café**: toggle like/save on the café detail page (login required).
-- **Create a post**: write text, choose a rating, optionally upload a photo, then submit.
-- **Edit / delete**: owners can edit/delete their own cafés; authors can edit/delete their own posts.
+- **Write a review**: click **write a review**, compose the review, choose a rating, optionally upload a photo, and submit. You can only post **one review per café** — if you've already reviewed it, use the inline **edit** link on your own review to update it.
+- **Edit / delete**: owners can edit/delete their own cafés; authors can edit/delete their own reviews.
 
 ### Posts (Reviews)
 
@@ -191,24 +204,27 @@ npm run lint
 
 ```text
 CafeDog/
-├── server.js                  # Express server entry (API + static frontend in prod)
-├── src/
-│   ├── db.js                   # MongoDB client + getDb()
-│   ├── auth/
-│   │   └── passport.js          # Passport Local strategy + session (de)serialization
-│   ├── middleware/
-│   │   └── requireAuth.js       # Auth guard for protected routes
-│   └── routes/
-│       ├── auth.js              # /api/auth/* and /api/me, /api/users/:id
-│       ├── cafes.js             # /api/cafes + cafe likes/saves
-│       ├── posts.js             # /api/posts + /api/cafes/:id/posts
-│       ├── social.js            # post likes + comment CRUD
-│       ├── uploads.js           # Cloudinary image upload
-│       └── places.js            # Google Places photo proxy
-├── frontend/                   # React + Vite app
-├── scripts/                    # Seed scripts
+├── package.json               # Root orchestrator (delegates to backend + frontend)
+├── backend/                   # Express API server
+│   ├── server.js               # Express server entry (API + static frontend in prod)
+│   ├── package.json
+│   ├── src/
+│   │   ├── db.js                # MongoDB client + getDb()
+│   │   ├── auth/
+│   │   │   └── passport.js       # Passport Local strategy + session (de)serialization
+│   │   ├── middleware/
+│   │   │   └── requireAuth.js    # Auth guard for protected routes
+│   │   └── routes/
+│   │       ├── auth.js           # /api/auth/* and /api/me, /api/users/:id
+│   │       ├── cafes.js          # /api/cafes + cafe likes/saves
+│   │       ├── posts.js          # /api/posts + /api/cafes/:id/posts
+│   │       ├── social.js         # post likes + comment CRUD
+│   │       ├── uploads.js        # Cloudinary image upload
+│   │       └── places.js         # Google Places photo proxy
+│   └── scripts/                # Seed / maintenance scripts
+├── frontend/                  # React + Vite app
 ├── docs/
-│   └── CafeDog.png              # README screenshot
+│   └── CafeDog.png             # README screenshot
 ├── API_Contract.md
 ├── design-document.md
 └── README.md
@@ -227,7 +243,7 @@ CafeDog/
 
 ### Cafés
 
-- `GET /api/cafes` (search/filter/paginate, supports `sort=new|top`)
+- `GET /api/cafes` (search/filter/paginate, supports `sort=new|top` and `nearby=true&lat=…&lng=…`)
 - `GET /api/cafes/:id`
 - `POST /api/cafes`
 - `PUT /api/cafes/:id` (owner only)
@@ -241,8 +257,9 @@ CafeDog/
 
 ### Posts (Reviews) + Social
 
-- `POST /api/posts`
+- `POST /api/posts` (returns `409` if the user has already reviewed this café)
 - `GET /api/cafes/:id/posts`
+- `GET /api/cafes/:id/my-post` (returns the viewer's review for this café, or `null`)
 - `GET /api/posts?cafeId=...`
 - `PUT /api/posts/:postId` (author only)
 - `DELETE /api/posts/:postId` (author only)
@@ -280,13 +297,16 @@ CafeDog/
 
 ## Features Implemented
 
-✅ Node.js + Express.js backend  
-✅ MongoDB with native driver (no Mongoose)  
+✅ Node.js + Express.js backend (split under `backend/`)  
+✅ MongoDB with native driver (no Mongoose), including `2dsphere` geo index and unique partial index on `(authorId, cafeId)`  
 ✅ React + Vite frontend with client-side routing  
 ✅ Session-based auth (Passport Local + `express-session`)  
 ✅ CRUD for cafés and posts; full CRUD for comments  
 ✅ Likes for posts + like/save for cafés  
+✅ Browser geolocation "Nearby" tab with distance-sorted results  
+✅ Google Places (New) seeding + Autocomplete Data API for address search  
 ✅ Image upload (Cloudinary) + Google Places photo proxy  
+✅ One-review-per-user-per-café enforced at the DB level; UI prompts the user to edit instead of creating a duplicate  
 ✅ Prettier formatting scripts  
 ✅ No exposed credentials (uses environment variables)  
 ✅ No prohibited libraries used (no `axios`, `mongoose`, or `cors` package)

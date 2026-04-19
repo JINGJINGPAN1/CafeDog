@@ -1,6 +1,6 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
-require('dotenv').config({ path: path.resolve(__dirname, '..', 'frontend', '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '..', '..', 'frontend', '.env') });
 
 const { MongoClient } = require('mongodb');
 const { v2: cloudinary } = require('cloudinary');

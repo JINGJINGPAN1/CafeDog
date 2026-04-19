@@ -1,6 +1,6 @@
-require('dotenv').config();
-const express = require('express');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+const express = require('express');
 const session = require('express-session');
 const { MongoStore } = require('connect-mongo');
 const passport = require('passport');
@@ -66,7 +66,7 @@ app.use('/api', uploadsRouter);
 app.use('/api', placesRouter);
 
 // 4. serve frontend (same-origin) in production
-const distPath = path.join(__dirname, 'frontend', 'dist');
+const distPath = path.join(__dirname, '..', 'frontend', 'dist');
 app.use(express.static(distPath));
 
 app.get(/^(?!\/api).*/, (req, res) => {

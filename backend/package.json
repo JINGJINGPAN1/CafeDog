@@ -1,18 +1,12 @@
 {
-  "name": "cafedog",
+  "name": "cafedog-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "CafeDog Express API server.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "seed": "node scripts/seed.js",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "build": "npm --prefix frontend install && npm --prefix frontend run build"
+    "seed": "node scripts/seed.js"
   },
-  "keywords": [],
-  "author": "",
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
@@ -26,8 +20,5 @@
     "multer": "^2.1.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
-  },
-  "devDependencies": {
-    "prettier": "^3.8.1"
   }
 }
