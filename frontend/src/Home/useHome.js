@@ -139,7 +139,6 @@ export default function useHome() {
       lat: place.lat,
       lng: place.lng,
       placeId: place.placeId,
-      name: prev.name || place.name || '',
     }));
   };
 
