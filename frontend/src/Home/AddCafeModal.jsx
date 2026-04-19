@@ -1,6 +1,11 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './Home.module.css';
-import { usePlaceAutocomplete, GOOGLE_MAPS_CONFIGURED } from '../lib/googlePlaces';
+import {
+  fetchPlaceSuggestions,
+  fetchPlaceDetails,
+  createSessionToken,
+  GOOGLE_MAPS_CONFIGURED,
+} from '../lib/googlePlaces';
 
 export default function AddCafeModal({
   showForm,
@@ -13,12 +18,69 @@ export default function AddCafeModal({
   onPlaceSelect,
 }) {
   const fileInputRef = useRef(null);
-  const addressContainerRef = useRef(null);
+  const addressWrapRef = useRef(null);
+  const sessionTokenRef = useRef(null);
+  const debounceRef = useRef(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  usePlaceAutocomplete(addressContainerRef, onPlaceSelect, {
-    active: showForm && GOOGLE_MAPS_CONFIGURED,
-    placeholder: 'Start typing an address and pick a suggestion *',
-  });
+  useEffect(() => {
+    if (!showForm) {
+      sessionTokenRef.current = null;
+      setSuggestions([]);
+      setShowDropdown(false);
+      return;
+    }
+    if (GOOGLE_MAPS_CONFIGURED && !sessionTokenRef.current) {
+      createSessionToken()
+        .then((t) => {
+          sessionTokenRef.current = t;
+        })
+        .catch((err) => console.error('[places] session token error:', err));
+    }
+  }, [showForm]);
+
+  useEffect(() => {
+    if (!showDropdown) return undefined;
+    const onDocClick = (e) => {
+      if (addressWrapRef.current && !addressWrapRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, [showDropdown]);
+
+  const handleAddressChange = (e) => {
+    onChange(e);
+    const value = e.target.value;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!value.trim() || !GOOGLE_MAPS_CONFIGURED) {
+      setSuggestions([]);
+      setShowDropdown(false);
+      return;
+    }
+    debounceRef.current = setTimeout(() => {
+      fetchPlaceSuggestions(value, sessionTokenRef.current)
+        .then((list) => {
+          setSuggestions(list);
+          setShowDropdown(list.length > 0);
+        })
+        .catch((err) => console.error('[places] suggestions error:', err));
+    }, 300);
+  };
+
+  const handleSuggestionPick = async (sug) => {
+    try {
+      const details = await fetchPlaceDetails(sug.prediction);
+      if (details) onPlaceSelect?.(details);
+      setShowDropdown(false);
+      setSuggestions([]);
+      sessionTokenRef.current = null;
+    } catch (err) {
+      console.error('[places] details error:', err);
+    }
+  };
 
   const objectUrl = useMemo(() => {
     if (!coverFile) return '';
@@ -69,28 +131,53 @@ export default function AddCafeModal({
             onChange={onChange}
             required
           />
-          {GOOGLE_MAPS_CONFIGURED ? (
-            <div ref={addressContainerRef} className={styles.hPlaceAutocomplete} />
-          ) : (
+          <div ref={addressWrapRef} className={styles.hAddressWrap}>
             <input
               type="text"
               name="address"
               className={styles.hInput}
-              placeholder="Address * (Google Places not configured)"
+              placeholder={
+                GOOGLE_MAPS_CONFIGURED
+                  ? 'Start typing an address and pick a suggestion *'
+                  : 'Address * (Google Places not configured)'
+              }
               value={formData.address}
-              onChange={onChange}
+              onChange={handleAddressChange}
+              onFocus={() => {
+                if (suggestions.length > 0) setShowDropdown(true);
+              }}
+              autoComplete="off"
               required
             />
-          )}
+            {showDropdown && suggestions.length > 0 ? (
+              <ul className={styles.hSuggestions}>
+                {suggestions.map((sug) => (
+                  <li
+                    key={sug.placeId}
+                    className={styles.hSuggestionItem}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleSuggestionPick(sug);
+                    }}
+                  >
+                    <span className={styles.hSuggestionMain}>
+                      {sug.mainText || sug.fullText}
+                    </span>
+                    {sug.secondaryText ? (
+                      <span className={styles.hSuggestionSecondary}>{sug.secondaryText}</span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
           {GOOGLE_MAPS_CONFIGURED && !formData.placeId ? (
             <p className={styles.hHelpText}>
               Please pick a location from the dropdown so it shows up in Nearby search.
             </p>
           ) : null}
           {formData.placeId ? (
-            <p className={styles.hHelpText}>
-              ✓ {formData.address}
-            </p>
+            <p className={styles.hHelpText}>✓ {formData.address}</p>
           ) : null}
           <input
             type="number"

@@ -1,12 +1,7 @@
-import { useEffect, useRef } from 'react';
-
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 let bootstrapped = false;
 
-// Install Google's official inline bootstrap loader. Sets up
-// window.google.maps.importLibrary() which is required to load newer APIs
-// like PlaceAutocompleteElement.
 function ensureBootstrap() {
   if (bootstrapped) return;
   if (window.google?.maps?.importLibrary) {
@@ -48,83 +43,52 @@ function ensureBootstrap() {
   bootstrapped = true;
 }
 
-function loadPlacesLibrary() {
-  if (!API_KEY) {
-    return Promise.reject(new Error('VITE_GOOGLE_MAPS_API_KEY is not set'));
-  }
+async function loadPlacesLibrary() {
+  if (!API_KEY) throw new Error('VITE_GOOGLE_MAPS_API_KEY is not set');
   ensureBootstrap();
-  return window.google.maps.importLibrary('places').then(() => window.google);
+  await window.google.maps.importLibrary('places');
+  return window.google.maps.places;
 }
 
-export function usePlaceAutocomplete(containerRef, onSelect, { active = true, placeholder } = {}) {
-  const onSelectRef = useRef(onSelect);
-  onSelectRef.current = onSelect;
+export async function createSessionToken() {
+  const places = await loadPlacesLibrary();
+  return new places.AutocompleteSessionToken();
+}
 
-  useEffect(() => {
-    if (!active) return undefined;
-    if (!containerRef.current) return undefined;
+export async function fetchPlaceSuggestions(input, sessionToken) {
+  if (!input || !input.trim()) return [];
+  const places = await loadPlacesLibrary();
+  const request = { input };
+  if (sessionToken) request.sessionToken = sessionToken;
+  const { suggestions } = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+  return suggestions
+    .filter((s) => s.placePrediction)
+    .map((s) => {
+      const pred = s.placePrediction;
+      return {
+        placeId: pred.placeId,
+        mainText: pred.mainText?.text || pred.text?.text || '',
+        secondaryText: pred.secondaryText?.text || '',
+        fullText: pred.text?.text || '',
+        prediction: pred,
+      };
+    });
+}
 
-    let cancelled = false;
-    let element = null;
-    let handleSelect = null;
-    let handleInput = null;
-    const container = containerRef.current;
-
-    loadPlacesLibrary()
-      .then((google) => {
-        if (cancelled || !container) return;
-        element = new google.maps.places.PlaceAutocompleteElement();
-        if (placeholder) element.setAttribute('placeholder', placeholder);
-        element.style.width = '100%';
-
-        handleSelect = async (event) => {
-          try {
-            const prediction = event.placePrediction;
-            if (!prediction) return;
-            const place = prediction.toPlace();
-            await place.fetchFields({
-              fields: ['id', 'displayName', 'formattedAddress', 'location'],
-            });
-            const loc = place.location;
-            if (!loc) {
-              onSelectRef.current?.(null);
-              return;
-            }
-            onSelectRef.current?.({
-              placeId: place.id,
-              address: place.formattedAddress || '',
-              name: typeof place.displayName === 'string' ? place.displayName : '',
-              lat: typeof loc.lat === 'function' ? loc.lat() : loc.lat,
-              lng: typeof loc.lng === 'function' ? loc.lng() : loc.lng,
-            });
-          } catch (err) {
-            console.error('[places] select error:', err);
-          }
-        };
-        handleInput = () => {
-          onSelectRef.current?.(null);
-        };
-
-        element.addEventListener('gmp-select', handleSelect);
-        element.addEventListener('input', handleInput);
-
-        container.innerHTML = '';
-        container.appendChild(element);
-      })
-      .catch((err) => {
-        console.error('[places] load error:', err);
-      });
-
-    return () => {
-      cancelled = true;
-      if (element) {
-        if (handleSelect) element.removeEventListener('gmp-select', handleSelect);
-        if (handleInput) element.removeEventListener('input', handleInput);
-        element.remove();
-      }
-      if (container) container.innerHTML = '';
-    };
-  }, [containerRef, active, placeholder]);
+export async function fetchPlaceDetails(prediction) {
+  const place = prediction.toPlace();
+  await place.fetchFields({
+    fields: ['id', 'displayName', 'formattedAddress', 'location'],
+  });
+  const loc = place.location;
+  if (!loc) return null;
+  return {
+    placeId: place.id,
+    address: place.formattedAddress || '',
+    name: typeof place.displayName === 'string' ? place.displayName : '',
+    lat: typeof loc.lat === 'function' ? loc.lat() : loc.lat,
+    lng: typeof loc.lng === 'function' ? loc.lng() : loc.lng,
+  };
 }
 
 export const GOOGLE_MAPS_CONFIGURED = Boolean(API_KEY);
