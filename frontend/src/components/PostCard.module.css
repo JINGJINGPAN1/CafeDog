@@ -17,7 +17,7 @@
 }
 
 .authorLink {
-  color: #007bff;
+  color: #e07a5f;
   text-decoration: none;
 }
 
@@ -97,7 +97,7 @@
   border: none;
   background: transparent;
   padding: 0;
-  color: #007bff;
+  color: #e07a5f;
   cursor: pointer;
 }
 
@@ -109,21 +109,25 @@
   padding: 8px 10px;
   border-radius: 10px;
   border: none;
-  background: #007bff;
+  background: linear-gradient(135deg, #e07a5f, #c96a4f);
   color: white;
   cursor: pointer;
 }
 
-.dangerButton {
+.secondaryButton {
   padding: 8px 10px;
   border-radius: 10px;
-  border: none;
-  background: #b00020;
-  color: white;
+  border: 1px solid #efefef;
+  background: #fff;
+  color: #666;
   cursor: pointer;
 }
 
-.dangerButton:disabled,
+.secondaryButton:hover {
+  border-color: #ddd;
+}
+
+.secondaryButton:disabled,
 .primaryButton:disabled {
   opacity: 0.65;
   cursor: not-allowed;

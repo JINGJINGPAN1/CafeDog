@@ -19,7 +19,10 @@ export default function Register() {
 
   return (
     <div className={styles.authPage}>
-      <div className={styles.authCard}>
+      <a className="skipLink" href="#main-content">
+        Skip to main content
+      </a>
+      <main id="main-content" className={styles.authCard}>
         <div className={styles.authLogo}>
           <img
             src={logoImg}
@@ -72,7 +75,7 @@ export default function Register() {
             Log in
           </Link>
         </p>
-      </div>
+      </main>
     </div>
   );
 }

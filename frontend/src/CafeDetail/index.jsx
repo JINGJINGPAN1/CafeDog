@@ -75,79 +75,86 @@ export default function CafeDetail() {
 
   return (
     <div className={styles.cdPage}>
+      <a className="skipLink" href="#main-content">
+        Skip to main content
+      </a>
       <CafeDetailNav isOwner={isOwner} onEdit={startEditing} onDelete={handleDelete} />
 
-      <div className={styles.cdBody}>
-        {/* Left column */}
-        <div className={styles.cdLeft}>
-          <CafeHero coverImage={cafe.cover_image} name={cafe.name} />
+      <main id="main-content" className={styles.cdMain}>
+        <div className={styles.cdBody}>
+          {/* Left column */}
+          <section className={styles.cdLeft} aria-label="Café information">
+            <CafeHero coverImage={cafe.cover_image} name={cafe.name} />
 
-          {isEditing ? (
-            <CafeEditForm
-              editData={editData}
-              onChange={handleEditChange}
-              onSubmit={handleEditSubmit}
-              onCancel={cancelEditing}
-              onCoverFileChange={setEditCoverFile}
-              coverFile={editCoverFile}
-            />
-          ) : (
-            <CafeInfoPanel
-              name={cafe.name}
-              address={cafe.address}
-              hasGoodWifi={cafe.has_good_wifi}
-              isQuiet={cafe.is_quiet}
-              avgRating={cafe.avgRating}
+            {isEditing ? (
+              <CafeEditForm
+                editData={editData}
+                onChange={handleEditChange}
+                onSubmit={handleEditSubmit}
+                onCancel={cancelEditing}
+                onCoverFileChange={setEditCoverFile}
+                coverFile={editCoverFile}
+              />
+            ) : (
+              <CafeInfoPanel
+                name={cafe.name}
+                address={cafe.address}
+                hasGoodWifi={cafe.has_good_wifi}
+                isQuiet={cafe.is_quiet}
+                avgRating={cafe.avgRating}
+                postsTotal={postsTotal}
+                savesCount={cafe.savesCount ?? 0}
+                likesCount={likesCount}
+                liked={liked}
+                saved={saved}
+                onToggleLike={toggleLike}
+                onToggleSave={toggleSave}
+              />
+            )}
+          </section>
+
+          {/* Right column */}
+          <section className={styles.cdRight} aria-labelledby="cafe-reviews-heading">
+            <div className={styles.cdRh}>
+              <h2 id="cafe-reviews-heading" className={styles.cdRhTitle}>
+                Reviews
+              </h2>
+              <span className={styles.cdRhCount}>{postsTotal} reviews</span>
+            </div>
+
+            <ReviewList
+              posts={posts}
               postsTotal={postsTotal}
-              savesCount={cafe.savesCount ?? 0}
-              likesCount={likesCount}
-              liked={liked}
-              saved={saved}
-              onToggleLike={toggleLike}
-              onToggleSave={toggleSave}
-            />
-          )}
+              loadingMorePosts={loadingMorePosts}
+              onLoadMore={loadMorePosts}
+              onTogglePostLike={togglePostLike}
+              onDeletePost={deletePost}
+              onUpdatePost={updatePost}
+              onBumpPostRepliesCount={bumpPostRepliesCount}
+            >
+              <ReviewForm
+                ref={formRef}
+                formData={formData}
+                onChange={handleReviewChange}
+                onSubmit={handleReviewSubmit}
+                onSetRating={setRating}
+                isLoggedIn={isLoggedIn}
+                displayName={me?.username || me?.email}
+                reviewTextRef={reviewTextRef}
+                onPhotoFileChange={setPostPhotoFile}
+                photoFile={postPhotoFile}
+                alreadyReviewed={isEditingReview}
+              />
+            </ReviewList>
+
+            <div className={styles.cdBar}>
+              <button type="button" className={styles.cdBarPill} onClick={scrollToForm}>
+                ✏️ write a review
+              </button>
+            </div>
+          </section>
         </div>
-
-        {/* Right column */}
-        <div className={styles.cdRight}>
-          <div className={styles.cdRh}>
-            <span className={styles.cdRhTitle}> Reviews</span>
-            <span className={styles.cdRhCount}>{postsTotal} reviews</span>
-          </div>
-
-          <ReviewList
-            posts={posts}
-            postsTotal={postsTotal}
-            loadingMorePosts={loadingMorePosts}
-            onLoadMore={loadMorePosts}
-            onTogglePostLike={togglePostLike}
-            onDeletePost={deletePost}
-            onUpdatePost={updatePost}
-            onBumpPostRepliesCount={bumpPostRepliesCount}
-          >
-            <ReviewForm
-              ref={formRef}
-              formData={formData}
-              onChange={handleReviewChange}
-              onSubmit={handleReviewSubmit}
-              onSetRating={setRating}
-              isLoggedIn={isLoggedIn}
-              displayName={me?.username || me?.email}
-              reviewTextRef={reviewTextRef}
-              onPhotoFileChange={setPostPhotoFile}
-              photoFile={postPhotoFile}
-              alreadyReviewed={isEditingReview}
-            />
-          </ReviewList>
-
-          <div className={styles.cdBar}>
-            <button type="button" className={styles.cdBarPill} onClick={scrollToForm}>
-              ✏️ write a review
-            </button>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

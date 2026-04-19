@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useEffect, useId, useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Toast.module.css';
 import { ToastContext } from './ToastContext';
@@ -6,6 +6,12 @@ import { ToastContext } from './ToastContext';
 let idCounter = 0;
 
 export function ToastProvider({ children }) {
+  const confirmTitleId = useId();
+  const confirmDescId = useId();
+  const confirmModalRef = useRef(null);
+  const confirmCancelBtnRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
+
   const [toasts, setToasts] = useState([]);
   const [confirmState, setConfirmState] = useState(null);
   const resolveRef = useRef(null);
@@ -36,11 +42,69 @@ export function ToastProvider({ children }) {
     });
   }, []);
 
-  const handleConfirm = (result) => {
+  const handleConfirm = useCallback((result) => {
     if (resolveRef.current) resolveRef.current(result);
     resolveRef.current = null;
     setConfirmState(null);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!confirmState) return undefined;
+
+    previouslyFocusedRef.current = document.activeElement;
+    queueMicrotask(() => confirmCancelBtnRef.current?.focus?.());
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleConfirm(false);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    const root = confirmModalRef.current;
+    const trapFocus = (e) => {
+      if (e.key !== 'Tab' || !root) return;
+
+      const focusables = Array.from(
+        root.querySelectorAll(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => {
+        if (!(el instanceof HTMLElement)) return false;
+        if (el.hasAttribute('disabled')) return false;
+        if (el.tabIndex < 0) return false;
+        return true;
+      });
+
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    root?.addEventListener('keydown', trapFocus);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      root?.removeEventListener('keydown', trapFocus);
+      const prev = previouslyFocusedRef.current;
+      if (prev && typeof prev.focus === 'function') {
+        queueMicrotask(() => prev.focus());
+      }
+    };
+  }, [confirmState, handleConfirm]);
 
   const toast = { success, error, confirm };
 
@@ -80,11 +144,25 @@ export function ToastProvider({ children }) {
       {/* Confirm modal */}
       {confirmState && (
         <div className={styles.confirmBackdrop} onClick={() => handleConfirm(false)}>
-          <div className={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.confirmTitle}>{confirmState.title}</h3>
-            <p className={styles.confirmMsg}>{confirmState.message}</p>
+          <div
+            ref={confirmModalRef}
+            className={styles.confirmModal}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby={confirmTitleId}
+            aria-describedby={confirmDescId}
+            tabIndex={-1}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 id={confirmTitleId} className={styles.confirmTitle}>
+              {confirmState.title}
+            </h3>
+            <p id={confirmDescId} className={styles.confirmMsg}>
+              {confirmState.message}
+            </p>
             <div className={styles.confirmActions}>
               <button
+                ref={confirmCancelBtnRef}
                 type="button"
                 className={styles.confirmCancel}
                 onClick={() => handleConfirm(false)}

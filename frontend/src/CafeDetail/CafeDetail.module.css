@@ -1,4 +1,5 @@
 .cdPage {
+  position: relative;
   height: 100vh;
   overflow: hidden;
   background: #fafafa;
@@ -100,12 +101,21 @@
   color: #fff;
 }
 
+/* Primary page content below top bar */
+.cdMain {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Two-column body */
 .cdBody {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: calc(100vh - 56px);
+  min-height: 0;
 }
 
 /* Left */
@@ -170,6 +180,7 @@
   margin-bottom: 10px;
 }
 .cdName {
+  margin: 0;
   font-size: 30px;
   font-weight: 800;
   color: #1a1a1a;
@@ -313,6 +324,7 @@
   color: #262626;
   margin: 0 0 4px;
 }
+
 .cdEformRow {
   display: flex;
   gap: 16px;
@@ -361,6 +373,7 @@
   flex-shrink: 0;
 }
 .cdRhTitle {
+  margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #262626;

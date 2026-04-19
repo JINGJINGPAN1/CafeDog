@@ -101,7 +101,7 @@ export default function PostCard({ post, onUpdate, onDelete }) {
             </button>
             <button
               type="button"
-              className={styles.dangerButton}
+              className={styles.secondaryButton}
               onClick={() => setEditing(false)}
               disabled={saving}
             >

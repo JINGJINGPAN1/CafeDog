@@ -1,4 +1,5 @@
 .pfPage {
+  position: relative;
   min-height: 100vh;
   background: #fafafa;
   font-family:
@@ -11,6 +12,11 @@
     Arial,
     sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+.pfMain {
+  display: block;
+  width: 100%;
 }
 
 /* Navbar (full-bleed, same as Home) */

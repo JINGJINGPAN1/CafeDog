@@ -38,29 +38,34 @@ export default function Profile() {
 
   return (
     <div className={styles.pfPage}>
+      <a className="skipLink" href="#main-content">
+        Skip to main content
+      </a>
       <ProfileNav />
 
-      <div className={styles.pfSection}>
-        <ProfileHeader
-          username={user.username}
-          email={user.email}
-          createdAt={user.createdAt}
-          bio={user.bio}
-          isSelf={isSelf}
-          onEditProfile={() => setEditOpen(true)}
-        />
+      <main id="main-content" className={styles.pfMain}>
+        <div className={styles.pfSection}>
+          <ProfileHeader
+            username={user.username}
+            email={user.email}
+            createdAt={user.createdAt}
+            bio={user.bio}
+            isSelf={isSelf}
+            onEditProfile={() => setEditOpen(true)}
+          />
 
-        <ProfileTabs tab={tab} onTabChange={setTab} />
+          <ProfileTabs tab={tab} onTabChange={setTab} />
 
-        <ProfileGrid
-          tab={tab}
-          posts={posts}
-          cafes={cafes || []}
-          likedPosts={likedPosts || []}
-          likedCafes={likedCafes || []}
-          savedCafes={savedCafes || []}
-        />
-      </div>
+          <ProfileGrid
+            tab={tab}
+            posts={posts}
+            cafes={cafes || []}
+            likedPosts={likedPosts || []}
+            likedCafes={likedCafes || []}
+            savedCafes={savedCafes || []}
+          />
+        </div>
+      </main>
 
       <EditProfileModal
         open={editOpen}

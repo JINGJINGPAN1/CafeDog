@@ -6,7 +6,7 @@ import styles from './Profile.module.css';
 export default function ProfileNav() {
   return (
     <header className={styles.pfNav}>
-      <div className={styles.pfNavInner}>
+      <nav className={styles.pfNavInner} aria-label="Site">
         <Link to="/" className={styles.pfLogo}>
           <img
             src={logoImg}
@@ -20,7 +20,7 @@ export default function ProfileNav() {
         <Link to="/" className={styles.pfBack}>
           &larr; back to home
         </Link>
-      </div>
+      </nav>
     </header>
   );
 }

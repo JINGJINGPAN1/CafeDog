@@ -6,7 +6,7 @@ import styles from './Home.module.css';
 export default function HomeNavbar({ isLoggedIn, meId, initials, logout }) {
   return (
     <header className={styles.hNavbar}>
-      <div className={styles.hNavInner}>
+      <nav className={styles.hNavInner} aria-label="Primary">
         <Link to="/" className={styles.hLogo}>
           <img
             src={logoImg}
@@ -52,7 +52,7 @@ export default function HomeNavbar({ isLoggedIn, meId, initials, logout }) {
             </>
           )}
         </div>
-      </div>
+      </nav>
     </header>
   );
 }

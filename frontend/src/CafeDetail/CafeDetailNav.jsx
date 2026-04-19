@@ -4,7 +4,7 @@ import styles from './CafeDetail.module.css';
 
 export default function CafeDetailNav({ isOwner, onEdit, onDelete }) {
   return (
-    <header className={styles.cdNav}>
+    <header className={styles.cdNav} aria-label="Café">
       <Link to="/" className={styles.cdBack}>
         <svg
           viewBox="0 0 24 24"

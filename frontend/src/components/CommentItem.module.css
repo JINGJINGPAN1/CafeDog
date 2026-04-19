@@ -37,7 +37,7 @@
   border: none;
   background: transparent;
   padding: 0;
-  color: #007bff;
+  color: #e07a5f;
   cursor: pointer;
 }
 
@@ -63,7 +63,7 @@
   padding: 8px 10px;
   border-radius: 10px;
   border: none;
-  background: #007bff;
+  background: linear-gradient(135deg, #e07a5f, #c96a4f);
   color: white;
   cursor: pointer;
 }
@@ -71,7 +71,12 @@
 .secondaryButton {
   padding: 8px 10px;
   border-radius: 10px;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #efefef;
   background: white;
+  color: #666;
   cursor: pointer;
+}
+
+.secondaryButton:hover {
+  border-color: #ddd;
 }

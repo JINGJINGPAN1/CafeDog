@@ -59,38 +59,44 @@ export default function Home() {
 
   return (
     <div className={styles.hPage}>
+      <a className="skipLink" href="#main-content">
+        Skip to main content
+      </a>
       <HomeNavbar isLoggedIn={isLoggedIn} meId={me?._id} initials={initials} logout={logout} />
 
-      <div className={styles.hContainer}>
-        <HomeTabs
-          categories={categories}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          locating={locating}
-        />
-        <HomeFilters
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          filterWifi={filterWifi}
-          onToggleWifi={toggleWifi}
-          filterQuiet={filterQuiet}
-          onToggleQuiet={toggleQuiet}
-        />
-
-        <p className={styles.hCount}>
-          Showing {cafes.length} of {total} cafe{total !== 1 ? 's' : ''}
-        </p>
-
-        <div className={styles.hGridWrap}>
-          {searching && <div className={styles.hSearchingOverlay} />}
-          <CafeGrid
-            cafes={cafes}
-            total={total}
-            loadingMore={loadingMore}
-            onLoadMore={handleLoadMore}
+      <main id="main-content" className={styles.hMain}>
+        <h1 className={styles.hPageTitle}>Discover cafés</h1>
+        <div className={styles.hContainer}>
+          <HomeTabs
+            categories={categories}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            locating={locating}
           />
+          <HomeFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            filterWifi={filterWifi}
+            onToggleWifi={toggleWifi}
+            filterQuiet={filterQuiet}
+            onToggleQuiet={toggleQuiet}
+          />
+
+          <p className={styles.hCount}>
+            Showing {cafes.length} of {total} cafe{total !== 1 ? 's' : ''}
+          </p>
+
+          <div className={styles.hGridWrap}>
+            {searching && <div className={styles.hSearchingOverlay} />}
+            <CafeGrid
+              cafes={cafes}
+              total={total}
+              loadingMore={loadingMore}
+              onLoadMore={handleLoadMore}
+            />
+          </div>
         </div>
-      </div>
+      </main>
 
       <button
         type="button"

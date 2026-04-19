@@ -59,9 +59,12 @@ export default function EditProfileModal({ open, onClose, currentUsername, onSav
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
+        aria-labelledby="edit-profile-title"
       >
         <div className={styles.pfModalHeader}>
-          <h3 className={styles.pfModalTitle}>Edit profile</h3>
+          <h2 id="edit-profile-title" className={styles.pfModalTitle}>
+            Edit profile
+          </h2>
           <button
             type="button"
             className={styles.pfModalClose}

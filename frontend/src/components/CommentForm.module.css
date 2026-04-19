@@ -17,7 +17,7 @@
   padding: 8px 10px;
   border-radius: 10px;
   border: none;
-  background: #28a745;
+  background: linear-gradient(135deg, #e07a5f, #c96a4f);
   color: white;
   cursor: pointer;
 }

@@ -100,7 +100,7 @@ export default function CafeInfoPanel({
   return (
     <div className={styles.cdLeftPad}>
       <div className={styles.cdNameRow}>
-        <div className={styles.cdName}>{name}</div>
+        <h1 className={styles.cdName}>{name}</h1>
         <div className={styles.cdNameActions}>
           <button
             type="button"

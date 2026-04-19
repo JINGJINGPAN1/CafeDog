@@ -31,7 +31,7 @@ export default function CafeEditForm({
   return (
     <div className={styles.cdLeftPad}>
       <form onSubmit={onSubmit} className={styles.cdEform}>
-        <h3 className={styles.cdEformTitle}>Edit Cafe</h3>
+        <h1 className={styles.cdEformTitle}>Edit café</h1>
         <input
           className={styles.cdInp}
           name="name"

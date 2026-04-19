@@ -1,4 +1,5 @@
 .authPage {
+  position: relative;
   min-height: 100vh;
   background: linear-gradient(160deg, #fafafa 0%, #f0ebe4 100%);
   display: flex;

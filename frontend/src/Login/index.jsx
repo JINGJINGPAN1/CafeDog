@@ -9,7 +9,10 @@ export default function Login() {
 
   return (
     <div className={styles.authPage}>
-      <div className={styles.authCard}>
+      <a className="skipLink" href="#main-content">
+        Skip to main content
+      </a>
+      <main id="main-content" className={styles.authCard}>
         <div className={styles.authLogo}>
           <img
             src={logoImg}
@@ -53,7 +56,7 @@ export default function Login() {
             Create an account
           </Link>
         </p>
-      </div>
+      </main>
     </div>
   );
 }

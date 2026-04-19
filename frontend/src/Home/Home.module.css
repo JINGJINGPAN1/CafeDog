@@ -2,6 +2,7 @@
 
 /* Page */
 .hPage {
+  position: relative;
   min-height: 100vh;
   background: #fafafa;
   font-family:
@@ -15,6 +16,25 @@
     sans-serif;
   -webkit-font-smoothing: antialiased;
   padding-bottom: 80px;
+}
+
+/* Primary content (below site header) */
+.hMain {
+  display: block;
+  width: 100%;
+}
+
+/* Visually hidden but available to assistive tech & document outline */
+.hPageTitle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Content Container (tabs, filters, grid — not navbar) */
@@ -578,6 +598,11 @@
 }
 .hSuggestionItem:hover {
   background: #fafafa;
+}
+
+.hSuggestionItemActive,
+.hSuggestionItem[aria-selected='true'] {
+  background: rgba(224, 122, 95, 0.08);
 }
 .hSuggestionMain {
   font-size: 14px;
