@@ -8,14 +8,17 @@ Unlike map-first tools that focus on navigation, CaféDog centers on a lightweig
 
 ### Core Features
 
-| Feature                 | Description                                                                                                                                      |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Café Discovery**      | Browse a paginated list of cafés with search by name, filters (WiFi / quiet), and category tabs (Discover / New places / Top rated).             |
-| **Café Detail Page**    | View café info (name, address, rating, cover image) plus aggregated engagement (likes/saves).                                                    |
-| **Posts (Reviews)**     | Create posts linked to a café with text, rating, and optional photo upload; view a feed of posts per café with pagination.                       |
-| **Social Interactions** | Like/unlike posts; comment CRUD (create/edit/delete) on posts; like/save cafés.                                                                  |
-| **Auth & Profiles**     | Session-based login (email + password), registration, logout; profile page shows user posts and cafés, plus personal tabs for liked/saved items. |
-| **Image Handling**      | Upload images to Cloudinary; support Google Places photo references via a backend proxy route so keys never reach the client.                    |
+| Feature                         | Description                                                                                                                                                                  |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Café Discovery**              | Browse a paginated list of cafés with search by name/address, filters (WiFi / quiet), and tabs (**Discover / Nearby / New places / Top rated**).                            |
+| **Nearby (Geo)**                | Use browser Geolocation to request “Nearby” cafés; backend uses MongoDB `2dsphere` + `$nearSphere` to rank results by distance.                                              |
+| **Recommend a café**            | Logged-in users can recommend a café using **Google Places Autocomplete** (address dropdown); the app stores `lat/lng` + optional cover image.                               |
+| **Café Detail Page**            | View café info plus aggregated engagement (**likes/saves**) and rating summary (average rating + rating count computed from posts).                                           |
+| **Posts (Reviews)**             | Create/edit/delete posts linked to a café with text, rating, and optional photo; per-café feed is paginated and sorted newest-first.                                          |
+| **One review per user per café**| Enforced at DB level with a unique compound index on `(authorId, cafeId)`; creating a duplicate returns `409` and the UI guides the user to edit their existing review.       |
+| **Social Interactions**         | Like/unlike posts; comment CRUD (create/edit/delete) on posts; like/save cafés.                                                                                              |
+| **Auth & Profiles**             | Session-based login (email + password), registration, logout; profile page shows user posts and cafés, plus personal tabs for liked/saved items (only visible to the owner). |
+| **Image Handling**              | Upload images to Cloudinary; support Google Places photo references via a backend proxy route so keys never reach the client.                                                |
 
 ### Technology Stack
 
@@ -23,7 +26,7 @@ Unlike map-first tools that focus on navigation, CaféDog centers on a lightweig
 - **Database**: MongoDB (native driver)
 - **Auth**: `express-session` + `connect-mongo` session store + Passport Local (email/password)
 - **Uploads**: Multer (memory storage) → Cloudinary
-- **Places**: Google Places photo proxy endpoint (`/api/places/photo`)
+- **Places**: Google Places (New) for seeding + frontend Autocomplete; photo proxy endpoint (`/api/places/photo`)
 - **Frontend**: React (hooks) + React Router + Vite
 - **Styling**: CSS modules + component CSS
 
@@ -102,7 +105,14 @@ _As a student, I want to search by café name and filter for WiFi/quiet, so that
 
 - User types into the search input; results update with debounce.
 - User toggles **WiFi** and/or **Quiet** filters.
-- User switches tabs (Discover / New places / Top rated) to change sort order.
+- User switches tabs (**Discover / Nearby / New places / Top rated**) to change sort order or switch into distance-based browsing.
+
+**Story 2b: Nearby browsing**  
+_As a user, I want to browse cafés near my current location, so that I can quickly find a place around me._
+
+- User clicks **Nearby**; the browser prompts for location permission.
+- If permission is granted, cafés are sorted by distance (within a configurable radius on the backend).
+- If permission is denied, the app shows a helpful error and keeps the user on the current tab.
 
 ---
 
@@ -111,8 +121,9 @@ _As a student, I want to search by café name and filter for WiFi/quiet, so that
 **Story 3: Adding a café**  
 _As a logged-in user, I want to add a new café with a cover photo, so that I can share a new place with the community._
 
-- User opens the “Add café” modal.
-- User enters name/address and selects attributes (WiFi, quiet, rating).
+- User opens the “Recommend a cafe” form.
+- User selects an address from **Google Places Autocomplete** suggestions (the app records `lat/lng` + `placeId`).
+- User enters/adjusts name and selects attributes (WiFi, quiet, rating).
 - User optionally uploads a cover image (stored in Cloudinary).
 - On submit, the café is created and appears in the list.
 
@@ -133,6 +144,12 @@ _As a visitor, I want to create a post on a café page, so that I can record my 
 - On the café detail page, user opens the review form.
 - User writes text, sets a rating (1–5), optionally uploads a photo.
 - On submit, the post is created and appears at the top of the feed.
+
+**Story 5b: Preventing duplicate reviews**  
+_As a user, I want the app to prevent me from accidentally posting multiple reviews for the same café, so that my review history stays clean._
+
+- If the user already reviewed the café, creating another review returns a `409`.
+- The UI shows an inline “edit” entry point to update the existing review instead of creating a duplicate.
 
 **Story 6: Editing or deleting my post**  
 _As a user, I want to update or remove my post, so that I can correct mistakes or remove content._
@@ -189,9 +206,9 @@ _As a user, I want to view my profile and other users’ profiles, so that I can
 ┌──────────────────────────────────────────────────────────────────┐
 │  CaféDog                              [Login] [Register] [👤]  │
 ├──────────────────────────────────────────────────────────────────┤
-│  [ Search cafés…________________ ]  [☐ WiFi] [☐ Quiet] [+ Add]  │
+│  [ Search cafés…________________ ]  [☐ WiFi] [☐ Quiet]           │
 │                                                                  │
-│  Tabs:  [Discover] [New places] [Top rated]                      │
+│  Tabs:  [Discover] [Nearby] [New places] [Top rated]             │
 │                                                                  │
 │  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐        │
 │  │  [cover img]  │  │  [cover img]  │  │  [cover img]  │        │
@@ -201,6 +218,8 @@ _As a user, I want to view my profile and other users’ profiles, so that I can
 │  └───────────────┘  └───────────────┘  └───────────────┘        │
 │                                                                  │
 │                         [Load more]                              │
+│                                                                  │
+│                       [Recommend a cafe]                          │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -290,8 +309,8 @@ _As a user, I want to view my profile and other users’ profiles, so that I can
 - **Backend**: Express.js JSON API under `/api/*`, with session cookies and Passport Local authentication.
 - **Database**: MongoDB database `cafedog` with collections:
   - `users`: `{ email, username, passwordHash, createdAt }`
-  - `cafes`: `{ name, address, has_good_wifi, is_quiet, rating, cover_image, createdBy?, googlePlaceId?, location? }`
-  - `posts`: `{ cafeId, authorId?, author, text, photoUrl, rating, createdAt, updatedAt? }`
+  - `cafes`: `{ name, address, has_good_wifi, is_quiet, rating, cover_image, createdBy, placeId?, googlePlaceId?, location: { type:'Point', coordinates:[lng,lat] } }`
+  - `posts`: `{ cafeId, authorId?, author, text, photoUrl, rating, createdAt, updatedAt? }` with a **unique partial index** on `(authorId, cafeId)` (only when `authorId` is present)
   - `likes`: `{ postId, userId, createdAt }`
   - `comments`: `{ postId, userId, text, createdAt, updatedAt }`
   - `cafeLikes`: `{ cafeId, userId, createdAt }`
@@ -299,6 +318,7 @@ _As a user, I want to view my profile and other users’ profiles, so that I can
   - `sessions`: session store used by `connect-mongo`
 - **Frontend**: React + React Router; API calls via `fetch` with `credentials: 'include'` so the session cookie is sent.
 - **Uploads**: `/api/uploads/image` uses Multer memory storage and uploads to Cloudinary (jpeg/png/webp, max 5MB).
-- **Places**: `/api/places/photo?ref=...` proxies Google Places photo bytes to the client without exposing the API key.
+- **Places**: `/api/places/photo?ref=...` proxies Google Places photo bytes to the client without exposing the API key. The “Recommend a cafe” form uses Google Places Autocomplete on the client to obtain `placeId` + `lat/lng`.
+- **Geo**: `cafes.location` has a MongoDB `2dsphere` index; `/api/cafes?nearby=true&lat=...&lng=...` returns distance-ranked results.
 - **Production hosting**: Backend serves the built React app from `frontend/dist` (same-origin), and routes non-`/api` paths to `index.html`.
 - **Data flow**: User action → React hook → `apiFetch` → Express route → MongoDB → JSON response → state update → UI render.

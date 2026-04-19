@@ -11,7 +11,8 @@ router.get('/places/photo', async (req, res) => {
     return res.status(400).json({ error: 'Missing ref parameter' });
   }
 
-  const apiKey = process.env.Maps_API_KEY;
+  const apiKey =
+    process.env.GOOGLE_MAPS_API_KEY || process.env.Maps_API_KEY || process.env.VITE_GOOGLE_MAPS_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: 'Server missing Maps API key' });
   }
