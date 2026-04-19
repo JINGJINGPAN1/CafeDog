@@ -20,8 +20,6 @@ export default function Home() {
     toggleWifi,
     filterQuiet,
     toggleQuiet,
-    filterNearby,
-    toggleNearby,
     locating,
     activeTab,
     setActiveTab,
@@ -63,7 +61,12 @@ export default function Home() {
       <HomeNavbar isLoggedIn={isLoggedIn} meId={me?._id} initials={initials} logout={logout} />
 
       <div className={styles.hContainer}>
-        <HomeTabs categories={categories} activeTab={activeTab} onTabChange={setActiveTab} />
+        <HomeTabs
+          categories={categories}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          locating={locating}
+        />
         <HomeFilters
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
@@ -71,9 +74,6 @@ export default function Home() {
           onToggleWifi={toggleWifi}
           filterQuiet={filterQuiet}
           onToggleQuiet={toggleQuiet}
-          filterNearby={filterNearby}
-          onToggleNearby={toggleNearby}
-          locating={locating}
         />
 
         <p className={styles.hCount}>

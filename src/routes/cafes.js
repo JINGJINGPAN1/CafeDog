@@ -48,7 +48,17 @@ router.get('/cafes', async (req, res) => {
       };
     }
 
-    const total = await cafesCollection.countDocuments(filter);
+    // countDocuments doesn't support $nearSphere — use $geoWithin/$centerSphere
+    // (same circular region) just for counting.
+    const countFilter = nearby
+      ? {
+          ...filter,
+          location: {
+            $geoWithin: { $centerSphere: [[lng, lat], radiusKm / 6378.1] },
+          },
+        }
+      : filter;
+    const total = await cafesCollection.countDocuments(countFilter);
 
     // For "top" sort we need avgRating computed from posts, so fetch all matching
     // cafes (or paginated subset) and sort in-memory after aggregation.

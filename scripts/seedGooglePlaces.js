@@ -1,13 +1,18 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '..', 'frontend', '.env') });
 
 const { MongoClient } = require('mongodb');
 const { v2: cloudinary } = require('cloudinary');
 
-const GOOGLE_API_KEY = process.env.Maps_API_KEY;
+const GOOGLE_API_KEY =
+  process.env.GOOGLE_MAPS_API_KEY ||
+  process.env.Maps_API_KEY ||
+  process.env.VITE_GOOGLE_MAPS_API_KEY;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!GOOGLE_API_KEY) {
-  console.error('Missing Maps_API_KEY in .env');
+  console.error('Missing GOOGLE_MAPS_API_KEY in .env');
   process.exit(1);
 }
 if (!MONGODB_URI) {
@@ -34,28 +39,24 @@ const limitArg = process.argv.find((a) => a.startsWith('--limit'));
 const limitVal = limitArg ? Number(process.argv[process.argv.indexOf(limitArg) + 1]) : null;
 const TARGET = limitVal && limitVal > 0 ? limitVal : 1000;
 
-// 20 major US city centers
+// Bay Area coverage
 const CITY_CENTERS = [
   { name: 'San Francisco', lat: 37.7749, lng: -122.4194 },
-  { name: 'Seattle', lat: 47.6062, lng: -122.3321 },
-  { name: 'New York', lat: 40.7128, lng: -74.006 },
-  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437 },
-  { name: 'Chicago', lat: 41.8781, lng: -87.6298 },
-  { name: 'Portland', lat: 45.5155, lng: -122.6789 },
-  { name: 'Austin', lat: 30.2672, lng: -97.7431 },
-  { name: 'Denver', lat: 39.7392, lng: -104.9903 },
-  { name: 'Boston', lat: 42.3601, lng: -71.0589 },
-  { name: 'Washington DC', lat: 38.9072, lng: -77.0369 },
-  { name: 'Miami', lat: 25.7617, lng: -80.1918 },
-  { name: 'Nashville', lat: 36.1627, lng: -86.7816 },
-  { name: 'Philadelphia', lat: 39.9526, lng: -75.1652 },
-  { name: 'San Diego', lat: 32.7157, lng: -117.1611 },
-  { name: 'Minneapolis', lat: 44.9778, lng: -93.265 },
-  { name: 'Atlanta', lat: 33.749, lng: -84.388 },
-  { name: 'Dallas', lat: 32.7767, lng: -96.797 },
-  { name: 'Phoenix', lat: 33.4484, lng: -112.074 },
-  { name: 'Salt Lake City', lat: 40.7608, lng: -111.891 },
-  { name: 'New Orleans', lat: 29.9511, lng: -90.0715 },
+  { name: 'Daly City', lat: 37.6879, lng: -122.4702 },
+  { name: 'South San Francisco', lat: 37.6547, lng: -122.4077 },
+  { name: 'San Mateo', lat: 37.563, lng: -122.3255 },
+  { name: 'Redwood City', lat: 37.4852, lng: -122.2364 },
+  { name: 'Menlo Park', lat: 37.453, lng: -122.1817 },
+  { name: 'Palo Alto', lat: 37.4419, lng: -122.143 },
+  { name: 'Mountain View', lat: 37.3861, lng: -122.0839 },
+  { name: 'Sunnyvale', lat: 37.3688, lng: -122.0363 },
+  { name: 'Santa Clara', lat: 37.3541, lng: -121.9552 },
+  { name: 'San Jose', lat: 37.3382, lng: -121.8863 },
+  { name: 'Fremont', lat: 37.5485, lng: -121.9886 },
+  { name: 'Hayward', lat: 37.6688, lng: -122.0808 },
+  { name: 'Oakland', lat: 37.8044, lng: -122.2712 },
+  { name: 'Berkeley', lat: 37.8715, lng: -122.273 },
+  { name: 'Walnut Creek', lat: 37.9101, lng: -122.0652 },
 ];
 
 function sleep(ms) {

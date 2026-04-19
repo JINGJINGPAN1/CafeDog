@@ -4,7 +4,7 @@ import { useToast } from '../toast/useToast';
 import { apiFetch } from '../lib/api';
 
 const CAFES_PER_PAGE = 10;
-const CATEGORIES = ['discover', 'new places', 'top rated'];
+const CATEGORIES = ['discover', 'nearby', 'new places', 'top rated'];
 
 export default function useHome() {
   const { me, isLoggedIn, logout } = useAuth();
@@ -20,7 +20,6 @@ export default function useHome() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterWifi, setFilterWifi] = useState(false);
   const [filterQuiet, setFilterQuiet] = useState(false);
-  const [filterNearby, setFilterNearby] = useState(false);
   const [coords, setCoords] = useState(null);
   const [locating, setLocating] = useState(false);
 
@@ -38,7 +37,7 @@ export default function useHome() {
   });
   const [coverFile, setCoverFile] = useState(null);
 
-  const [activeTab, setActiveTab] = useState('discover');
+  const [activeTab, setActiveTabRaw] = useState('discover');
   const debounceRef = useRef(null);
   const hasLoadedOnce = useRef(false);
 
@@ -65,14 +64,21 @@ export default function useHome() {
     params.append('limit', String(CAFES_PER_PAGE));
 
     fetch(`/api/cafes?${params.toString()}`, { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => {
-        if (reset) {
-          setCafes(data.cafes);
-        } else {
-          setCafes((prev) => [...prev, ...data.cafes]);
+      .then(async (res) => {
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Request failed: ${res.status}`);
         }
-        setTotal(data.total);
+        return res.json();
+      })
+      .then((data) => {
+        const list = Array.isArray(data.cafes) ? data.cafes : [];
+        if (reset) {
+          setCafes(list);
+        } else {
+          setCafes((prev) => [...prev, ...list]);
+        }
+        setTotal(data.total || 0);
         setPage(pg);
         hasLoadedOnce.current = true;
         setInitialLoading(false);
@@ -81,10 +87,12 @@ export default function useHome() {
       })
       .catch((err) => {
         console.error(err);
-        setError(err.message);
+        if (reset) setCafes([]);
+        setTotal(0);
         setInitialLoading(false);
         setSearching(false);
         setLoadingMore(false);
+        toast.error(err.message || 'Failed to load cafes');
       });
   }, []);
 
@@ -92,14 +100,14 @@ export default function useHome() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setPage(1);
-      const activeCoords = filterNearby ? coords : null;
+      const activeCoords = activeTab === 'nearby' ? coords : null;
       fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true, activeCoords);
     }, 300);
     return () => clearTimeout(debounceRef.current);
-  }, [searchTerm, filterWifi, filterQuiet, filterNearby, coords, activeTab, fetchCafes]);
+  }, [searchTerm, filterWifi, filterQuiet, coords, activeTab, fetchCafes]);
 
   const handleLoadMore = () => {
-    const activeCoords = filterNearby ? coords : null;
+    const activeCoords = activeTab === 'nearby' ? coords : null;
     fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, page + 1, false, activeCoords);
   };
 
@@ -187,7 +195,7 @@ export default function useHome() {
       });
       setCoverFile(null);
       setShowForm(false);
-      const activeCoords = filterNearby ? coords : null;
+      const activeCoords = activeTab === 'nearby' ? coords : null;
       fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true, activeCoords);
     } catch (err) {
       toast.error('Error submitting: ' + err.message);
@@ -205,13 +213,13 @@ export default function useHome() {
   const toggleWifi = () => setFilterWifi((v) => !v);
   const toggleQuiet = () => setFilterQuiet((v) => !v);
 
-  const toggleNearby = () => {
-    if (filterNearby) {
-      setFilterNearby(false);
+  const setActiveTab = (tab) => {
+    if (tab !== 'nearby') {
+      setActiveTabRaw(tab);
       return;
     }
     if (coords) {
-      setFilterNearby(true);
+      setActiveTabRaw('nearby');
       return;
     }
     if (!navigator.geolocation) {
@@ -222,7 +230,7 @@ export default function useHome() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        setFilterNearby(true);
+        setActiveTabRaw('nearby');
         setLocating(false);
       },
       (err) => {
@@ -257,8 +265,6 @@ export default function useHome() {
     toggleWifi,
     filterQuiet,
     toggleQuiet,
-    filterNearby,
-    toggleNearby,
     locating,
     activeTab,
     setActiveTab,
