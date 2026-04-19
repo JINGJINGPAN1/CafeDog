@@ -12,6 +12,11 @@ async function getDb() {
   if (cachedDb) return cachedDb;
   await client.connect();
   cachedDb = client.db('cafedog');
+  try {
+    await cachedDb.collection('cafes').createIndex({ location: '2dsphere' });
+  } catch (err) {
+    console.error('Failed to create 2dsphere index:', err);
+  }
   return cachedDb;
 }
 

@@ -7,6 +7,9 @@ export default function HomeFilters({
   onToggleWifi,
   filterQuiet,
   onToggleQuiet,
+  filterNearby,
+  onToggleNearby,
+  locating,
 }) {
   return (
     <div className={styles.hFilters}>
@@ -46,6 +49,14 @@ export default function HomeFilters({
         onClick={onToggleQuiet}
       >
         quiet
+      </button>
+      <button
+        type="button"
+        className={`${styles.hPill} ${filterNearby ? styles.hPillActive : ''}`}
+        onClick={onToggleNearby}
+        disabled={locating}
+      >
+        {locating ? 'locating…' : 'nearby'}
       </button>
     </div>
   );

@@ -20,6 +20,9 @@ export default function Home() {
     toggleWifi,
     filterQuiet,
     toggleQuiet,
+    filterNearby,
+    toggleNearby,
+    locating,
     activeTab,
     setActiveTab,
     categories,
@@ -67,6 +70,9 @@ export default function Home() {
           onToggleWifi={toggleWifi}
           filterQuiet={filterQuiet}
           onToggleQuiet={toggleQuiet}
+          filterNearby={filterNearby}
+          onToggleNearby={toggleNearby}
+          locating={locating}
         />
 
         <p className={styles.hCount}>

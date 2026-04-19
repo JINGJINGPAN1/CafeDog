@@ -20,6 +20,9 @@ export default function useHome() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterWifi, setFilterWifi] = useState(false);
   const [filterQuiet, setFilterQuiet] = useState(false);
+  const [filterNearby, setFilterNearby] = useState(false);
+  const [coords, setCoords] = useState(null);
+  const [locating, setLocating] = useState(false);
 
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -36,7 +39,7 @@ export default function useHome() {
   const debounceRef = useRef(null);
   const hasLoadedOnce = useRef(false);
 
-  const fetchCafes = useCallback((search, wifi, quiet, tab, pg, reset) => {
+  const fetchCafes = useCallback((search, wifi, quiet, tab, pg, reset, nearbyCoords) => {
     if (reset) {
       if (!hasLoadedOnce.current) setInitialLoading(true);
       else setSearching(true);
@@ -50,6 +53,11 @@ export default function useHome() {
     if (quiet) params.append('quiet', 'true');
     if (tab === 'new places') params.append('sort', 'new');
     if (tab === 'top rated') params.append('sort', 'top');
+    if (nearbyCoords) {
+      params.append('nearby', 'true');
+      params.append('lat', String(nearbyCoords.lat));
+      params.append('lng', String(nearbyCoords.lng));
+    }
     params.append('page', String(pg));
     params.append('limit', String(CAFES_PER_PAGE));
 
@@ -81,13 +89,15 @@ export default function useHome() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setPage(1);
-      fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true);
+      const activeCoords = filterNearby ? coords : null;
+      fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true, activeCoords);
     }, 300);
     return () => clearTimeout(debounceRef.current);
-  }, [searchTerm, filterWifi, filterQuiet, activeTab, fetchCafes]);
+  }, [searchTerm, filterWifi, filterQuiet, filterNearby, coords, activeTab, fetchCafes]);
 
   const handleLoadMore = () => {
-    fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, page + 1, false);
+    const activeCoords = filterNearby ? coords : null;
+    fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, page + 1, false, activeCoords);
   };
 
   const handleFormChange = (e) => {
@@ -137,7 +147,8 @@ export default function useHome() {
       });
       setCoverFile(null);
       setShowForm(false);
-      fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true);
+      const activeCoords = filterNearby ? coords : null;
+      fetchCafes(searchTerm, filterWifi, filterQuiet, activeTab, 1, true, activeCoords);
     } catch (err) {
       toast.error('Error submitting: ' + err.message);
     }
@@ -153,6 +164,40 @@ export default function useHome() {
   };
   const toggleWifi = () => setFilterWifi((v) => !v);
   const toggleQuiet = () => setFilterQuiet((v) => !v);
+
+  const toggleNearby = () => {
+    if (filterNearby) {
+      setFilterNearby(false);
+      return;
+    }
+    if (coords) {
+      setFilterNearby(true);
+      return;
+    }
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser.');
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        console.log('[nearby] got coords:', pos.coords.latitude, pos.coords.longitude);
+        setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setFilterNearby(true);
+        setLocating(false);
+      },
+      (err) => {
+        console.error('[nearby] geolocation error:', err);
+        setLocating(false);
+        const msg =
+          err.code === 1
+            ? 'Location permission denied. Please allow access to use Nearby.'
+            : 'Could not get your location.';
+        toast.error(msg);
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
+    );
+  };
 
   const initials = me?.username
     ? me.username.slice(0, 2).toUpperCase()
@@ -173,6 +218,9 @@ export default function useHome() {
     toggleWifi,
     filterQuiet,
     toggleQuiet,
+    filterNearby,
+    toggleNearby,
+    locating,
     activeTab,
     setActiveTab,
     categories: CATEGORIES,
