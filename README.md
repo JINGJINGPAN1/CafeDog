@@ -33,8 +33,8 @@ Email: <kong.yin@northeastern.edu>
 ## Live Demo
 
 - **[CaféDog App](https://cafedog.onrender.com/)** – Try CaféDog online (may take 30–60s to wake if idle)
-- **[Video Introduction](https://youtu.be/BxDYqyCj4Us)** – Watch on YouTube
-- **[Presentation Slides](https://docs.google.com/presentation/d/1w4XbNmxJuYF50cAYwc1aHL0473fEScwAsBk3-wYQbNo/edit?slide=id.p18#slide=id.p18)** – Project overview
+- **[Video Introduction](https://www.youtube.com/watch?v=52r3F8ojG9Q&t=666s)** – Watch on YouTube
+- **[Presentation Slides](https://docs.google.com/presentation/d/18w3kRo7Eg98WnMd5fH2UtTfGJKkqIM15YetoBxNF44U/edit?usp=sharing)** – Project overview
 
 ## Screenshot
 
@@ -300,6 +300,7 @@ CafeDog/
 1. Unauthenticated users can not perform restricted actions — including submitting reviews, ratings, likes, saves, and recommending cafés — without logging in
 2. Add a “Nearby” location tab, allowing users to easily view cafes within a configurable radius (default: 10 km).
 3. Users are only allowed to submit one reviews for the same café, avoiding duplicate or spammy reviews.
+4. Users can recommend a café, with the address auto-filled using the Google Maps API.
 
 ## License
 
