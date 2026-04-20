@@ -33,7 +33,7 @@ Email: <kong.yin@northeastern.edu>
 ## Live Demo
 
 - **[CaféDog App](https://cafedog.onrender.com/)** – Try CaféDog online (may take 30–60s to wake if idle)
-- **[Video Introduction](https://www.youtube.com/watch?v=2Jk9KFiXgeo)** – Watch on YouTube
+- **[Video Introduction](https://youtu.be/BxDYqyCj4Us)** – Watch on YouTube
 - **[Presentation Slides](https://docs.google.com/presentation/d/1w4XbNmxJuYF50cAYwc1aHL0473fEScwAsBk3-wYQbNo/edit?slide=id.p18#slide=id.p18)** – Project overview
 
 ## Screenshot
@@ -295,21 +295,11 @@ CafeDog/
 8. **sessions**
    - Session documents stored by `connect-mongo`
 
-## Features Implemented
+## Features improvement Compared to Project 3
 
-✅ Node.js + Express.js backend (split under `backend/`)  
-✅ MongoDB with native driver (no Mongoose), including `2dsphere` geo index and unique partial index on `(authorId, cafeId)`  
-✅ React + Vite frontend with client-side routing  
-✅ Session-based auth (Passport Local + `express-session`)  
-✅ CRUD for cafés and posts; full CRUD for comments  
-✅ Likes for posts + like/save for cafés  
-✅ Browser geolocation "Nearby" tab with distance-sorted results  
-✅ Google Places (New) seeding + Autocomplete Data API for address search  
-✅ Image upload (Cloudinary) + Google Places photo proxy  
-✅ One-review-per-user-per-café enforced at the DB level; UI prompts the user to edit instead of creating a duplicate  
-✅ Prettier formatting scripts  
-✅ No exposed credentials (uses environment variables)  
-✅ No prohibited libraries used (no `axios`, `mongoose`, or `cors` package)
+1. Unauthenticated users can not perform restricted actions — including submitting reviews, ratings, likes, saves, and recommending cafés — without logging in
+2. Add a “Nearby” location tab, allowing users to easily view cafes within a configurable radius (default: 10 km).
+3. Users are only allowed to submit one reviews for the same café, avoiding duplicate or spammy reviews.
 
 ## License
 
